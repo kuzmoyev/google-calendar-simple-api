@@ -1,0 +1,50 @@
+{
+  "summary": "string",
+  "description": "string",
+  "location": "string",
+  "start": {
+    "date": "date",
+    "datetime": "datetime",
+    "timeZone": "string"
+  },
+  "end": {
+    "date": "date",
+    "datetime": "datetime",
+    "timeZone": "string"
+  },
+  "recurrence": [
+    "string"
+  ],
+  "colorId": "string",
+  "visibility": "string",
+  "gadget": {
+    "type": "string",
+    "title": "string",
+    "link": "string",
+    "iconLink": "string",
+    "width": "integer",
+    "height": "integer",
+    "display": "string",
+    "preferences": {
+      "(key)": "string"
+    }
+  },
+  "reminders": {
+    "useDefault": "boolean",
+    "overrides": [
+      {
+        "method": "string",
+        "minutes": "integer"
+      }
+    ]
+  },
+  "attachments": [
+    {
+      "fileUrl": "string",
+      "title": "string",
+      "mimeType": "string",
+      "iconLink!": "string",
+      "fileId!": "string"
+    }
+  ]
+}
