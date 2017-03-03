@@ -54,10 +54,14 @@ class GoogleCalendar:
     def list_events(self):
         return self.service.events().list(calendarId=self.calendar).execute()['items']
 
+    def list_event_colors(self):
+        return self.service.colors().get().execute()['event']
+
 
 def main():
     calendar = GoogleCalendar('kuzmovich.goog@gmail.com')
-    print(calendar.list_events())
+    for color_id, color in calendar.list_event_colors().items():
+        print(color)
 
 
 if __name__ == '__main__':
