@@ -1,13 +1,32 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+
+import pytz
+from tzlocal import get_localzone
 
 
-def get_utc_datetime(date, *args, **kwargs):
-    if isinstance(date, datetime):
-        return date.isoformat()
+def get_utc_datetime(dt, *args, **kwargs):
+    if isinstance(dt, datetime):
+        return dt.isoformat()
     else:
-        return datetime(date, *args, **kwargs).isoformat()
+        return datetime(dt, *args, **kwargs).isoformat()
 
 
 def date_range(start_date, day_count):
     for n in range(day_count):
         yield start_date + timedelta(n)
+
+
+def insure_localisation(dt, timezone=str(get_localzone())):
+    """Insures localisation with provided timezone on "datetime" object.
+
+    Does nothing to object of type "date"."""
+
+    if isinstance(dt, date):
+        return dt
+    elif isinstance(dt, datetime):
+        tz = pytz.timezone(timezone)
+        if dt.tzinfo is None:
+            dt = tz.localize(dt)
+        return dt
+    else:
+        raise TypeError('"date" or "datetime" object expected, not {!r}.'.format(dt.__class__.__name__))
