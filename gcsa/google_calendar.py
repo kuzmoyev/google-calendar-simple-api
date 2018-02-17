@@ -1,10 +1,16 @@
+import datetime
 import httplib2
 import os
 
 from apiclient import discovery
+from dateutil.relativedelta import relativedelta
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
+from tzlocal import get_localzone
+
+from serializers.event_serializer import EventSerializer
+from util.date_time_util import insure_localisation
 
 
 def _get_default_credentials_path():
@@ -45,14 +51,40 @@ class GoogleCalendar:
             credentials = tools.run_flow(flow, store)
         return credentials
 
-    def create_event(self, event):
-        return self.service.events().insert(calendarId=self.calendar, body=event.get_body()).execute()
+    def add_event(self, event):
+        body = EventSerializer(event).get_json()
+        return self.service.events().insert(calendarId=self.calendar, body=body).execute()
 
-    def delete_event(self, event_id):
-        return self.service.events().delete(calendarId=self.calendar, eventId=event_id).execute()
+    def add_quick_event(self, event_string):
+        return self.service.events().quickAdd(calendarId=self.calendar, text=event_string).execute()
 
-    def list_events(self):
-        return self.service.events().list(calendarId=self.calendar).execute()['items']
+    def delete_event(self, event):
+        return self.service.events().delete(calendarId=self.calendar, eventId=event.get_id()).execute()
+
+    def get_events(self, time_min=None, time_max=None, order_by='startTime', timezone=str(get_localzone())):
+        time_min = time_min or datetime.datetime.utcnow()
+        time_max = time_max or time_min + relativedelta(years=1)
+
+        time_min = insure_localisation(time_min, timezone)
+        time_max = insure_localisation(time_max, timezone)
+
+        res = []
+        page_token = None
+        while True:
+            events = self.service.events().list(calendarId=self.calendar,
+                                                timeMin=time_min,
+                                                timeMax=time_max,
+                                                orderBy=order_by,
+                                                singleEvents=True,
+                                                pageToken=page_token).execute()
+            for event_json in events['items']:
+                event = EventSerializer(event_json).get_event()
+                res.append(event)
+            page_token = events.get('nextPageToken')
+            if not page_token:
+                break
+
+        return res
 
     def list_event_colors(self):
         return self.service.colors().get().execute()['event']
