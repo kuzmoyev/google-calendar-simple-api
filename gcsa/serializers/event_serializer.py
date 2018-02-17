@@ -1,8 +1,9 @@
 import dateutil.parser
 
-from gcsa.event import Event
-from json import loads, dumps
+import json
 from datetime import date, datetime
+
+from event import Event
 
 
 class EventSerializer:
@@ -10,11 +11,11 @@ class EventSerializer:
         if isinstance(event, Event):
             self.data = self.event2json(event)
         elif isinstance(event, str):
-            self.data = loads(event)
+            self.data = json.loads(event)
         elif isinstance(event, dict):
             self.data = event
         else:
-            raise TypeError('The event object must be Event, str or dict, not {!r}'.format(event.__class__.__name__))
+            raise TypeError('The event object must be Event, str or dict, not {!r}.'.format(event.__class__.__name__))
 
     def get_event(self):
         return self.json2event(self.data)
@@ -25,18 +26,14 @@ class EventSerializer:
     @staticmethod
     def event2json(event):
         if not isinstance(event, Event):
-            raise TypeError('The event object must be Event, not {!r}'.format(event.__class__.__name__))
+            raise TypeError('The event object must be Event, not {!r}.'.format(event.__class__.__name__))
 
         data = {
             "summary": event.summary,
             "description": event.description,
             "location": event.location,
-            "start": {
-                "timeZone": event.timezone
-            },
-            "end": {
-                "timeZone": event.timezone
-            },
+            "start": {},
+            "end": {},
             "recurrence": event.recurrence,
             "colorId": event.colorId,
             "visibility": event.visibility,
@@ -44,67 +41,70 @@ class EventSerializer:
                 "useDefault": event.default_reminders,
                 "overrides": event.reminders
             },
-            "attachments": event.attachments
+            "attachments": event.attachments,
+            **event.other
         }
 
-        if isinstance(event.start, date) and isinstance(event.end, date):
+        if isinstance(event.start, datetime) and isinstance(event.end, datetime):
+            data['start']['dateTime'] = event.start.isoformat()
+            data['end']['dateTime'] = event.end.isoformat()
+        elif isinstance(event.start, date) and isinstance(event.end, date):
             data['start']['date'] = event.start.isoformat()
             data['end']['date'] = event.end.isoformat()
-        elif isinstance(event.start, datetime) and isinstance(event.end, datetime):
-            data['start']['datetime'] = event.start.isoformat()
-            data['end']['datetime'] = event.end.isoformat()
 
-        return dumps(data)
+        # Removes all None keys.
+        data = {k: v for k, v in data.items() if v is not None}
+
+        return data
 
     @staticmethod
-    def json2event(json):
-        if not isinstance(json, (str, dict)):
-            raise TypeError('The json object must be str or dict, not {!r}'.format(json.__class__.__name__))
+    def json2event(json_event):
+        if not isinstance(json_event, (str, dict)):
+            raise TypeError('The json object must be str or dict, not {!r}'.format(json_event.__class__.__name__))
 
-        if isinstance(json, str):
-            json = loads(json)
+        if isinstance(json_event, str):
+            json_event = json.loads(json_event)
 
         start = None
-        timzone = None
-        start_data = json.pop('start', None)
+        timezone = None
+        start_data = json_event.pop('start', None)
         if start_data is not None:
             if 'date' in start_data:
                 start = EventSerializer._get_datetime_from_string(start_data['date']).date()
             else:
                 start = EventSerializer._get_datetime_from_string(start_data['dateTime'])
-            timzone = start_data.pop('timeZone', None)
+            timezone = start_data.pop('timeZone', None)
 
         end = None
-        end_data = json.pop('end', None)
+        end_data = json_event.pop('end', None)
         if end_data is not None:
             if 'date' in end_data:
                 end = EventSerializer._get_datetime_from_string(end_data['date']).date()
             else:
                 end = EventSerializer._get_datetime_from_string(end_data['dateTime'])
 
-        reminders = json.pop('reminders', {})
+        reminders = json_event.pop('reminders', {})
 
         event = Event(
             start=start,
             end=end,
-            timezone=timzone,
-            event_id=json.pop('id', None),
-            summary=json.pop('summary', None),
-            description=json.pop('description', None),
-            location=json.pop('location', None),
-            recurrence=json.pop('recurrence', None),
-            color=json.pop('colorId', None),
-            visibility=json.pop('visibility', None),
-            gadget=json.pop('gadget', None),
-            attachments=json.pop('attachments', None),
+            timezone=timezone,
+            event_id=json_event.pop('id', None),
+            summary=json_event.pop('summary', None),
+            description=json_event.pop('description', None),
+            location=json_event.pop('location', None),
+            recurrence=json_event.pop('recurrence', None),
+            color=json_event.pop('colorId', None),
+            visibility=json_event.pop('visibility', None),
+            gadget=json_event.pop('gadget', None),
+            attachments=json_event.pop('attachments', None),
             reminders=reminders.pop('overrides', None),
             default_reminders=reminders.pop('useDefault', False),
-            other=json
+            other=json_event
         )
-        
+
         return event
 
     @staticmethod
     def _get_datetime_from_string(s):
-        d = dateutil.parser.parse(s)
-        return d
+        return dateutil.parser.parse(s)
