@@ -1,30 +1,22 @@
 import dateutil.parser
 
-import json
 from datetime import date, datetime
 
 from event import Event
+from serializers.attachment_serializer import AttachmentSerializer
+from serializers.base_serializer import BaseSerializer
+from serializers.gadget_serializer import GadgetSerializer
+from serializers.reminder_serializer import ReminderSerializer
 
 
-class EventSerializer:
+class EventSerializer(BaseSerializer):
+    type_ = Event
+
     def __init__(self, event):
-        if isinstance(event, Event):
-            self.data = self.event2json(event)
-        elif isinstance(event, str):
-            self.data = json.loads(event)
-        elif isinstance(event, dict):
-            self.data = event
-        else:
-            raise TypeError('The event object must be Event, str or dict, not {!r}.'.format(event.__class__.__name__))
-
-    def get_event(self):
-        return self.json2event(self.data)
-
-    def get_json(self):
-        return self.data
+        super().__init__(event)
 
     @staticmethod
-    def event2json(event):
+    def to_json(event):
         if not isinstance(event, Event):
             raise TypeError('The event object must be Event, not {!r}.'.format(event.__class__.__name__))
 
@@ -35,13 +27,14 @@ class EventSerializer:
             "start": {},
             "end": {},
             "recurrence": event.recurrence,
-            "colorId": event.colorId,
+            "colorId": event.color_id,
             "visibility": event.visibility,
+            "gadget": GadgetSerializer.to_json(event.gadget) if event.gadget else None,
             "reminders": {
                 "useDefault": event.default_reminders,
-                "overrides": event.reminders
+                "overrides": [ReminderSerializer.to_json(r) for r in event.reminders]
             },
-            "attachments": event.attachments,
+            "attachments": [AttachmentSerializer.to_json(a) for a in event.attachments],
             **event.other
         }
 
@@ -58,52 +51,53 @@ class EventSerializer:
         return data
 
     @staticmethod
-    def json2event(json_event):
-        if not isinstance(json_event, (str, dict)):
-            raise TypeError('The json object must be str or dict, not {!r}'.format(json_event.__class__.__name__))
-
-        if isinstance(json_event, str):
-            json_event = json.loads(json_event)
+    def to_object(json_event):
+        super().assure_dict(json_event)
 
         start = None
         timezone = None
-        start_data = json_event.pop('start', None)
+        start_data = json_event.get('start', None)
         if start_data is not None:
             if 'date' in start_data:
                 start = EventSerializer._get_datetime_from_string(start_data['date']).date()
             else:
                 start = EventSerializer._get_datetime_from_string(start_data['dateTime'])
-            timezone = start_data.pop('timeZone', None)
+            timezone = start_data.get('timeZone', None)
 
         end = None
-        end_data = json_event.pop('end', None)
+        end_data = json_event.get('end', None)
         if end_data is not None:
             if 'date' in end_data:
                 end = EventSerializer._get_datetime_from_string(end_data['date']).date()
             else:
                 end = EventSerializer._get_datetime_from_string(end_data['dateTime'])
 
-        reminders = json_event.pop('reminders', {})
+        gadget_json = json_event.get('gadget', None)
+        gadget = GadgetSerializer.to_object(gadget_json) if gadget_json else None
 
-        event = Event(
+        reminders_json = json_event.get('reminders', {})
+        reminders = [ReminderSerializer.to_object(r) for r in reminders_json.get('overrides', [])]
+
+        attachments_json = json_event.get('attachments', None),
+        attachments = [AttachmentSerializer.to_object(a) for a in attachments_json]
+
+        return Event(
             start=start,
             end=end,
             timezone=timezone,
-            event_id=json_event.pop('id', None),
-            summary=json_event.pop('summary', None),
-            description=json_event.pop('description', None),
-            location=json_event.pop('location', None),
-            recurrence=json_event.pop('recurrence', None),
-            color=json_event.pop('colorId', None),
-            visibility=json_event.pop('visibility', None),
-            gadget=json_event.pop('gadget', None),
-            attachments=json_event.pop('attachments', None),
-            reminders=reminders.pop('overrides', None),
-            default_reminders=reminders.pop('useDefault', False),
+            event_id=json_event.get('id', None),
+            summary=json_event.get('summary', None),
+            description=json_event.get('description', None),
+            location=json_event.get('location', None),
+            recurrence=json_event.get('recurrence', None),
+            color=json_event.get('colorId', None),
+            visibility=json_event.get('visibility', None),
+            gadget=gadget,
+            attachments=attachments,
+            reminders=reminders,
+            default_reminders=reminders_json.get('useDefault', False),
             other=json_event
         )
-
-        return event
 
     @staticmethod
     def _get_datetime_from_string(s):

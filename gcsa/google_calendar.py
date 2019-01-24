@@ -78,7 +78,7 @@ class GoogleCalendar:
                                                 singleEvents=True,
                                                 pageToken=page_token).execute()
             for event_json in events['items']:
-                event = EventSerializer(event_json).get_event()
+                event = EventSerializer(event_json).get_object()
                 res.append(event)
             page_token = events.get('nextPageToken')
             if not page_token:
