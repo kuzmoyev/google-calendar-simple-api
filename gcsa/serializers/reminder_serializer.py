@@ -17,12 +17,12 @@ class ReminderSerializer(BaseSerializer):
 
     @staticmethod
     def to_object(json_reminder):
-        super().assure_dict(json_reminder)
+        BaseSerializer.assure_dict(json_reminder)
 
         method = json_reminder['method']
         if method == 'email':
-            return EmailReminder(int(json_reminder['minutes_before_start']))
+            return EmailReminder(int(json_reminder['minutes']))
         elif method == 'popup':
-            return PopupReminder(int(json_reminder['minutes_before_start']))
+            return PopupReminder(int(json_reminder['minutes']))
         else:
             raise ValueError('Unexpected method "{}" for a reminder.'.format(method))
