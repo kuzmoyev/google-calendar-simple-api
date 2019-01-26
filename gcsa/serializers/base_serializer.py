@@ -43,6 +43,8 @@ class BaseSerializer:
         """Checks that name of the argument in subclasses __init__ method is the name of the type_ in lowercase.
         It assures that error in __init__ function of BaseSerializer has a correct message.
         """
+        if cls.type_ is None:
+            raise AssertionError('Subclass of BaseSerializer has to define class "type_" that is being serialized.')
         if cls.__init__.__code__.co_varnames != ('self', cls.type_.__name__.lower()):
             raise AssertionError('Argument of the __init__ method has to have a name "{}".'
                                  .format(cls.type_.__name__.lower()))
