@@ -50,14 +50,14 @@ class Gadget:
         check_not_empty(link, 'link')
         check_not_empty(icon_link, 'icon_link')
 
-        if display not in (Gadget.ICON, Gadget.CHIP):
+        if display and display not in (Gadget.ICON, Gadget.CHIP):
             raise ValueError('"display" has to be on of Gadget.ICON or Gadget.CHIP')
 
         check_positive_integer(height, 'height')
         check_positive_integer(width, 'width')
 
         self.title = title
-        self.type = type_
+        self.type_ = type_
         self.link = link
         self.icon_link = icon_link
         self.display = display
