@@ -29,14 +29,14 @@ class GadgetSerializer(BaseSerializer):
 
     @staticmethod
     def to_object(json_gadget):
-        super().assure_dict(json_gadget)
+        BaseSerializer.assure_dict(json_gadget)
 
         return Gadget(
             title=json_gadget['title'],
             type_=json_gadget['type'],
             link=json_gadget['link'],
             icon_link=json_gadget['iconLink'],
-            display=json_gadget['display'],
+            display=json_gadget.get('display', None),
             height=json_gadget.get('height', None),
             width=json_gadget.get('width', None),
             preferences=json_gadget.get('preferences', None)

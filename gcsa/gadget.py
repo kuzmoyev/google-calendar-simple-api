@@ -42,7 +42,7 @@ class Gadget:
                 raise ValueError('"{}" can not be empty'.format(name))
 
         def check_positive_integer(v, name):
-            if v and (not isinstance(v, int) or v <= 0):
+            if v is not None and (not isinstance(v, int) or v <= 0):
                 raise ValueError('"{}" has to be a positive integer'.format(name))
 
         check_not_empty(title, 'title')
