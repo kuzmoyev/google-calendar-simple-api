@@ -92,7 +92,6 @@ class TestGadgetSerializer(TestCase):
             "type": 'gadget',
             "link": 'https://gadgets_url.com',
             "iconLink": 'https://icons_url.com',
-            "display": Gadget.CHIP,
         }
 
         gadget = GadgetSerializer.to_object(gadget_json)
