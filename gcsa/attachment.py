@@ -1,20 +1,20 @@
 class Attachment:
     SUPPORTED_MIME_TYPES = [
-        "application/vnd.google-apps.audio"
-        "application/vnd.google-apps.document"  # Google Docs
-        "application/vnd.google-apps.drawing"  # Google Drawing
-        "application/vnd.google-apps.file"  # Google Drive file
-        "application/vnd.google-apps.folder"  # Google Drive folder
-        "application/vnd.google-apps.form"  # Google Forms
-        "application/vnd.google-apps.fusiontable"  # Google Fusion Tables
-        "application/vnd.google-apps.map"  # Google My Maps
-        "application/vnd.google-apps.photo"
-        "application/vnd.google-apps.presentation"  # Google Slides
-        "application/vnd.google-apps.script"  # Google Apps Scripts
-        "application/vnd.google-apps.site"  # Google Sites
-        "application/vnd.google-apps.spreadsheet"  # Google Sheets
-        "application/vnd.google-apps.unknown"
-        "application/vnd.google-apps.video"
+        "application/vnd.google-apps.audio",
+        "application/vnd.google-apps.document",  # Google Docs
+        "application/vnd.google-apps.drawing",  # Google Drawing
+        "application/vnd.google-apps.file",  # Google Drive file
+        "application/vnd.google-apps.folder",  # Google Drive folder
+        "application/vnd.google-apps.form",  # Google Forms
+        "application/vnd.google-apps.fusiontable",  # Google Fusion Tables
+        "application/vnd.google-apps.map",  # Google My Maps
+        "application/vnd.google-apps.photo",
+        "application/vnd.google-apps.presentation",  # Google Slides
+        "application/vnd.google-apps.script",  # Google Apps Scripts
+        "application/vnd.google-apps.site",  # Google Sites
+        "application/vnd.google-apps.spreadsheet",  # Google Sheets
+        "application/vnd.google-apps.unknown",
+        "application/vnd.google-apps.video",
         "application/vnd.google-apps.drive-sdk"  # 3rd party shortcut
     ]
 
