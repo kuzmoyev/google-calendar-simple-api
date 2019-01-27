@@ -1,5 +1,9 @@
 # Google Calendar Simple API
 
+[![Build Status](https://travis-ci.com/kuzmoyev/Google-Calendar-Simple-API.svg?branch=master)](https://travis-ci.com/kuzmoyev/Google-Calendar-Simple-API)
+[![Documentation Status](https://readthedocs.org/projects/google-calendar-simple-api/badge/?version=latest)](https://google-calendar-simple-api.readthedocs.io/en/latest/?badge=latest)
+  
+
 Simple adapter for https://github.com/googleapis/google-api-python-client
 
 Example usege:
