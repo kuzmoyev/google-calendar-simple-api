@@ -29,6 +29,13 @@ class TestBaseSerializer(TestCase):
             BaseSerializer.assure_dict(json_object)
 
     def test_subclass(self):
+
+        # __init_subclass__ was introduced in Python 3.6
+        # In older versions tests are not executed
+        import sys
+        if sys.version_info[1] < 6:
+            return
+
         class Apple:
             pass
 
