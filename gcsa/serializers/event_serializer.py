@@ -24,8 +24,6 @@ class EventSerializer(BaseSerializer):
             "summary": event.summary,
             "description": event.description,
             "location": event.location,
-            "start": {},
-            "end": {},
             "recurrence": event.recurrence,
             "colorId": event.color_id,
             "visibility": event.visibility,
@@ -39,11 +37,27 @@ class EventSerializer(BaseSerializer):
         }
 
         if isinstance(event.start, datetime) and isinstance(event.end, datetime):
-            data['start']['dateTime'] = event.start.isoformat()
-            data['end']['dateTime'] = event.end.isoformat()
+            data['start'] = {
+                'dateTime': event.start.isoformat(),
+                'timeZone': event.timezone
+            }
+            data['end'] = {
+                'dateTime': event.end.isoformat(),
+                'timeZone': event.timezone
+            }
         elif isinstance(event.start, date) and isinstance(event.end, date):
             data['start']['date'] = event.start.isoformat()
             data['end']['date'] = event.end.isoformat()
+
+        if event.default_reminders:
+            data['reminders'] = {
+                "useDefault": True
+            }
+        else:
+            data['reminders'] = {
+                "useDefault": False,
+                "overrides": [ReminderSerializer.to_json(r) for r in event.reminders]
+            }
 
         # Removes all None keys.
         data = {k: v for k, v in data.items() if v is not None}

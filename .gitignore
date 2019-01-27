@@ -1,5 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
 .idea/
-client_secret.json
+credentials.json
+token.pickle
 venv/
 __pycache__

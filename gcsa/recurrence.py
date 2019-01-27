@@ -157,27 +157,27 @@ class Recurrence:
 
     @staticmethod
     def dates(ds):
-        return 'RDATE:' + Recurrence._dates(ds)
+        return 'RDATE;' + Recurrence._dates(ds)
 
     @staticmethod
     def times(dts, timezone=str(get_localzone())):
-        return 'RDATE:' + Recurrence._times(dts, timezone)
+        return 'RDATE;' + Recurrence._times(dts, timezone)
 
     @staticmethod
     def periods(ps, timezone=str(get_localzone())):
-        return 'RDATE:' + Recurrence._periods(ps, timezone)
+        return 'RDATE;' + Recurrence._periods(ps, timezone)
 
     @staticmethod
     def exclude_dates(ds):
-        return 'EXDATE:' + Recurrence._dates(ds)
+        return 'EXDATE;' + Recurrence._dates(ds)
 
     @staticmethod
     def exclude_times(dts, timezone=str(get_localzone())):
-        return 'EXDATE:' + Recurrence._times(dts, timezone)
+        return 'EXDATE;' + Recurrence._times(dts, timezone)
 
     @staticmethod
     def exclude_periods(ps, timezone=str(get_localzone())):
-        return 'EXDATE:' + Recurrence._periods(ps, timezone)
+        return 'EXDATE;' + Recurrence._periods(ps, timezone)
 
     @staticmethod
     def _times(dts, timezone=str(get_localzone())):

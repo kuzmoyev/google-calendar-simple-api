@@ -1,14 +1,16 @@
 import datetime
-import httplib2
-import os
+import pickle
+import os.path
 
-from apiclient import discovery
+from beautiful_date import Jan, Apr
 from dateutil.relativedelta import relativedelta
-from oauth2client import client
-from oauth2client import tools
-from oauth2client.file import Storage
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
 from tzlocal import get_localzone
 
+from event import Event
+from recurrence import Recurrence, DAILY, SU, SA
 from serializers.event_serializer import EventSerializer
 from util.date_time_util import insure_localisation
 
@@ -24,31 +26,42 @@ def _get_default_credentials_path():
 
 class GoogleCalendar:
     _READ_WRITE_SCOPES = 'https://www.googleapis.com/auth/calendar'
-    _DEFAULT_CLIENT_SECRET_FILE = 'client_secret.json'
 
     def __init__(self,
                  calendar,
                  credentials_path=_get_default_credentials_path(),
                  read_only=False,
-                 secret_file=_DEFAULT_CLIENT_SECRET_FILE,
                  application_name=None):
-        self._credentials_path = credentials_path
+
+        self._credentials_dir, self._credentials_file = os.path.split(credentials_path)
+
         self._scopes = self._READ_WRITE_SCOPES + ('.readonly' if read_only else '')
-        self._secret_file = secret_file
         self._application_name = application_name
 
         self.calendar = calendar
         credentials = self._get_credentials()
-        http = credentials.authorize(httplib2.Http())
-        self.service = discovery.build('calendar', 'v3', http=http)
+        self.service = build('calendar', 'v3', credentials=credentials)
 
     def _get_credentials(self):
-        store = Storage(self._credentials_path)
-        credentials = store.get()
-        if not credentials or credentials.invalid:
-            flow = client.flow_from_clientsecrets(self._secret_file, self._scopes)
-            flow.user_agent = self._application_name
-            credentials = tools.run_flow(flow, store)
+        _credentials_path = os.path.join(self._credentials_dir, self._credentials_file)
+        _token_path = os.path.join(self._credentials_dir, 'token.pickle')
+
+        credentials = None
+
+        if os.path.exists(_token_path):
+            with open(_token_path, 'rb') as token:
+                credentials = pickle.load(token)
+
+        if not credentials or not credentials.valid:
+            if credentials and credentials.expired and credentials.refresh_token:
+                credentials.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(_credentials_path, self._scopes)
+                credentials = flow.run_local_server()
+
+            with open(_token_path, 'wb') as token:
+                pickle.dump(credentials, token)
+
         return credentials
 
     def add_event(self, event):
@@ -65,8 +78,8 @@ class GoogleCalendar:
         time_min = time_min or datetime.datetime.utcnow()
         time_max = time_max or time_min + relativedelta(years=1)
 
-        time_min = insure_localisation(time_min, timezone)
-        time_max = insure_localisation(time_max, timezone)
+        time_min = insure_localisation(time_min, timezone).isoformat()
+        time_max = insure_localisation(time_max, timezone).isoformat()
 
         res = []
         page_token = None
@@ -91,9 +104,23 @@ class GoogleCalendar:
 
 
 def main():
-    calendar = GoogleCalendar('kuzmovich.goog@gmail.com')
-    for color_id, color in calendar.list_event_colors().items():
-        print(color)
+    calendar = GoogleCalendar('kuzmovich.goog@gmail.com', '../credentials.json')
+    event = Event(
+        'Breakfast',
+        start=(1 / Jan / 2019)[9:00],
+        recurrence=[
+            Recurrence.rule(freq=DAILY),
+            Recurrence.exclude_rule(by_week_day=[SU, SA]),
+            Recurrence.exclude_times([
+                (19 / Apr / 2019)[9:00],
+                (22 / Apr / 2019)[9:00]
+            ])
+        ],
+        minutes_before_email_reminder=50
+    )
+
+    for event in calendar.get_events():
+        print(event)
 
 
 if __name__ == '__main__':
