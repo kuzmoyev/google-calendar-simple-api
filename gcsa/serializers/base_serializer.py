@@ -40,8 +40,8 @@ class BaseSerializer:
             return json_
 
     def __init_subclass__(cls, **kwargs):
-        """Checks that name of the argument in subclasses __init__ method is the name of the type_ in lowercase.
-        It assures that error in __init__ function of BaseSerializer has a correct message.
+        """Checks that "type_" is defined and that name of the argument in subclasses __init__ method is the name of
+        the "type_" in lowercase. It assures that error in __init__ function of BaseSerializer has a correct message.
         """
         if cls.type_ is None:
             raise AssertionError('Subclass of BaseSerializer has to define class "type_" that is being serialized.')

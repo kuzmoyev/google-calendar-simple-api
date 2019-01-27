@@ -122,6 +122,7 @@ class Recurrence:
             freq=DAILY,
             interval=None,
             count=None,
+            by_second=None,
             by_minute=None,
             by_hour=None,
             by_week_day=None,
@@ -132,14 +133,15 @@ class Recurrence:
             by_set_pos=None,
             week_start=DEFAULT_WEEK_START
     ):
-        return 'RRULE:' + Recurrence._rule(freq, interval, count, by_minute, by_hour, by_week_day, by_month_day,
-                                           by_year_day, by_week, by_month, by_set_pos, week_start)
+        return 'RRULE:' + Recurrence._rule(freq, interval, count, by_second, by_minute, by_hour, by_week_day,
+                                           by_month_day, by_year_day, by_week, by_month, by_set_pos, week_start)
 
     @staticmethod
     def exclude_rule(
             freq=DAILY,
             interval=None,
             count=None,
+            by_second=None,
             by_minute=None,
             by_hour=None,
             by_week_day=None,
@@ -150,8 +152,8 @@ class Recurrence:
             by_set_pos=None,
             week_start=DEFAULT_WEEK_START
     ):
-        return 'EXRULE:' + Recurrence._rule(freq, interval, count, by_minute, by_hour, by_week_day, by_month_day,
-                                            by_year_day, by_week, by_month, by_set_pos, week_start)
+        return 'EXRULE:' + Recurrence._rule(freq, interval, count, by_second, by_minute, by_hour, by_week_day,
+                                            by_month_day, by_year_day, by_week, by_month, by_set_pos, week_start)
 
     @staticmethod
     def dates(ds):

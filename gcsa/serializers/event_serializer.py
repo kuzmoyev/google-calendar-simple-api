@@ -52,7 +52,7 @@ class EventSerializer(BaseSerializer):
 
     @staticmethod
     def to_object(json_event):
-        super().assure_dict(json_event)
+        BaseSerializer.assure_dict(json_event)
 
         start = None
         timezone = None
@@ -78,15 +78,15 @@ class EventSerializer(BaseSerializer):
         reminders_json = json_event.get('reminders', {})
         reminders = [ReminderSerializer.to_object(r) for r in reminders_json.get('overrides', [])]
 
-        attachments_json = json_event.get('attachments', None),
+        attachments_json = json_event.get('attachments', [])
         attachments = [AttachmentSerializer.to_object(a) for a in attachments_json]
 
         return Event(
+            json_event['summary'],
             start=start,
             end=end,
             timezone=timezone,
             event_id=json_event.get('id', None),
-            summary=json_event.get('summary', None),
             description=json_event.get('description', None),
             location=json_event.get('location', None),
             recurrence=json_event.get('recurrence', None),
