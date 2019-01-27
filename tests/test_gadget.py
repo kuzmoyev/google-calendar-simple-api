@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from gadget import Gadget
-from serializers.gadget_serializer import GadgetSerializer
+from gcsa.gadget import Gadget
+from gcsa.serializers.gadget_serializer import GadgetSerializer
 
 
 class TestGadget(TestCase):

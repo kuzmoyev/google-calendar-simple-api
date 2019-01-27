@@ -1,8 +1,8 @@
 from tzlocal import get_localzone
 from datetime import datetime, date, timedelta
 
-from attachment import Attachment
-from reminder import PopupReminder, EmailReminder
+from .attachment import Attachment
+from .reminder import PopupReminder, EmailReminder
 from util.date_time_util import insure_localisation
 
 
@@ -34,7 +34,7 @@ class Event:
                  gadget=None,
                  attachments=None,
                  reminders=None,
-                 default_reminders=True,
+                 default_reminders=False,
                  minutes_before_popup_reminder=None,
                  minutes_before_email_reminder=None,
                  **other):

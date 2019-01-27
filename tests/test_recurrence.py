@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from recurrence import Recurrence, \
+from gcsa.recurrence import Recurrence, \
     SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY, \
     MO, TU, WE, TH, FR, SA, SU
 
