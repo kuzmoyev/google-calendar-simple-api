@@ -7,4 +7,5 @@ __pycache__
 
 build
 dist
-*egg-info
+.eggs
+gcsa.egg-info

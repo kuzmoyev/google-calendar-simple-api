@@ -2,11 +2,13 @@ import dateutil.parser
 
 from datetime import date, datetime
 
-from event import Event
-from serializers.attachment_serializer import AttachmentSerializer
-from serializers.base_serializer import BaseSerializer
-from serializers.gadget_serializer import GadgetSerializer
-from serializers.reminder_serializer import ReminderSerializer
+from tzlocal import get_localzone
+
+from gcsa.event import Event
+from .attachment_serializer import AttachmentSerializer
+from .base_serializer import BaseSerializer
+from .gadget_serializer import GadgetSerializer
+from .reminder_serializer import ReminderSerializer
 
 
 class EventSerializer(BaseSerializer):
@@ -46,8 +48,8 @@ class EventSerializer(BaseSerializer):
                 'timeZone': event.timezone
             }
         elif isinstance(event.start, date) and isinstance(event.end, date):
-            data['start']['date'] = event.start.isoformat()
-            data['end']['date'] = event.end.isoformat()
+            data['start'] = {'date': event.start.isoformat()}
+            data['end'] = {'date': event.end.isoformat()}
 
         if event.default_reminders:
             data['reminders'] = {
@@ -55,9 +57,10 @@ class EventSerializer(BaseSerializer):
             }
         else:
             data['reminders'] = {
-                "useDefault": False,
-                "overrides": [ReminderSerializer.to_json(r) for r in event.reminders]
+                "useDefault": False
             }
+            if event.reminders:
+                data['reminders']["overrides"] = [ReminderSerializer.to_json(r) for r in event.reminders]
 
         # Removes all None keys.
         data = {k: v for k, v in data.items() if v is not None}
@@ -76,7 +79,7 @@ class EventSerializer(BaseSerializer):
                 start = EventSerializer._get_datetime_from_string(start_data['date']).date()
             else:
                 start = EventSerializer._get_datetime_from_string(start_data['dateTime'])
-            timezone = start_data.get('timeZone', None)
+            timezone = start_data.get('timeZone', str(get_localzone()))
 
         end = None
         end_data = json_event.get('end', None)

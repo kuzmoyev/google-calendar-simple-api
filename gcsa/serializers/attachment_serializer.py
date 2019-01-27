@@ -1,5 +1,5 @@
-from attachment import Attachment
-from serializers.base_serializer import BaseSerializer
+from gcsa.attachment import Attachment
+from .base_serializer import BaseSerializer
 
 
 class AttachmentSerializer(BaseSerializer):

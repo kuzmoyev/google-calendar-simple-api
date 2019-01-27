@@ -1,5 +1,5 @@
-from gadget import Gadget
-from serializers.base_serializer import BaseSerializer
+from gcsa.gadget import Gadget
+from .base_serializer import BaseSerializer
 
 
 class GadgetSerializer(BaseSerializer):

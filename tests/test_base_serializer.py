@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from serializers.base_serializer import BaseSerializer
+from gcsa.serializers.base_serializer import BaseSerializer
 
 
 class TestBaseSerializer(TestCase):

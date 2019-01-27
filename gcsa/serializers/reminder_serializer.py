@@ -1,5 +1,5 @@
-from reminder import Reminder, EmailReminder, PopupReminder
-from serializers.base_serializer import BaseSerializer
+from gcsa.reminder import Reminder, EmailReminder, PopupReminder
+from .base_serializer import BaseSerializer
 
 
 class ReminderSerializer(BaseSerializer):

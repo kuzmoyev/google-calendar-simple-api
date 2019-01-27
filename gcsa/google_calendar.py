@@ -9,9 +9,9 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from tzlocal import get_localzone
 
-from event import Event
-from recurrence import Recurrence, DAILY, SU, SA
-from serializers.event_serializer import EventSerializer
+from .event import Event
+from .recurrence import Recurrence, DAILY, SU, SA
+from .serializers.event_serializer import EventSerializer
 from util.date_time_util import insure_localisation
 
 

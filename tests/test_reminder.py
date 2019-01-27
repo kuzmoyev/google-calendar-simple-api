@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from reminder import EmailReminder, PopupReminder
-from serializers.reminder_serializer import ReminderSerializer
+from gcsa.reminder import EmailReminder, PopupReminder
+from gcsa.serializers.reminder_serializer import ReminderSerializer
 
 
 class TestReminder(TestCase):
