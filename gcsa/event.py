@@ -82,6 +82,7 @@ class Event:
         def assure_list(obj):
             return obj if isinstance(obj, list) else obj or []
 
+        self.timezone = timezone
         self.start = start
         if end:
             self.end = end
@@ -96,6 +97,14 @@ class Event:
         elif isinstance(self.start, datetime) or isinstance(self.end, datetime):
             raise TypeError('Start and end must either both be date or both be datetime.')
 
+        reminders = assure_list(reminders)
+
+        if len(reminders) > 5:
+            raise ValueError('The maximum number of override reminders is 5.')
+
+        if default_reminders and reminders:
+            raise ValueError('Cannot specify both default reminders and overrides at the same time.')
+
         self.event_id = event_id and event_id.lower()
         self.summary = summary
         self.description = description
@@ -105,7 +114,7 @@ class Event:
         self.visibility = visibility
         self.gadget = gadget
         self.attachments = assure_list(attachments)
-        self.reminders = assure_list(reminders)
+        self.reminders = reminders
         self.default_reminders = default_reminders
         self.other = other
 
@@ -127,6 +136,8 @@ class Event:
         self.add_reminder(PopupReminder(minutes_before_start))
 
     def add_reminder(self, reminder):
+        if len(self.reminders) > 4:
+            raise ValueError('The maximum number of override reminders is 5.')
         self.reminders.append(reminder)
 
     def __str__(self):
