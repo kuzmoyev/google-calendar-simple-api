@@ -2,15 +2,12 @@ import datetime
 import pickle
 import os.path
 
-from beautiful_date import Jan, Apr
 from dateutil.relativedelta import relativedelta
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from tzlocal import get_localzone
 
-from .event import Event
-from .recurrence import Recurrence, DAILY, SU, SA
 from .serializers.event_serializer import EventSerializer
 from util.date_time_util import insure_localisation
 
@@ -20,7 +17,7 @@ def _get_default_credentials_path():
     credential_dir = os.path.join(home_dir, '.credentials')
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
-    credential_path = os.path.join(credential_dir, 'calendar-python.json')
+    credential_path = os.path.join(credential_dir, 'credentials.json')
     return credential_path
 
 
@@ -101,27 +98,3 @@ class GoogleCalendar:
 
     def list_event_colors(self):
         return self.service.colors().get().execute()['event']
-
-
-def main():
-    calendar = GoogleCalendar('kuzmovich.goog@gmail.com', '../credentials.json')
-    event = Event(
-        'Breakfast',
-        start=(1 / Jan / 2019)[9:00],
-        recurrence=[
-            Recurrence.rule(freq=DAILY),
-            Recurrence.exclude_rule(by_week_day=[SU, SA]),
-            Recurrence.exclude_times([
-                (19 / Apr / 2019)[9:00],
-                (22 / Apr / 2019)[9:00]
-            ])
-        ],
-        minutes_before_email_reminder=50
-    )
-
-    for event in calendar.get_events():
-        print(event)
-
-
-if __name__ == '__main__':
-    main()
