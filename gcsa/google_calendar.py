@@ -23,13 +23,25 @@ def _get_default_credentials_path():
 
 class GoogleCalendar:
     _READ_WRITE_SCOPES = 'https://www.googleapis.com/auth/calendar'
+    _LIST_ORDERS = ("startTime", "updated")
 
     def __init__(self,
-                 calendar,
-                 credentials_path=_get_default_credentials_path(),
+                 calendar='primary',
+                 credentials_path=None,
                  read_only=False,
                  application_name=None):
+        """Represents Google Calendar of the user.
 
+        :param calendar:
+                users email address or name of the calendar. Default: primary calendar of the user.
+        :param credentials_path:
+                path to "credentials.json" file. Default: ~/.credentials.
+        :param read_only:
+                if require read only access. Default: False
+        :param application_name:
+                name of the application. Default: None
+        """
+        credentials_path = credentials_path or _get_default_credentials_path()
         self._credentials_dir, self._credentials_file = os.path.split(credentials_path)
 
         self._scopes = self._READ_WRITE_SCOPES + ('.readonly' if read_only else '')
@@ -62,16 +74,57 @@ class GoogleCalendar:
         return credentials
 
     def add_event(self, event):
+        """Creates event in the calendar
+
+        :param event:
+                event object.
+
+        :return:
+                created event object with id.
+        """
         body = EventSerializer(event).get_json()
-        return self.service.events().insert(calendarId=self.calendar, body=body).execute()
+        event_json = self.service.events().insert(calendarId=self.calendar, body=body).execute()
+        return EventSerializer.to_object(event_json)
 
     def add_quick_event(self, event_string):
-        return self.service.events().quickAdd(calendarId=self.calendar, text=event_string).execute()
+        """Creates event in the calendar by string description.
+
+        Example:
+            Appointment at Somewhere on June 3rd 10am-10:25am
+
+        :param event_string:
+                string that describes an event
+
+        :return:
+                created event object with id.
+        """
+        event_json = self.service.events().quickAdd(calendarId=self.calendar, text=event_string).execute()
+        return EventSerializer.to_object(event_json)
 
     def delete_event(self, event):
-        return self.service.events().delete(calendarId=self.calendar, eventId=event.get_id()).execute()
+        """ Deletes an event.
+
+        :param event:
+                event object with set event_id.
+        """
+        if event.event_id() is None:
+            raise ValueError('Event has to have event_id to be deleted.')
+        self.service.events().delete(calendarId=self.calendar, eventId=event.id()).execute()
 
     def get_events(self, time_min=None, time_max=None, order_by='startTime', timezone=str(get_localzone())):
+        """ Lists events
+
+        :param time_min:
+                staring date/datetime
+        :param time_max:
+                ending date/datetime
+        :param order_by:
+                order of the events. Possible values: "startTime", "updated".
+        :param timezone:
+                timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
+                the computers configured local timezone(if any) is used.
+        :return:
+        """
         time_min = time_min or datetime.datetime.utcnow()
         time_max = time_max or time_min + relativedelta(years=1)
 
@@ -97,4 +150,25 @@ class GoogleCalendar:
         return res
 
     def list_event_colors(self):
+        """List allowed event colors for the calendar."""
         return self.service.colors().get().execute()['event']
+
+    def __iter__(self):
+        return iter(self.get_events())
+
+    def __getitem__(self, r):
+        if isinstance(r, slice):
+            time_min, time_max, order_by = r.start or None, r.stop or None, r.step or 'startTime'
+        elif isinstance(r, (datetime.date, datetime.datetime)):
+            time_min, time_max, order_by = r, None, 'startTime'
+        else:
+            return NotImplemented
+
+        if (time_min and not isinstance(time_min, datetime.date)) \
+                or (time_max and not isinstance(time_max, datetime.date)) \
+                or not isinstance(order_by, str) or order_by not in self._LIST_ORDERS:
+            raise ValueError('Calendar indexing is in the following format:  time_min[:time_max[:order_by],'
+                             ' where time_min and time_max are date/datetime objects'
+                             ' and order_by is one of "startTime" or "updated" strings.')
+
+        return self.get_events(time_min, time_max, order_by)

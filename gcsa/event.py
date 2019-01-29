@@ -2,7 +2,7 @@ from tzlocal import get_localzone
 from datetime import datetime, date, timedelta
 
 from .attachment import Attachment
-from .reminder import PopupReminder, EmailReminder
+from .reminders import PopupReminder, EmailReminder
 from util.date_time_util import insure_localisation
 
 
@@ -58,17 +58,17 @@ class Event:
         :param location:
                 geographic location of the event as free-form text.
         :param recurrence:
-                RRULE/RDATE/EXRULE/EXDATE string or list of such strings. TODO link to code.
+                RRULE/RDATE/EXRULE/EXDATE string or list of such strings. See :py:mod:`~gcsa.recurrence`
         :param color:
                 color id referring to an entry from colors endpoint (list_event_colors)
         :param visibility:
                 visibility of the event. Default is default visibility for events on the calendar.
         :param gadget:
-                a gadget that extends the event. TODO link to code.
+                a gadget that extends the event. See :py:class:`~gcsa.gadget.Gadget`
         :param attachments:
-                attachment or list of attachments. TODO link to code.
+                attachment or list of attachments. See :py:class:`~gcsa.attachment.Attachment`
         :param reminders:
-                reminder or list of reminder objects. TODO link to code.
+                reminder or list of reminder objects. See :py:mod:`~gcsa.reminders`
         :param default_reminders:
                 whether the default reminders of the calendar apply to the event.
         :param minutes_before_popup_reminder:
@@ -123,19 +123,24 @@ class Event:
         if minutes_before_email_reminder:
             self.add_email_reminder(minutes_before_email_reminder)
 
-    def get_id(self):
+    @property
+    def id(self):
         return self.event_id
 
     def add_attachment(self, file_url, title, mime_type):
+        """Adds attachment to an event. See :py:class:`~gcsa.attachment.Attachment`"""
         self.attachments.append(Attachment(title=title, file_url=file_url, mime_type=mime_type))
 
     def add_email_reminder(self, minutes_before_start=60):
+        """Adds email reminder to an event. See :py:class:`~gcsa.reminders.EmailReminder`"""
         self.add_reminder(EmailReminder(minutes_before_start))
 
     def add_popup_reminder(self, minutes_before_start=30):
+        """Adds popup reminder to an event. See :py:class:`~gcsa.reminders.PopupReminder`"""
         self.add_reminder(PopupReminder(minutes_before_start))
 
     def add_reminder(self, reminder):
+        """Adds reminder to an event. See :py:mod:`~gcsa.reminders`"""
         if len(self.reminders) > 4:
             raise ValueError('The maximum number of override reminders is 5.')
         self.reminders.append(reminder)

@@ -4,42 +4,38 @@
 [![Documentation Status](https://readthedocs.org/projects/google-calendar-simple-api/badge/?version=latest)](https://google-calendar-simple-api.readthedocs.io/en/latest/?badge=latest)
   
 
-Simple adapter for https://github.com/googleapis/google-api-python-client
+`Google Calendar Simple API` or `gcsa` is a library that simplifies event management in a Google Calendars.
+It is a Pythonic object oriented adapter for the [official API](https://github.com/googleapis/google-api-python-client).
 
-Example usege:
 
-    from beautiful_date import *
-    from gcsa import GoogleCalendar, Event, rule, DAILY
-    
-    calendar = GoogleCalendar('kuzmovich.goog@gmail.com')
-    event = Event("Breakfast", start=12/Dec/2018, recurrence=rule(freq=DAILY))
+### Installation
+
+    pip install gcsa
+
+### Example usage
+
+
+    calendar = GoogleCalendar('your_email@gmail.com')
+    event = Event(
+        'Breakfast',
+        start=date(2019, 1, 1),
+        recurrence=Recurrence.rule(freq=DAILY)),
+        minutes_before_email_reminder=50
+    )
+
     calendar.add_event(event)
-    
-    ...
-    
+
     for event in calendar:
-        print(event.start, event.summary)
-        repr(event)  # => <Event 'Breakfast' at 12/Dec/2018>
-
-The idea is to keep all the functionality of the original API, but simplify implementation of the most popular cases, provide Pythonic API:
-
-Front-end:
-
-   - Events management:
-      - Pythonic, object-oriented events interface
-      - list, create, delete, update, quick add (by string like "Appointment at Somewhere on June 3rd 10am-10:25am" (googles text processing, not mine. Maybe will add some features))
-   - Recurrence:
-      - Pythonic, object-oriented recurrence interface
-   - Simple, intuitive incode documetation
-
-Back-end:
-
-   - Credentials management
-   - Timezones management:
-      - Assuring timezone on datetime objects
-      - Find timezone of the PC and use it as a default
-   - Serialization and deserialization of event, recurrence, calendar, ... objects.
+        print(event)
 
 
-![alt tag](http://alfaraj-group.com/wp-content/uploads/2016/09/underConstruction.png)
+See [documentation](https://google-calendar-simple-api.readthedocs.io/en/latest/?badge=latest)
+for more parameters and functionality.
 
+**Suggestion**: use [beautiful_date](https://github.com/beautiful-everything/beautiful-date) to creat 
+`date` and `datetime` objects in your projects (*because its beautiful... just like you*).
+
+
+### References
+
+Template for `setup.py` was taken from [kennethreitz/setup.py](https://github.com/kennethreitz/setup.py)
