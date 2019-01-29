@@ -1,5 +1,5 @@
 class Attachment:
-    SUPPORTED_MIME_TYPES = [
+    _SUPPORTED_MIME_TYPES = [
         "application/vnd.google-apps.audio",
         "application/vnd.google-apps.document",  # Google Docs
         "application/vnd.google-apps.drawing",  # Google Drawing
@@ -19,21 +19,28 @@ class Attachment:
     ]
 
     def __init__(self, title, file_url, mime_type, icon_link=None, file_id=None):
-        """File attachments for the event.
+        """File attachment for the event.
 
         Currently only Google Drive attachments are supported.
 
-        :param title: attachment title
-        :param file_url: a link for opening the file in a relevant Google editor or viewer.
-        :param mime_type: internet media type (MIME type) of the attachment TODO add link https://developers.google.com/drive/api/v3/mime-types
-        :param icon_link: URL link to the attachment's icon (read only)
-        :param file_id: id of the attached file (read only)
+        :param title:
+                attachment title
+        :param file_url:
+                a link for opening the file in a relevant Google editor or viewer.
+        :param mime_type:
+                internet media type (MIME type) of the attachment. See  `available MIME types`_
+        :param icon_link:
+                URL link to the attachment's icon (read only)
+        :param file_id:
+                id of the attached file (read only)
 
         .. note: "read only" means that Attachment has given property only
                  when received from the existing event in the calendar.
+
+        .. _`available MIME types`: https://developers.google.com/drive/api/v3/mime-types
         """
 
-        if mime_type not in Attachment.SUPPORTED_MIME_TYPES:
+        if mime_type not in Attachment._SUPPORTED_MIME_TYPES:
             raise ValueError("Mime type {} is not supported.".format(mime_type))
 
         self.title = title

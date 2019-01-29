@@ -6,7 +6,7 @@ import sys
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '0.1'
+VERSION = '0.1.2'
 
 
 class UploadCommand(Command):
@@ -66,7 +66,7 @@ class Doctest(Command):
         sph.build()
 
 
-with open('README.md') as f:
+with open('README.rst') as f:
     long_description = ''.join(f.readlines())
 
 setup(
