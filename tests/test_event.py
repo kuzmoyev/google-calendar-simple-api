@@ -1,10 +1,10 @@
 from unittest import TestCase
-from beautiful_date import Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, Nov, Dec, hours, days
+from beautiful_date import Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, Dec, hours, days
 
 from gcsa.attachment import Attachment
 from gcsa.event import Event, Visibility
 from gcsa.recurrence import Recurrence, DAILY, SU, SA, MONDAY
-from gcsa.reminder import PopupReminder, EmailReminder
+from gcsa.reminders import PopupReminder, EmailReminder
 from gcsa.serializers.event_serializer import EventSerializer
 from util.date_time_util import insure_localisation
 

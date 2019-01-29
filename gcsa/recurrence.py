@@ -133,6 +133,52 @@ class Recurrence:
             by_set_pos=None,
             week_start=DEFAULT_WEEK_START
     ):
+        """This property defines a rule or repeating pattern for recurring events.
+
+        :param freq:
+                identifies the type of recurrence rule. Possible values are HOURLY,
+                MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY. Default: DAILY
+        :param interval:
+                positive integer representing how often the recurrence rule repeats
+        :param count:
+                number of occurrences at which to range-bound the recurrence
+        :param by_second:
+                second or list of seconds within a minute. Valid values are 0 to 60
+        :param by_minute:
+                minute or list of minutes within a hour. Valid values are 0 to 59
+        :param by_hour:
+                hour or list of hours of the day. Valid values are 0 to 23
+        :param by_week_day:
+                day or list of days of the week.
+                Possible values: :py:class:~SUNDAY, :py:class:~MONDAY, :py:class:~TUESDAY, :py:class:~WEDNESDAY,
+                :py:class:~THURSDAY ,:py:class:~FRIDAY, :py:class:~SATURDAY
+        :param by_month_day:
+                day or list of days of the month. Valid values are 1 to 31 or -31 to -1.
+                For example, -10 represents the tenth to the last day of the month.
+        :param by_year_day:
+                day or list of days of the year. Valid values are 1 to 366 or -366 to -1.
+                For example, -1 represents the last day of the year.
+        :param by_week:
+                ordinal or list of ordinals specifying weeks of the year. Valid values are 1 to 53 or -53 to -1.
+        :param by_month:
+                month or list of months of the year. Valid values are 1 to 12.
+        :param by_set_pos:
+                value or list of values which corresponds to the nth occurrence within the set of events
+                specified by the rule. Valid values are 1 to 366 or -366 to -1.
+                It can only be used in conjunction with another by_xxx parameter.
+        :param week_start:
+                the day on which the workweek starts.
+                Possible values: :py:class:~SUNDAY, :py:class:~MONDAY, :py:class:~TUESDAY, :py:class:~WEDNESDAY,
+                :py:class:~THURSDAY ,:py:class:~FRIDAY, :py:class:~SATURDAY
+
+        :return:
+                string representing specified recurrence rule in `RRULE format`_.
+
+        .. note:: If none of the by_day, by_month_day, or by_year_day are specified, the day is gotten from start date.
+
+
+        .. _`RRULE format`: https://tools.ietf.org/html/rfc5545#section-3.8.5
+        """
         return 'RRULE:' + Recurrence._rule(freq, interval, count, by_second, by_minute, by_hour, by_week_day,
                                            by_month_day, by_year_day, by_week, by_month, by_set_pos, week_start)
 
@@ -152,31 +198,121 @@ class Recurrence:
             by_set_pos=None,
             week_start=DEFAULT_WEEK_START
     ):
+        """This property defines an exclusion rule or repeating pattern for recurring events.
+
+        :param freq:
+                identifies the type of recurrence rule. Possible values are HOURLY,
+                MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY. Default: DAILY
+        :param interval:
+                positive integer representing how often the recurrence rule repeats
+        :param count:
+                number of occurrences at which to range-bound the recurrence
+        :param by_second:
+                second or list of seconds within a minute. Valid values are 0 to 60
+        :param by_minute:
+                minute or list of minutes within a hour. Valid values are 0 to 59
+        :param by_hour:
+                hour or list of hours of the day. Valid values are 0 to 23
+        :param by_week_day:
+                day or list of days of the week.
+                Possible values: :py:class:~SUNDAY, :py:class:~MONDAY, :py:class:~TUESDAY, :py:class:~WEDNESDAY,
+                :py:class:~THURSDAY ,:py:class:~FRIDAY, :py:class:~SATURDAY
+        :param by_month_day:
+                day or list of days of the month. Valid values are 1 to 31 or -31 to -1.
+                For example, -10 represents the tenth to the last day of the month.
+        :param by_year_day:
+                day or list of days of the year. Valid values are 1 to 366 or -366 to -1.
+                For example, -1 represents the last day of the year.
+        :param by_week:
+                ordinal or list of ordinals specifying weeks of the year. Valid values are 1 to 53 or -53 to -1.
+        :param by_month:
+                month or list of months of the year. Valid values are 1 to 12.
+        :param by_set_pos:
+                value or list of values which corresponds to the nth occurrence within the set of events
+                specified by the rule. Valid values are 1 to 366 or -366 to -1.
+                It can only be used in conjunction with another by_xxx parameter.
+        :param week_start:
+                the day on which the workweek starts.
+                Possible values: :py:class:~SUNDAY, :py:class:~MONDAY, :py:class:~TUESDAY, :py:class:~WEDNESDAY,
+                :py:class:~THURSDAY ,:py:class:~FRIDAY, :py:class:~SATURDAY
+
+        :return:
+                string representing specified recurrence rule in `RRULE format`_.
+
+        .. note:: If none of the by_day, by_month_day, or by_year_day are specified, the day is gotten from start date.
+
+
+        .. _`RRULE format`: https://tools.ietf.org/html/rfc5545#section-3.8.5
+        """
         return 'EXRULE:' + Recurrence._rule(freq, interval, count, by_second, by_minute, by_hour, by_week_day,
                                             by_month_day, by_year_day, by_week, by_month, by_set_pos, week_start)
 
     @staticmethod
     def dates(ds):
+        """Converts date(s) set to RDATE format.
+
+        :param ds: date/datetime object or list of date/datetime objects
+        :return: RDATE string of dates.
+        """
         return 'RDATE;' + Recurrence._dates(ds)
 
     @staticmethod
     def times(dts, timezone=str(get_localzone())):
+        """Converts datetime(s) set to RDATE format.
+
+        :param dts: datetime object or list of datetime objects
+        :param timezone: Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
+                         the computers configured local timezone(if any) is used.
+        :return: RDATE string of datetimes with specified timezone.
+        """
         return 'RDATE;' + Recurrence._times(dts, timezone)
 
     @staticmethod
     def periods(ps, timezone=str(get_localzone())):
+        """Converts date period(s) to RDATE format.
+
+        Period is defined as tuple of starting date/datetime and ending date/datetime or duration as Duration object:
+            (date/datetime, date/datetime/Duration)
+
+        :param ps: period or list of periods.
+        :param timezone: Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
+                         the computers configured local timezone(if any) is used.
+        :return: RDATE string of periods.
+        """
         return 'RDATE;' + Recurrence._periods(ps, timezone)
 
     @staticmethod
     def exclude_dates(ds):
+        """Converts date(s) set to EXDATE format.
+
+        :param ds: date/datetime object or list of date/datetime objects
+        :return: EXDATE string of dates.
+        """
         return 'EXDATE;' + Recurrence._dates(ds)
 
     @staticmethod
     def exclude_times(dts, timezone=str(get_localzone())):
+        """Converts datetime(s) set to EXDATE format.
+
+        :param dts: datetime object or list of datetime objects
+        :param timezone: Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
+                         the computers configured local timezone(if any) is used.
+        :return: EXDATE string of datetimes with specified timezone.
+        """
         return 'EXDATE;' + Recurrence._times(dts, timezone)
 
     @staticmethod
     def exclude_periods(ps, timezone=str(get_localzone())):
+        """Converts date period(s) to EXDATE format.
+
+        Period is defined as tuple of starting date/datetime and ending date/datetime or duration as Duration object:
+            (date/datetime, date/datetime/Duration)
+
+        :param ps: period or list of periods.
+        :param timezone: Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
+                         the computers configured local timezone(if any) is used.
+        :return: EXDATE string of periods.
+        """
         return 'EXDATE;' + Recurrence._periods(ps, timezone)
 
     @staticmethod
@@ -284,7 +420,9 @@ class Recurrence:
         :param by_hour:
                 hour or list of hours of the day. Valid values are 0 to 23
         :param by_week_day:
-                day or list of days of the week. #TODO link to weekday docs
+                day or list of days of the week.
+                Possible values: :py:class:~SUNDAY, :py:class:~MONDAY, :py:class:~TUESDAY, :py:class:~WEDNESDAY,
+                :py:class:~THURSDAY ,:py:class:~FRIDAY, :py:class:~SATURDAY
         :param by_month_day:
                 day or list of days of the month. Valid values are 1 to 31 or -31 to -1.
                 For example, -10 represents the tenth to the last day of the month.
@@ -300,12 +438,17 @@ class Recurrence:
                 specified by the rule. Valid values are 1 to 366 or -366 to -1.
                 It can only be used in conjunction with another by_xxx parameter.
         :param week_start:
-                the day on which the workweek starts. #TODO link to weekday docs
+                the day on which the workweek starts.
+                Possible values: :py:class:~SUNDAY, :py:class:~MONDAY, :py:class:~TUESDAY, :py:class:~WEDNESDAY,
+                :py:class:~THURSDAY ,:py:class:~FRIDAY, :py:class:~SATURDAY
 
         :return:
-                string representing specified recurrence rule in RRULE format. #TODO add link to docs https://tools.ietf.org/html/rfc5545#section-3.8.5
+                string representing specified recurrence rule in `RRULE format`_.
 
         .. note:: If none of the by_day, by_month_day, or by_year_day are specified, the day is gotten from start date.
+
+
+        .. _`RRULE format`: https://tools.ietf.org/html/rfc5545#section-3.8.5
         """
 
         def assure_iterable(it):
