@@ -1,4 +1,4 @@
-import datetime
+from datetime import date, datetime
 import pickle
 import os.path
 
@@ -125,8 +125,14 @@ class GoogleCalendar:
                 the computers configured local timezone(if any) is used.
         :return:
         """
-        time_min = time_min or datetime.datetime.utcnow()
+        time_min = time_min or datetime.utcnow()
         time_max = time_max or time_min + relativedelta(years=1)
+
+        if not isinstance(time_min, datetime):
+            time_min = datetime.combine(time_min, datetime.min.time())
+
+        if not isinstance(time_max, datetime):
+            time_max = datetime.combine(time_max, datetime.max.time())
 
         time_min = insure_localisation(time_min, timezone).isoformat()
         time_max = insure_localisation(time_max, timezone).isoformat()
@@ -159,13 +165,13 @@ class GoogleCalendar:
     def __getitem__(self, r):
         if isinstance(r, slice):
             time_min, time_max, order_by = r.start or None, r.stop or None, r.step or 'startTime'
-        elif isinstance(r, (datetime.date, datetime.datetime)):
+        elif isinstance(r, (date, datetime)):
             time_min, time_max, order_by = r, None, 'startTime'
         else:
             return NotImplemented
 
-        if (time_min and not isinstance(time_min, datetime.date)) \
-                or (time_max and not isinstance(time_max, datetime.date)) \
+        if (time_min and not isinstance(time_min, date)) \
+                or (time_max and not isinstance(time_max, date)) \
                 or not isinstance(order_by, str) or order_by not in self._LIST_ORDERS:
             raise ValueError('Calendar indexing is in the following format:  time_min[:time_max[:order_by],'
                              ' where time_min and time_max are date/datetime objects'
