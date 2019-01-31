@@ -77,7 +77,7 @@ Event has to have ``event_id`` to be deleted. Events that you get from
 :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_events` method already have their ids.
 
 Attachments
-~~~~~~~~~~~
+-----------
 
 If you want to add and attachment(s) to your event, just create :py:class:`~gcsa.attachment.Attachment` (s) and pass
 as a ``attachments`` parameter:
@@ -106,7 +106,7 @@ You can pass multiple attachments at once in a list.
 
 
 Reminders
-~~~~~~~~~
+---------
 
 To add reminder(s) to an event you can create :py:class:`~gcsa.reminders.EmailReminder` or
 :py:class:`~gcsa.reminders.PopupReminder` and pass them as a ``reminders`` parameter (single reminder
@@ -153,13 +153,6 @@ To use default reminders of the calendar, set ``default_reminders`` parameter of
 to ``True``.
 
 .. note:: You can add up to 5 reminders to one event.
-
-
-
-Recurrence
-~~~~~~~~~~
-
-
 
 
 

@@ -31,6 +31,7 @@ Contents
 
    installation
    event_management
+   recurrence_tutorial
    code
 
 Indices and tables
