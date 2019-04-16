@@ -97,13 +97,13 @@ setup(
         "pyasn1-modules==0.2.4",
         "python-dateutil==2.7.2",
         "pytz==2018.9",
-        "requests==2.21.0",
+        "requests==2.22.0",
         "requests-oauthlib==1.2.0",
         "rsa==4.0",
         "six==1.11.0",
         "tzlocal==1.5.1",
         "uritemplate==3.0.0",
-        "urllib3==1.24.1"
+        "urllib3==1.25.3"
     ],
     tests_require=[
         "pytest"
