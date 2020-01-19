@@ -474,7 +474,7 @@ class Recurrence:
         if freq not in (HOURLY, MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY):
             raise ValueError('"freq" parameter must be one of HOURLY, MINUTELY, DAILY, WEEKLY, MONTHLY or YEARLY. '
                              '{} was provided'.format(freq))
-        if interval and (isinstance(interval, int) or interval < 1):
+        if interval and (not isinstance(interval, int) or interval < 1):
             raise ValueError('"interval" parameter must be a positive int. '
                              '{} was provided'.format(interval))
         if count and (not isinstance(count, int) or count < 1):
