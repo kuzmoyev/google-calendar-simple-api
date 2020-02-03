@@ -118,9 +118,9 @@ class Event:
         self.default_reminders = default_reminders
         self.other = other
 
-        if minutes_before_popup_reminder:
+        if minutes_before_popup_reminder is not None:
             self.add_popup_reminder(minutes_before_popup_reminder)
-        if minutes_before_email_reminder:
+        if minutes_before_email_reminder is not None:
             self.add_email_reminder(minutes_before_email_reminder)
 
     @property
