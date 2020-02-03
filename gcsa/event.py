@@ -80,7 +80,7 @@ class Event:
         """
 
         def assure_list(obj):
-            return obj if isinstance(obj, list) else obj or []
+            return [] if obj is None else obj if isinstance(obj, list) else [obj]
 
         self.timezone = timezone
         self.start = start
