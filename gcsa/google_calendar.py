@@ -107,7 +107,7 @@ class GoogleCalendar:
         :param event:
                 event object with set event_id.
         """
-        if event.event_id() is None:
+        if event.id is None:
             raise ValueError('Event has to have event_id to be deleted.')
         self.service.events().delete(calendarId=self.calendar, eventId=event.id).execute()
 
