@@ -90,7 +90,7 @@ setup(
         "google-auth==1.6.2",
         "google-auth-httplib2==0.0.3",
         "google-auth-oauthlib==0.2.0",
-        "httplib2==0.12.0",
+        "httplib2==0.18.0",
         "idna==2.8",
         "oauthlib==3.0.1",
         "pyasn1==0.4.5",
