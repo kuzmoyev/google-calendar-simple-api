@@ -26,7 +26,7 @@ Installation
 Example usage
 -------------
 
-::
+.. code-block:: python
 
     calendar = GoogleCalendar('your_email@gmail.com')
     event = Event(
