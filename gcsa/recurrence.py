@@ -115,7 +115,7 @@ class Recurrence:
         """This property defines a rule or repeating pattern for recurring events.
 
         :param freq:
-                identifies the type of recurrence rule. Possible values are HOURLY,
+                identifies the type of recurrence rule. Possible values are SECONDLY, HOURLY,
                 MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY. Default: DAILY
         :param interval:
                 positive integer representing how often the recurrence rule repeats
@@ -183,7 +183,7 @@ class Recurrence:
         """This property defines an exclusion rule or repeating pattern for recurring events.
 
         :param freq:
-                identifies the type of recurrence rule. Possible values are HOURLY,
+                identifies the type of recurrence rule. Possible values are SECONDLY, HOURLY,
                 MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY. Default: DAILY
         :param interval:
                 positive integer representing how often the recurrence rule repeats
@@ -314,8 +314,8 @@ class Recurrence:
 
         localized_datetimes = []
         for dt in dts:
-            if not (isinstance(dt, date) or isinstance(dt, datetime)):
-                msg = 'The datetimes object(s) must be datetime, not {!r}.'.format(dt.__class__.__name__)
+            if not isinstance(dt, (date, datetime)):
+                msg = 'The dts object(s) must be date or datetime, not {!r}.'.format(dt.__class__.__name__)
                 raise TypeError(msg)
             localized_datetimes.append(insure_localisation(dt, timezone))
 
@@ -362,9 +362,9 @@ class Recurrence:
             start = insure_localisation(start, timezone)
             if isinstance(end, (date, datetime)):
                 end = insure_localisation(end, timezone)
-                pstr = '{}/{}'.format(start.strftime('%Y%m%dT%H%M%S'), end.format(start.strftime('%Y%m%dT%H%M%S')))
+                pstr = '{}/{}'.format(start.strftime('%Y%m%dT%H%M%SZ'), end.strftime('%Y%m%dT%H%M%SZ'))
             elif isinstance(end, Duration):
-                pstr = '{}/{}'.format(start.strftime('%Y%m%dT%H%M%S'), end)
+                pstr = '{}/{}'.format(start.strftime('%Y%m%dT%H%M%SZ'), end)
             else:
                 msg = 'The end object(s) must be a date, datetime or Duration, not {!r}.'.format(end.__class__.__name__)
                 raise TypeError(msg)
@@ -392,7 +392,7 @@ class Recurrence:
         """This property defines a rule or repeating pattern for recurring events.
 
         :param freq:
-                identifies the type of recurrence rule. Possible values are HOURLY,
+                identifies the type of recurrence rule. Possible values are SECONDLY, HOURLY,
                 MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY. Default: DAILY
         :param interval:
                 positive integer representing how often the recurrence rule repeats
@@ -439,7 +439,7 @@ class Recurrence:
         """
 
         def assure_iterable(it):
-            return it if isinstance(it, (list, tuple, set)) else [it] if it else []
+            return it if isinstance(it, (list, tuple, set)) else [it] if it is not None else []
 
         def check_all_type(it, type_, name):
             if any(not isinstance(o, type_) for o in it):
@@ -453,22 +453,22 @@ class Recurrence:
                 raise ValueError('"{}" parameter must be in range {}-{}.'
                                  .format(name, low, high))
             if nonzero and any(o == 0 for o in it):
-                raise ValueError('"{}" parameter must be a {} or list of {}s in range {}-{} and nonzero.'
-                                 .format(name, type_.__name__, type_.__name__, low, high))
+                raise ValueError('"{}" parameter must be in range {}-{} and nonzero.'
+                                 .format(name, low, high))
 
         def to_string(values):
             return ','.join(map(str, values)) if values else None
 
-        if freq not in (HOURLY, MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY):
-            raise ValueError('"freq" parameter must be one of HOURLY, MINUTELY, DAILY, WEEKLY, MONTHLY or YEARLY. '
-                             '{} was provided'.format(freq))
-        if interval and (not isinstance(interval, int) or interval < 1):
+        if freq not in (SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY):
+            raise ValueError('"freq" parameter must be one of SECONDLY, HOURLY, MINUTELY, DAILY, '
+                             'WEEKLY, MONTHLY or YEARLY. {} was provided'.format(freq))
+        if interval is not None and (not isinstance(interval, int) or interval < 1):
             raise ValueError('"interval" parameter must be a positive int. '
                              '{} was provided'.format(interval))
-        if count and (not isinstance(count, int) or count < 1):
+        if count is not None and (not isinstance(count, int) or count < 1):
             raise ValueError('"count" parameter must be a positive int. '
                              '{} was provided'.format(count))
-        if until:
+        if until is not None:
             if not isinstance(until, (date, datetime)):
                 raise TypeError('The until object must be a date or datetime, '
                                 'not {!r}.'.format(until.__class__.__name__))
