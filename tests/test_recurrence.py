@@ -4,6 +4,8 @@ from gcsa.recurrence import Recurrence, \
     SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY, \
     MO, TU, WE, TH, FR, SA, SU
 
+from beautiful_date import Jun
+
 
 class TestRecurrence(TestCase):
     def assert_rrule_equal(self, first, second, msg=None):
@@ -16,6 +18,8 @@ class TestRecurrence(TestCase):
         self.assert_rrule_equal(r(), 'FREQ=DAILY;WKST=SU')
         self.assert_rrule_equal(r(freq=WEEKLY), 'FREQ=WEEKLY;WKST=SU')
         self.assert_rrule_equal(r(count=5), 'FREQ=DAILY;COUNT=5;WKST=SU')
+        self.assert_rrule_equal(r(until=14 / Jun / 2020), 'FREQ=DAILY;UNTIL=20200614T000000Z;WKST=SU')
+        self.assert_rrule_equal(r(until=(14 / Jun / 2020)[15:49]), 'FREQ=DAILY;UNTIL=20200614T154900Z;WKST=SU')
         self.assert_rrule_equal(r(by_second=13), 'FREQ=DAILY;BYSECOND=13;WKST=SU')
         self.assert_rrule_equal(r(by_minute=44), 'FREQ=DAILY;BYMINUTE=44;WKST=SU')
         self.assert_rrule_equal(r(by_hour=22), 'FREQ=DAILY;BYHOUR=22;WKST=SU')
