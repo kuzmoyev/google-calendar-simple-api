@@ -7,7 +7,11 @@ It is a Pythonic object oriented adapter for the `official API`_.
 Example usage
 -------------
 
-::
+.. code-block:: python
+
+    from gcsa.google_calendar import GoogleCalendar
+    from gcsa.event import Event
+    from gcsa.recurrence import Recurrence, DAILY
 
     calendar = GoogleCalendar('your_email@gmail.com')
     event = Event(

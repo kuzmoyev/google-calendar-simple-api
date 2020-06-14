@@ -21,7 +21,7 @@ These methods return strings in ``RRULE`` format that you can pass as a ``recurr
 to the :py:class:`~gcsa.event.Event` objects. You can pass one string or list of strings.
 For example:
 
-::
+.. code-block:: python
 
    Event('Breakfast',
          (1/Jan/2019)[9:00],
@@ -30,7 +30,7 @@ For example:
 
 or
 
-::
+.. code-block:: python
 
    Event('Breakfast',
          (1/Jan/2019)[9:00],
@@ -48,7 +48,7 @@ Examples
 You will need to import :py:class:`~gcsa.recurrence.Recurrence` class and optionally other
 auxiliary classes and objects:
 
-::
+.. code-block:: python
 
     from gcsa.recurrence import Recurrence
 
@@ -70,34 +70,34 @@ and adapted to ``gcsa``.
 
 `Daily for 10 occurrences`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=DAILY, count=10)
 
 or as ``DAILY`` is a default frequency:
 
-::
+.. code-block:: python
 
     Recurrence.rule(count=10)
 
 
 `Every other day`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=DAILY, interval=2)
 
 
 `Every 10 days, 5 occurrences`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(count=5, interval=10)
 
 
 `Every day in January`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=YEARLY,
                     by_month=1,
@@ -105,27 +105,27 @@ or as ``DAILY`` is a default frequency:
 
 or
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=DAILY, by_month=1)
 
 
 `Weekly for 10 occurrences`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=WEEKLY, count=10)
 
 `Weekly on Tuesday and Thursday`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=WEEKLY,
                     by_week_day=[TU, TH])
 
 `Every other week on Monday, Wednesday, and Friday`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=WEEKLY,
                     interval=2,
@@ -134,7 +134,7 @@ or
 
 `Every other week on Tuesday and Thursday, for 8 occurrences`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=WEEKLY,
                     interval=2,
@@ -143,7 +143,7 @@ or
 
 `Monthly on the first Friday for 10 occurrences`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=MONTHLY,
                     count=10,
@@ -151,7 +151,7 @@ or
 
 `Every other month on the first and last Sunday of the month for 10 occurrences`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=MONTHLY,
                     interval=2,
@@ -161,7 +161,7 @@ or
 
 `Monthly on the second-to-last Monday of the month for 6 months`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=MONTHLY,
                     count=6,
@@ -170,7 +170,7 @@ or
 
 `Monthly on the third-to-the-last day of the month`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=MONTHLY,
                     by_month_day=-3)
@@ -178,7 +178,7 @@ or
 
 `Monthly on the 2nd and 15th of the month for 10 occurrences`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=MONTHLY,
                     count=10,
@@ -187,7 +187,7 @@ or
 
 `Monthly on the first and last day of the month for 10 occurrences`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=MONTHLY,
                     count=10,
@@ -195,7 +195,7 @@ or
 
 `Every 18 months on the 10th thru 15th of the month for 10 occurrences`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=MONTHLY,
                     interval=18,
@@ -205,7 +205,7 @@ or
 
 `Every Tuesday, every other month`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=MONTHLY,
                     interval=2,
@@ -214,7 +214,7 @@ or
 
 `Yearly in June and July for 10 occurrences`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=YEARLY,
                     count=10,
@@ -223,7 +223,7 @@ or
 
 `Every third year on the 1st, 100th, and 200th day for 10 occurrences`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=YEARLY,
                     interval=3,
@@ -233,7 +233,7 @@ or
 
 `Every 20th Monday of the year`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=YEARLY,
                     by_week_day=MO(20))
@@ -241,7 +241,7 @@ or
 
 `Monday of week number 20 (where the default start of the week is Monday)`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=YEARLY,
                     by_week=20,
@@ -250,7 +250,7 @@ or
 
 `Every Thursday in March`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=YEARLY,
                     by_month=3,
@@ -260,7 +260,7 @@ or
 `The third instance into the month of one of Tuesday, Wednesday, or
 Thursday, for the next 3 months`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=MONTHLY,
                     count=3,
@@ -270,7 +270,7 @@ Thursday, for the next 3 months`:
 
 `The second-to-last weekday of the month`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=MONTHLY,
                     by_week_day=[MO, TU, WE, TH, FR],
@@ -279,7 +279,7 @@ Thursday, for the next 3 months`:
 
 `Every 20 minutes from 9:00 AM to 4:40 PM every day`:
 
-::
+.. code-block:: python
 
     Recurrence.rule(freq=DAILY,
                     by_hour=list(range(9, 17)),
