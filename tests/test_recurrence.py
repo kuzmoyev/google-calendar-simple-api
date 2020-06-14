@@ -1,10 +1,10 @@
 from functools import partial
 from unittest import TestCase
-from beautiful_date import Jun, Jul, Mar
+
+from beautiful_date import Jun, Jul
 
 from gcsa.recurrence import Recurrence, \
-    SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY, \
-    MO, TU, WE, TH, FR, SA, SU, Duration
+    WEEKLY, MO, WE, TH, Duration
 
 r = Recurrence._rule
 t = partial(Recurrence._times, timezone='Europe/Prague')
@@ -161,4 +161,3 @@ class TestRecurrence(TestCase):
             p([("Hello", 15 / Jun / 2020)])
         with self.assertRaises(TypeError):
             p([(10 / Jun / 2020, 15 / Jun / 2020), ("Hello", 15 / Jun / 2020)])
-
