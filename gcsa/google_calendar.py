@@ -123,7 +123,6 @@ class GoogleCalendar:
         :param timezone:
                 timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
                 the computers configured local timezone(if any) is used.
-        :return:
         """
         time_min = time_min or datetime.utcnow()
         time_max = time_max or time_min + relativedelta(years=1)
@@ -137,7 +136,6 @@ class GoogleCalendar:
         time_min = insure_localisation(time_min, timezone).isoformat()
         time_max = insure_localisation(time_max, timezone).isoformat()
 
-        res = []
         page_token = None
         while True:
             events = self.service.events().list(calendarId=self.calendar,
@@ -148,12 +146,10 @@ class GoogleCalendar:
                                                 pageToken=page_token).execute()
             for event_json in events['items']:
                 event = EventSerializer(event_json).get_object()
-                res.append(event)
+                yield event
             page_token = events.get('nextPageToken')
             if not page_token:
                 break
-
-        return res
 
     def list_event_colors(self):
         """List allowed event colors for the calendar."""
