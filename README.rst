@@ -1,12 +1,24 @@
 Google Calendar Simple API
 ==========================
 
-.. image:: https://travis-ci.com/kuzmoyev/Google-Calendar-Simple-API.svg?branch=master
-    :target: https://travis-ci.com/kuzmoyev/Google-Calendar-Simple-API
+
+.. image:: https://github.com/kuzmoyev/Google-Calendar-Simple-API/workflows/Tests/badge.svg
+    :target: https://github.com/kuzmoyev/Google-Calendar-Simple-API/actions
+    :alt: Tests
 
 .. image:: https://readthedocs.org/projects/google-calendar-simple-api/badge/?version=latest
     :target: https://google-calendar-simple-api.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+
+
+.. image:: https://pepy.tech/badge/gcsa
+    :target: https://pepy.tech/project/gcsa
+    :alt: Downloads
+
+.. image:: https://badge.fury.io/py/gcsa.svg
+    :target: https://badge.fury.io/py/gcsa
+    :alt: Downloads
+
 
 
 `Google Calendar Simple API` or `gcsa` is a library that simplifies event management in a Google Calendars.
@@ -22,13 +34,17 @@ Installation
 Example usage
 -------------
 
-::
+.. code-block:: python
+
+    from gcsa.google_calendar import GoogleCalendar
+    from gcsa.event import Event
+    from gcsa.recurrence import Recurrence, DAILY
 
     calendar = GoogleCalendar('your_email@gmail.com')
     event = Event(
         'Breakfast',
-        start=date(2019, 1, 1),
-        recurrence=Recurrence.rule(freq=DAILY)),
+        start=date(2020, 6, 14),
+        recurrence=Recurrence.rule(freq=DAILY),
         minutes_before_email_reminder=50
     )
 

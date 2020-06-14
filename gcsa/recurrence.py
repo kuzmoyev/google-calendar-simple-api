@@ -41,67 +41,45 @@ class Duration:
         return res
 
 
-class _DayOfTheWeekMeta(type):
-    """ Metaclass used for weekdays classes to override __str__ method of the class (not the instances),
-        so the weekday class' __str__ method returns corresponding weekday short form.
+class _DayOfTheWeek:
+    """Weekday representation. Optionally includes positive or negative integer
+    value that indicates the nth occurrence of a specific day within the "MONTHLY"
+    or "YEARLY"  recurrence rules.
 
         >>> str(SU)
         'SU'
 
         >>> str(FR)
         'FR'
+
+        >>> str(SU(4))
+        '4SU'
+
+        >>> str(SU(-1))
+        '-1SU'
     """
-    _short = None
 
-    def __str__(self):
-        return self._short
-
-
-class _DayOfTheWeek(metaclass=_DayOfTheWeekMeta):
-    _short = None
-
-    def __init__(self, n):
+    def __init__(self, short, n=None):
+        self.short = short
         self.n = n
 
+    def __call__(self, n):
+        return _DayOfTheWeek(self.short, n)
+
     def __str__(self):
-        return str(self.n) + self._short
+        if self.n is None:
+            return self.short
+        else:
+            return str(self.n) + self.short
 
 
-class SUNDAY(_DayOfTheWeek):
-    _short = 'SU'
-
-
-class MONDAY(_DayOfTheWeek):
-    _short = 'MO'
-
-
-class TUESDAY(_DayOfTheWeek):
-    _short = 'TU'
-
-
-class WEDNESDAY(_DayOfTheWeek):
-    _short = 'WE'
-
-
-class THURSDAY(_DayOfTheWeek):
-    _short = 'TH'
-
-
-class FRIDAY(_DayOfTheWeek):
-    _short = 'FR'
-
-
-class SATURDAY(_DayOfTheWeek):
-    _short = 'SA'
-
-
-SU = SUNDAY
-MO = MONDAY
-TU = TUESDAY
-WE = WEDNESDAY
-TH = THURSDAY
-FR = FRIDAY
-SA = SATURDAY
+SU = SUNDAY = _DayOfTheWeek('SU')
+MO = MONDAY = _DayOfTheWeek('MO')
+TU = TUESDAY = _DayOfTheWeek('TU')
+WE = WEDNESDAY = _DayOfTheWeek('WE')
+TH = THURSDAY = _DayOfTheWeek('TH')
+FR = FRIDAY = _DayOfTheWeek('FR')
+SA = SATURDAY = _DayOfTheWeek('SA')
 
 DEFAULT_WEEK_START = SUNDAY
 
@@ -122,6 +100,7 @@ class Recurrence:
             freq=DAILY,
             interval=None,
             count=None,
+            until=None,
             by_second=None,
             by_minute=None,
             by_hour=None,
@@ -136,12 +115,14 @@ class Recurrence:
         """This property defines a rule or repeating pattern for recurring events.
 
         :param freq:
-                identifies the type of recurrence rule. Possible values are HOURLY,
+                identifies the type of recurrence rule. Possible values are SECONDLY, HOURLY,
                 MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY. Default: DAILY
         :param interval:
                 positive integer representing how often the recurrence rule repeats
         :param count:
                 number of occurrences at which to range-bound the recurrence
+        :param until:
+                end date of recurrence
         :param by_second:
                 second or list of seconds within a minute. Valid values are 0 to 60
         :param by_minute:
@@ -179,7 +160,7 @@ class Recurrence:
 
         .. _`RRULE format`: https://tools.ietf.org/html/rfc5545#section-3.8.5
         """
-        return 'RRULE:' + Recurrence._rule(freq, interval, count, by_second, by_minute, by_hour, by_week_day,
+        return 'RRULE:' + Recurrence._rule(freq, interval, count, until, by_second, by_minute, by_hour, by_week_day,
                                            by_month_day, by_year_day, by_week, by_month, by_set_pos, week_start)
 
     @staticmethod
@@ -187,6 +168,7 @@ class Recurrence:
             freq=DAILY,
             interval=None,
             count=None,
+            until=None,
             by_second=None,
             by_minute=None,
             by_hour=None,
@@ -201,12 +183,14 @@ class Recurrence:
         """This property defines an exclusion rule or repeating pattern for recurring events.
 
         :param freq:
-                identifies the type of recurrence rule. Possible values are HOURLY,
+                identifies the type of recurrence rule. Possible values are SECONDLY, HOURLY,
                 MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY. Default: DAILY
         :param interval:
                 positive integer representing how often the recurrence rule repeats
         :param count:
                 number of occurrences at which to range-bound the recurrence
+        :param until:
+                end date of recurrence
         :param by_second:
                 second or list of seconds within a minute. Valid values are 0 to 60
         :param by_minute:
@@ -244,7 +228,7 @@ class Recurrence:
 
         .. _`RRULE format`: https://tools.ietf.org/html/rfc5545#section-3.8.5
         """
-        return 'EXRULE:' + Recurrence._rule(freq, interval, count, by_second, by_minute, by_hour, by_week_day,
+        return 'EXRULE:' + Recurrence._rule(freq, interval, count, until, by_second, by_minute, by_hour, by_week_day,
                                             by_month_day, by_year_day, by_week, by_month, by_set_pos, week_start)
 
     @staticmethod
@@ -330,8 +314,8 @@ class Recurrence:
 
         localized_datetimes = []
         for dt in dts:
-            if not (isinstance(dt, date) or isinstance(dt, datetime)):
-                msg = 'The datetimes object(s) must be datetime, not {!r}.'.format(dt.__class__.__name__)
+            if not isinstance(dt, (date, datetime)):
+                msg = 'The dts object(s) must be date or datetime, not {!r}.'.format(dt.__class__.__name__)
                 raise TypeError(msg)
             localized_datetimes.append(insure_localisation(dt, timezone))
 
@@ -378,9 +362,9 @@ class Recurrence:
             start = insure_localisation(start, timezone)
             if isinstance(end, (date, datetime)):
                 end = insure_localisation(end, timezone)
-                pstr = '{}/{}'.format(start.strftime('%Y%m%dT%H%M%S'), end.format(start.strftime('%Y%m%dT%H%M%S')))
+                pstr = '{}/{}'.format(start.strftime('%Y%m%dT%H%M%SZ'), end.strftime('%Y%m%dT%H%M%SZ'))
             elif isinstance(end, Duration):
-                pstr = '{}/{}'.format(start.strftime('%Y%m%dT%H%M%S'), end)
+                pstr = '{}/{}'.format(start.strftime('%Y%m%dT%H%M%SZ'), end)
             else:
                 msg = 'The end object(s) must be a date, datetime or Duration, not {!r}.'.format(end.__class__.__name__)
                 raise TypeError(msg)
@@ -393,6 +377,7 @@ class Recurrence:
             freq=DAILY,
             interval=None,
             count=None,
+            until=None,
             by_second=None,  # BYSECOND
             by_minute=None,  # BYMINUTE
             by_hour=None,  # BYHOUR
@@ -407,12 +392,14 @@ class Recurrence:
         """This property defines a rule or repeating pattern for recurring events.
 
         :param freq:
-                identifies the type of recurrence rule. Possible values are HOURLY,
+                identifies the type of recurrence rule. Possible values are SECONDLY, HOURLY,
                 MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY. Default: DAILY
         :param interval:
                 positive integer representing how often the recurrence rule repeats
         :param count:
                 number of occurrences at which to range-bound the recurrence
+        :param until:
+                end date of recurrence
         :param by_second:
                 second or list of seconds within a minute. Valid values are 0 to 60
         :param by_minute:
@@ -452,34 +439,43 @@ class Recurrence:
         """
 
         def assure_iterable(it):
-            return it if isinstance(it, (list, tuple, set)) else [it] if it else []
-
-        def check_all_type_and_range(it, type_, range_, name, nonzero=False):
-            low, high = range_
-            if any(not isinstance(o, type_) or not (low <= o <= high) for o in it):
-                raise ValueError('"{}" parameter must be a {} or list of {}s in range {}-{}.'
-                                 .format(name, type_.__name__, type_.__name__, low, high))
-            if nonzero and any(o == 0 for o in it):
-                raise ValueError('"{}" parameter must be a {} or list of {}s in range {}-{} and nonzero.'
-                                 .format(name, type_.__name__, type_.__name__, low, high))
+            return it if isinstance(it, (list, tuple, set)) else [it] if it is not None else []
 
         def check_all_type(it, type_, name):
             if any(not isinstance(o, type_) for o in it):
-                raise ValueError('"{}" parameter must be a {} or list of {}s.'
-                                 .format(name, type_.__name__, type_.__name__))
+                raise TypeError('"{}" parameter must be a {} or list of {}s.'
+                                .format(name, type_.__name__, type_.__name__))
 
-        def to_string(l):
-            return ','.join(map(str, l)) if l else None
+        def check_all_type_and_range(it, type_, range_, name, nonzero=False):
+            check_all_type(it, type_, name)
+            low, high = range_
+            if any(not (low <= o <= high) for o in it):
+                raise ValueError('"{}" parameter must be in range {}-{}.'
+                                 .format(name, low, high))
+            if nonzero and any(o == 0 for o in it):
+                raise ValueError('"{}" parameter must be in range {}-{} and nonzero.'
+                                 .format(name, low, high))
 
-        if freq not in (HOURLY, MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY):
-            raise ValueError('"freq" parameter must be one of HOURLY, MINUTELY, DAILY, WEEKLY, MONTHLY or YEARLY. '
-                             '{} was provided'.format(freq))
-        if interval and (isinstance(interval, int) or interval < 1):
+        def to_string(values):
+            return ','.join(map(str, values)) if values else None
+
+        if freq not in (SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY):
+            raise ValueError('"freq" parameter must be one of SECONDLY, HOURLY, MINUTELY, DAILY, '
+                             'WEEKLY, MONTHLY or YEARLY. {} was provided'.format(freq))
+        if interval is not None and (not isinstance(interval, int) or interval < 1):
             raise ValueError('"interval" parameter must be a positive int. '
                              '{} was provided'.format(interval))
-        if count and (not isinstance(count, int) or count < 1):
+        if count is not None and (not isinstance(count, int) or count < 1):
             raise ValueError('"count" parameter must be a positive int. '
                              '{} was provided'.format(count))
+        if until is not None:
+            if not isinstance(until, (date, datetime)):
+                raise TypeError('The until object must be a date or datetime, '
+                                'not {!r}.'.format(until.__class__.__name__))
+            else:
+                until = until.strftime("%Y%m%dT%H%M%SZ")
+        if count is not None and until is not None:
+            raise ValueError('"count" and "until" may not appear in one recurrence rule.')
 
         by_second = assure_iterable(by_second)
         check_all_type_and_range(by_second, int, (0, 60), "by_second")
@@ -491,7 +487,7 @@ class Recurrence:
         check_all_type_and_range(by_hour, int, (0, 23), "by_hour")
 
         by_week_day = assure_iterable(by_week_day)
-        check_all_type(by_week_day, (_DayOfTheWeek, _DayOfTheWeekMeta), "by_week_day")
+        check_all_type(by_week_day, _DayOfTheWeek, "by_week_day")
 
         by_month_day = assure_iterable(by_month_day)
         check_all_type_and_range(by_month_day, int, (-31, 31), "by_month_day", nonzero=True)
@@ -512,7 +508,7 @@ class Recurrence:
                                               by_week, by_month)):
             raise ValueError('"by_set_pos" parameter can only be used in conjunction with another by_xxx parameter.')
 
-        if not isinstance(week_start, (_DayOfTheWeek, _DayOfTheWeekMeta)):
+        if not isinstance(week_start, _DayOfTheWeek):
             raise ValueError('"week_start" parameter must be one of SUNDAY, MONDAY, etc. '
                              '{} was provided'.format(week_start))
 
@@ -521,6 +517,7 @@ class Recurrence:
         rule_properties = (
             ('INTERVAL', interval),
             ('COUNT', count),
+            ('UNTIL', until),
             ('BYSECOND', to_string(by_second)),
             ('BYMINUTE', to_string(by_minute)),
             ('BYHOUR', to_string(by_hour)),

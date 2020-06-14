@@ -29,7 +29,6 @@ class TestBaseSerializer(TestCase):
             BaseSerializer.assure_dict(json_object)
 
     def test_subclass(self):
-
         # __init_subclass__ was introduced in Python 3.6
         # In older versions tests are not executed
         import sys
@@ -48,14 +47,17 @@ class TestBaseSerializer(TestCase):
 
         with self.assertRaises(AssertionError):
             # type_ not defined
-            class AppleSerializer(BaseSerializer):
-                def __init__(self, apple):
-                    super().__init__(apple)
+            class PeachSerializer(BaseSerializer):
+                def __init__(self, peach):
+                    super().__init__(peach)
 
         with self.assertRaises(AssertionError):
+            class Watermelon:
+                pass
+
             # __init__ parameter should be "apple"
-            class AppleSerializer(BaseSerializer):
-                type_ = Apple
+            class WatermelonSerializer(BaseSerializer):
+                type_ = Watermelon
 
                 def __init__(self, peach):
                     super().__init__(peach)
