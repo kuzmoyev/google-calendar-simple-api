@@ -4,6 +4,7 @@ Google Calendar Simple API
 
 .. image:: https://github.com/kuzmoyev/Google-Calendar-Simple-API/workflows/Tests/badge.svg
     :target: https://github.com/kuzmoyev/Google-Calendar-Simple-API/actions
+    :alt: Tests
 
 .. image:: https://readthedocs.org/projects/google-calendar-simple-api/badge/?version=latest
     :target: https://google-calendar-simple-api.readthedocs.io/en/latest/?badge=latest
@@ -13,6 +14,12 @@ Google Calendar Simple API
 .. image:: https://pepy.tech/badge/gcsa
     :target: https://pepy.tech/project/gcsa
     :alt: Downloads
+
+.. image:: https://badge.fury.io/py/gcsa.svg
+    :target: https://badge.fury.io/py/gcsa
+    :alt: Downloads
+
+
 
 `Google Calendar Simple API` or `gcsa` is a library that simplifies event management in a Google Calendars.
 It is a Pythonic object oriented adapter for the `official API`_.
