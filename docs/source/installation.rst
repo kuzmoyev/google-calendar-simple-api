@@ -9,7 +9,7 @@ Installation
 
 To install ``gcsa`` run following command:
 
-::
+.. code-block:: bash
 
    pip install gcsa
 
@@ -45,7 +45,7 @@ Then it will list all events for one year starting today.
 For :code:`date`/:code:`datetime` objects you can use Pythons datetime_ module or as in the
 example beautiful_date_ library (*because it's beautiful... just like you*).
 
-::
+.. code-block:: python
 
     from gcsa.event import Event
     from gcsa.google_calendar import GoogleCalendar
@@ -79,7 +79,7 @@ example beautiful_date_ library (*because it's beautiful... just like you*).
 If you have put :code:`credentials.json` elsewhere (not in :code:`~/.credentials/`),
 you can specify the path to the credentials as a second argument of the :code:`GoogleCalendar`:
 
-::
+.. code-block:: python
 
     calendar = GoogleCalendar('your_email@gmail.com',
                               'path_to_credentials/credentials.json')

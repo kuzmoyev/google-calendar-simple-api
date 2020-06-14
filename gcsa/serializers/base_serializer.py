@@ -23,11 +23,11 @@ class BaseSerializer:
 
     @staticmethod
     def to_json(obj):
-        raise NotImplemented
+        raise NotImplementedError
 
     @staticmethod
     def to_object(json_):
-        raise NotImplemented
+        raise NotImplementedError
 
     @staticmethod
     def assure_dict(json_):

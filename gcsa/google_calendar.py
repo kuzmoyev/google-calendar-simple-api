@@ -107,7 +107,7 @@ class GoogleCalendar:
         :param event:
                 event object with set event_id.
         """
-        if event.event_id() is None:
+        if event.id is None:
             raise ValueError('Event has to have event_id to be deleted.')
         self.service.events().delete(calendarId=self.calendar, eventId=event.id).execute()
 
@@ -123,7 +123,6 @@ class GoogleCalendar:
         :param timezone:
                 timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
                 the computers configured local timezone(if any) is used.
-        :return:
         """
         time_min = time_min or datetime.utcnow()
         time_max = time_max or time_min + relativedelta(years=1)
@@ -137,7 +136,6 @@ class GoogleCalendar:
         time_min = insure_localisation(time_min, timezone).isoformat()
         time_max = insure_localisation(time_max, timezone).isoformat()
 
-        res = []
         page_token = None
         while True:
             events = self.service.events().list(calendarId=self.calendar,
@@ -148,12 +146,10 @@ class GoogleCalendar:
                                                 pageToken=page_token).execute()
             for event_json in events['items']:
                 event = EventSerializer(event_json).get_object()
-                res.append(event)
+                yield event
             page_token = events.get('nextPageToken')
             if not page_token:
                 break
-
-        return res
 
     def list_event_colors(self):
         """List allowed event colors for the calendar."""
@@ -173,7 +169,7 @@ class GoogleCalendar:
         if (time_min and not isinstance(time_min, date)) \
                 or (time_max and not isinstance(time_max, date)) \
                 or not isinstance(order_by, str) or order_by not in self._LIST_ORDERS:
-            raise ValueError('Calendar indexing is in the following format:  time_min[:time_max[:order_by],'
+            raise ValueError('Calendar indexing is in the following format:  time_min[:time_max[:order_by]],'
                              ' where time_min and time_max are date/datetime objects'
                              ' and order_by is one of "startTime" or "updated" strings.')
 

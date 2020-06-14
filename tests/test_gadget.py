@@ -103,4 +103,3 @@ class TestGadgetSerializer(TestCase):
         self.assertIsNone(gadget.display)
         self.assertIsNone(gadget.height)
         self.assertIsNone(gadget.width)
-
