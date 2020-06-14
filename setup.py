@@ -72,7 +72,7 @@ with open('README.rst') as f:
 setup(
     name='gcsa',
     version=VERSION,
-    keywords='google calendar simple api',
+    keywords='google calendar simple api recurrence',
     description='Simple API for Google Calendar management',
     long_description=long_description,
     author='Yevhen Kuzmovych',
