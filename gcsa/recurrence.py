@@ -122,6 +122,7 @@ class Recurrence:
             freq=DAILY,
             interval=None,
             count=None,
+            until=None,
             by_second=None,
             by_minute=None,
             by_hour=None,
@@ -142,6 +143,8 @@ class Recurrence:
                 positive integer representing how often the recurrence rule repeats
         :param count:
                 number of occurrences at which to range-bound the recurrence
+        :param until:
+                end date of recurrence
         :param by_second:
                 second or list of seconds within a minute. Valid values are 0 to 60
         :param by_minute:
@@ -179,7 +182,7 @@ class Recurrence:
 
         .. _`RRULE format`: https://tools.ietf.org/html/rfc5545#section-3.8.5
         """
-        return 'RRULE:' + Recurrence._rule(freq, interval, count, by_second, by_minute, by_hour, by_week_day,
+        return 'RRULE:' + Recurrence._rule(freq, interval, count, until, by_second, by_minute, by_hour, by_week_day,
                                            by_month_day, by_year_day, by_week, by_month, by_set_pos, week_start)
 
     @staticmethod
@@ -187,6 +190,7 @@ class Recurrence:
             freq=DAILY,
             interval=None,
             count=None,
+            until=None,
             by_second=None,
             by_minute=None,
             by_hour=None,
@@ -207,6 +211,8 @@ class Recurrence:
                 positive integer representing how often the recurrence rule repeats
         :param count:
                 number of occurrences at which to range-bound the recurrence
+        :param until:
+                end date of recurrence
         :param by_second:
                 second or list of seconds within a minute. Valid values are 0 to 60
         :param by_minute:
@@ -244,7 +250,7 @@ class Recurrence:
 
         .. _`RRULE format`: https://tools.ietf.org/html/rfc5545#section-3.8.5
         """
-        return 'EXRULE:' + Recurrence._rule(freq, interval, count, by_second, by_minute, by_hour, by_week_day,
+        return 'EXRULE:' + Recurrence._rule(freq, interval, count, until, by_second, by_minute, by_hour, by_week_day,
                                             by_month_day, by_year_day, by_week, by_month, by_set_pos, week_start)
 
     @staticmethod
@@ -393,6 +399,7 @@ class Recurrence:
             freq=DAILY,
             interval=None,
             count=None,
+            until=None,
             by_second=None,  # BYSECOND
             by_minute=None,  # BYMINUTE
             by_hour=None,  # BYHOUR
@@ -413,6 +420,8 @@ class Recurrence:
                 positive integer representing how often the recurrence rule repeats
         :param count:
                 number of occurrences at which to range-bound the recurrence
+        :param until:
+                end date of recurrence
         :param by_second:
                 second or list of seconds within a minute. Valid values are 0 to 60
         :param by_minute:
@@ -481,6 +490,13 @@ class Recurrence:
             raise ValueError('"count" parameter must be a positive int. '
                              '{} was provided'.format(count))
 
+        if until:
+            if not isinstance(until, (date, datetime)):
+                msg = 'The until object must be a date or datetime, not {!r}.'.format(end.__class__.__name__)
+                raise TypeError(msg)
+            else:
+                until = until.strftime("%Y%m%dT%H%M%SZ")
+
         by_second = assure_iterable(by_second)
         check_all_type_and_range(by_second, int, (0, 60), "by_second")
 
@@ -521,6 +537,7 @@ class Recurrence:
         rule_properties = (
             ('INTERVAL', interval),
             ('COUNT', count),
+            ('UNTIL', until),
             ('BYSECOND', to_string(by_second)),
             ('BYMINUTE', to_string(by_minute)),
             ('BYHOUR', to_string(by_hour)),
