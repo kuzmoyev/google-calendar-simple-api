@@ -441,22 +441,23 @@ class Recurrence:
         def assure_iterable(it):
             return it if isinstance(it, (list, tuple, set)) else [it] if it else []
 
+        def check_all_type(it, type_, name):
+            if any(not isinstance(o, type_) for o in it):
+                raise TypeError('"{}" parameter must be a {} or list of {}s.'
+                                .format(name, type_.__name__, type_.__name__))
+
         def check_all_type_and_range(it, type_, range_, name, nonzero=False):
+            check_all_type(it, type_, name)
             low, high = range_
-            if any(not isinstance(o, type_) or not (low <= o <= high) for o in it):
-                raise ValueError('"{}" parameter must be a {} or list of {}s in range {}-{}.'
-                                 .format(name, type_.__name__, type_.__name__, low, high))
+            if any(not (low <= o <= high) for o in it):
+                raise ValueError('"{}" parameter must be in range {}-{}.'
+                                 .format(name, low, high))
             if nonzero and any(o == 0 for o in it):
                 raise ValueError('"{}" parameter must be a {} or list of {}s in range {}-{} and nonzero.'
                                  .format(name, type_.__name__, type_.__name__, low, high))
 
-        def check_all_type(it, type_, name):
-            if any(not isinstance(o, type_) for o in it):
-                raise ValueError('"{}" parameter must be a {} or list of {}s.'
-                                 .format(name, type_.__name__, type_.__name__))
-
-        def to_string(l):
-            return ','.join(map(str, l)) if l else None
+        def to_string(values):
+            return ','.join(map(str, values)) if values else None
 
         if freq not in (HOURLY, MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY):
             raise ValueError('"freq" parameter must be one of HOURLY, MINUTELY, DAILY, WEEKLY, MONTHLY or YEARLY. '
@@ -469,8 +470,8 @@ class Recurrence:
                              '{} was provided'.format(count))
         if until:
             if not isinstance(until, (date, datetime)):
-                msg = 'The until object must be a date or datetime, not {!r}.'.format(until.__class__.__name__)
-                raise TypeError(msg)
+                raise TypeError('The until object must be a date or datetime, '
+                                'not {!r}.'.format(until.__class__.__name__))
             else:
                 until = until.strftime("%Y%m%dT%H%M%SZ")
         if count is not None and until is not None:
