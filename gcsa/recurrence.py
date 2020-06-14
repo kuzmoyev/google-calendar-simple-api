@@ -489,13 +489,14 @@ class Recurrence:
         if count and (not isinstance(count, int) or count < 1):
             raise ValueError('"count" parameter must be a positive int. '
                              '{} was provided'.format(count))
-
         if until:
             if not isinstance(until, (date, datetime)):
                 msg = 'The until object must be a date or datetime, not {!r}.'.format(until.__class__.__name__)
                 raise TypeError(msg)
             else:
                 until = until.strftime("%Y%m%dT%H%M%SZ")
+        if count is not None and until is not None:
+            raise ValueError('"count" and "until" may not appear in one recurrence rule.')
 
         by_second = assure_iterable(by_second)
         check_all_type_and_range(by_second, int, (0, 60), "by_second")
