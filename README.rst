@@ -1,8 +1,9 @@
 Google Calendar Simple API
 ==========================
 
-.. image:: https://travis-ci.com/kuzmoyev/Google-Calendar-Simple-API.svg?branch=master
-    :target: https://travis-ci.com/kuzmoyev/Google-Calendar-Simple-API
+
+.. image:: https://github.com/kuzmoyev/Google-Calendar-Simple-API/workflows/Tests/badge.svg
+    :target: https://github.com/kuzmoyev/Google-Calendar-Simple-API/actions
 
 .. image:: https://readthedocs.org/projects/google-calendar-simple-api/badge/?version=latest
     :target: https://google-calendar-simple-api.readthedocs.io/en/latest/?badge=latest
