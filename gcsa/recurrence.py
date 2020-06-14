@@ -492,7 +492,7 @@ class Recurrence:
 
         if until:
             if not isinstance(until, (date, datetime)):
-                msg = 'The until object must be a date or datetime, not {!r}.'.format(end.__class__.__name__)
+                msg = 'The until object must be a date or datetime, not {!r}.'.format(until.__class__.__name__)
                 raise TypeError(msg)
             else:
                 until = until.strftime("%Y%m%dT%H%M%SZ")
