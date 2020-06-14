@@ -31,3 +31,5 @@ class TestRecurrence(TestCase):
         self.assert_rrule_equal(r(by_month=4), 'FREQ=DAILY;BYMONTH=4;WKST=SU')
         self.assert_rrule_equal(r(by_set_pos=4, by_month=3), 'FREQ=DAILY;BYSETPOS=4;BYMONTH=3;WKST=SU')
         self.assert_rrule_equal(r(week_start=MO), 'FREQ=DAILY;WKST=MO')
+        self.assert_rrule_equal(r(week_start=MO(4)), 'FREQ=DAILY;WKST=4MO')
+        self.assert_rrule_equal(r(week_start=MO(-1)), 'FREQ=DAILY;WKST=-1MO')
