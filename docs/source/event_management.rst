@@ -8,7 +8,7 @@ Current version of `gcsa` allows you to create new events, delete existing event
 
 To do so, create a ``GoogleCalendar`` instance (see :ref:`installation` to get your credentials):
 
-::
+.. code-block:: python
 
     from gcsa.google_calendar import GoogleCalendar
 
@@ -19,7 +19,7 @@ then you can **list** existing events.
 This code will print out events for one year starting today:
 
 
-::
+.. code-block:: python
 
     for event in calendar:
         print(event)
@@ -27,13 +27,13 @@ This code will print out events for one year starting today:
 
 You can specify range of listed events in two ways:
 
-::
+.. code-block:: python
 
     calendar.get_event(start_date, end_date, order_by='updated')
 
 or
 
-::
+.. code-block:: python
 
     calendar[start_date:end_date:'updated']
 
@@ -44,7 +44,7 @@ or `'updated'`.
 
 You can **create** an event:
 
-::
+.. code-block:: python
 
     from beautiful_date import Apr
 
@@ -59,7 +59,7 @@ example beautiful_date_ library (*because it's beautiful... just like you*).
 
 Now you can **add** your event to the calendar:
 
-::
+.. code-block:: python
 
     calendar.add_event(event)
 
@@ -67,7 +67,7 @@ Now you can **add** your event to the calendar:
 To **delete** an event:
 
 
-::
+.. code-block:: python
 
     calendar.delete_event(event)
 
@@ -82,7 +82,7 @@ Attachments
 If you want to add and attachment(s) to your event, just create :py:class:`~gcsa.attachment.Attachment` (s) and pass
 as a ``attachments`` parameter:
 
-::
+.. code-block:: python
 
     from gcsa.attachment import Attachment
 
@@ -97,7 +97,7 @@ as a ``attachments`` parameter:
 
 You can pass multiple attachments at once in a list.
 
-::
+.. code-block:: python
 
     event = Event('Meeting',
                   start=(22/Apr/2019)[12:00],
@@ -113,7 +113,7 @@ To add reminder(s) to an event you can create :py:class:`~gcsa.reminders.EmailRe
 or list of reminders):
 
 
-::
+.. code-block:: python
 
 
     from gcsa.reminders import EmailReminder, PopupReminder
@@ -124,7 +124,7 @@ or list of reminders):
 
 or
 
-::
+.. code-block:: python
 
     event = Event('Meeting',
                   start=(22/Apr/2019)[12:00],
@@ -138,7 +138,7 @@ or
 You can also simply add reminders by specifying ``minutes_before_popup_reminder`` and/or
 ``minutes_before_email_reminder`` parameter of the :py:class:`~gcsa.event.Event` object:
 
-::
+.. code-block:: python
 
     event = Event('Meeting',
                   start=(22/Apr/2019)[12:00],
