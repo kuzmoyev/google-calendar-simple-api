@@ -1,0 +1,14 @@
+name: Python package
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Tests
+      run: |
+        python -m unittest -v tests/*.py
