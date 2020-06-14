@@ -29,11 +29,15 @@ Example usage
 
 .. code-block:: python
 
+    from gcsa.google_calendar import GoogleCalendar
+    from gcsa.event import Event
+    from gcsa.recurrence import Recurrence, DAILY
+
     calendar = GoogleCalendar('your_email@gmail.com')
     event = Event(
         'Breakfast',
-        start=date(2019, 1, 1),
-        recurrence=Recurrence.rule(freq=DAILY)),
+        start=date(2020, 6, 14),
+        recurrence=Recurrence.rule(freq=DAILY),
         minutes_before_email_reminder=50
     )
 
