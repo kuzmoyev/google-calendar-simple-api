@@ -41,67 +41,45 @@ class Duration:
         return res
 
 
-class _DayOfTheWeekMeta(type):
-    """ Metaclass used for weekdays classes to override __str__ method of the class (not the instances),
-        so the weekday class' __str__ method returns corresponding weekday short form.
+class _DayOfTheWeek:
+    """Weekday representation. Optionally includes positive or negative integer
+    value that indicates the nth occurrence of a specific day within the "MONTHLY"
+    or "YEARLY"  recurrence rules.
 
         >>> str(SU)
         'SU'
 
         >>> str(FR)
         'FR'
+
+        >>> str(SU(4))
+        '4SU'
+
+        >>> str(SU(-1))
+        '-1SU'
     """
-    _short = None
 
-    def __str__(self):
-        return self._short
-
-
-class _DayOfTheWeek(metaclass=_DayOfTheWeekMeta):
-    _short = None
-
-    def __init__(self, n):
+    def __init__(self, short, n=None):
+        self.short = short
         self.n = n
 
+    def __call__(self, n):
+        return _DayOfTheWeek(self.short, n)
+
     def __str__(self):
-        return str(self.n) + self._short
+        if self.n is None:
+            return self.short
+        else:
+            return str(self.n) + self.short
 
 
-class SUNDAY(_DayOfTheWeek):
-    _short = 'SU'
-
-
-class MONDAY(_DayOfTheWeek):
-    _short = 'MO'
-
-
-class TUESDAY(_DayOfTheWeek):
-    _short = 'TU'
-
-
-class WEDNESDAY(_DayOfTheWeek):
-    _short = 'WE'
-
-
-class THURSDAY(_DayOfTheWeek):
-    _short = 'TH'
-
-
-class FRIDAY(_DayOfTheWeek):
-    _short = 'FR'
-
-
-class SATURDAY(_DayOfTheWeek):
-    _short = 'SA'
-
-
-SU = SUNDAY
-MO = MONDAY
-TU = TUESDAY
-WE = WEDNESDAY
-TH = THURSDAY
-FR = FRIDAY
-SA = SATURDAY
+SU = SUNDAY = _DayOfTheWeek('SU')
+MO = MONDAY = _DayOfTheWeek('MO')
+TU = TUESDAY = _DayOfTheWeek('TU')
+WE = WEDNESDAY = _DayOfTheWeek('WE')
+TH = THURSDAY = _DayOfTheWeek('TH')
+FR = FRIDAY = _DayOfTheWeek('FR')
+SA = SATURDAY = _DayOfTheWeek('SA')
 
 DEFAULT_WEEK_START = SUNDAY
 
@@ -508,7 +486,7 @@ class Recurrence:
         check_all_type_and_range(by_hour, int, (0, 23), "by_hour")
 
         by_week_day = assure_iterable(by_week_day)
-        check_all_type(by_week_day, (_DayOfTheWeek, _DayOfTheWeekMeta), "by_week_day")
+        check_all_type(by_week_day, _DayOfTheWeek, "by_week_day")
 
         by_month_day = assure_iterable(by_month_day)
         check_all_type_and_range(by_month_day, int, (-31, 31), "by_month_day", nonzero=True)
@@ -529,7 +507,7 @@ class Recurrence:
                                               by_week, by_month)):
             raise ValueError('"by_set_pos" parameter can only be used in conjunction with another by_xxx parameter.')
 
-        if not isinstance(week_start, (_DayOfTheWeek, _DayOfTheWeekMeta)):
+        if not isinstance(week_start, _DayOfTheWeek):
             raise ValueError('"week_start" parameter must be one of SUNDAY, MONDAY, etc. '
                              '{} was provided'.format(week_start))
 
