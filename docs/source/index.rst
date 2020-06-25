@@ -17,7 +17,7 @@ Example usage
     event = Event(
         'Breakfast',
         start=date(2019, 1, 1),
-        recurrence=Recurrence.rule(freq=DAILY)),
+        recurrence=Recurrence.rule(freq=DAILY),
         minutes_before_email_reminder=50
     )
 
