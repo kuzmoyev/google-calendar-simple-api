@@ -76,7 +76,7 @@ setup(
     description='Simple API for Google Calendar management',
     long_description=long_description,
     author='Yevhen Kuzmovych',
-    author_email='kuzmpvich.goog@gmail.com',
+    author_email='kuzmovych.yevhen@gmail.com',
     license='MIT',
     url='https://github.com/kuzmoyev/Google-Calendar-Simple-API',
     zip_safe=False,
