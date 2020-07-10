@@ -118,6 +118,7 @@ setup(
         "requests==2.22.0",
         "requests-oauthlib==1.2.0",
         "rsa==4.0",
+        "sphinx-rtd-theme==0.5.0",
         "six==1.11.0",
         "snowballstemmer==1.2.1",
         "Sphinx==1.8.3",
