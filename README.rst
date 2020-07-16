@@ -33,6 +33,9 @@ Installation
 
 See `Getting started page`_ for more details.
 
+Example usage
+-------------
+
 List events
 ~~~~~~~~~~~
 
