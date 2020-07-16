@@ -29,3 +29,6 @@ jobs:
         run: |
           pytest
 
+      - name: Test docs build
+        run: |
+          sphinx-build -W docs/source docs/build
