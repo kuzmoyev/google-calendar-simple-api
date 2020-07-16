@@ -7,24 +7,47 @@ It is a Pythonic object oriented adapter for the `official API`_.
 Example usage
 -------------
 
+List events
+~~~~~~~~~~~
+
 .. code-block:: python
 
     from gcsa.google_calendar import GoogleCalendar
-    from gcsa.event import Event
-    from gcsa.recurrence import Recurrence, DAILY
 
     calendar = GoogleCalendar('your_email@gmail.com')
-    event = Event(
-        'Breakfast',
-        start=date(2019, 1, 1),
-        recurrence=Recurrence.rule(freq=DAILY),
-        minutes_before_email_reminder=50
-    )
-
-    calendar.add_event(event)
-
     for event in calendar:
         print(event)
+
+
+Create event
+~~~~~~~~~~~~
+
+.. code-block:: python
+
+    from gcsa.event import Event
+
+    event = Event(
+        'The Glass Menagerie',
+        start=datetime(2020, 7, 10, 19, 0),
+        location='Záhřebská 468/21'
+        minutes_before_popup_reminder=15
+    )
+    calendar.add_event(event)
+
+
+Create recurring event
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    from gcsa.recurrence import Recurrence, DAILY
+
+    event = Event(
+        'Breakfast',
+        start=date(2020, 7, 16),
+        recurrence=Recurrence.rule(freq=DAILY)
+    )
+    calendar.add_event(event)
 
 
 Contents
@@ -53,4 +76,4 @@ Template for `setup.py` was taken from `kennethreitz/setup.py`_.
 
 
 .. _kennethreitz/setup.py: https://github.com/kennethreitz/setup.py
-.. _`official API`: https://github.com/googleapis/google-api-python-client
+.. _`official API`: https://developers.google.com/calendar

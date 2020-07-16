@@ -1,7 +1,7 @@
 .. _installation:
 
-Installation and Quickstart
-============================
+Getting started
+===============
 
 
 Installation
@@ -31,7 +31,7 @@ Now you need to get your API credentials:
     .. note:: On the first run, your application will prompt you to the default browser
         to get permissions from you to use (see/edit) your calendar. This will create
         :code:`token.pickle` file in the same folder as your :code:`credentials.json`. So
-        don't forget to also add it to :code:`.gitignore` if it is in a git repository.
+        don't forget to also add it to :code:`.gitignore` if it is in a GIT repository.
 
 
 Quick example
