@@ -103,3 +103,17 @@ class TestGadgetSerializer(TestCase):
         self.assertIsNone(gadget.display)
         self.assertIsNone(gadget.height)
         self.assertIsNone(gadget.width)
+
+        gadget_json_str = """{
+            "title": "My gadget2",
+            "type": "gadget",
+            "link": "https://gadgets_url2.com",
+            "iconLink": "https://icons_url2.com"
+        }"""
+
+        gadget = GadgetSerializer.to_object(gadget_json_str)
+
+        self.assertEqual(gadget.title, 'My gadget2')
+        self.assertEqual(gadget.type_, 'gadget')
+        self.assertEqual(gadget.link, 'https://gadgets_url2.com')
+        self.assertEqual(gadget.icon_link, 'https://icons_url2.com')

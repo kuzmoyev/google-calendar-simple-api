@@ -25,7 +25,7 @@ class AttachmentSerializer(BaseSerializer):
 
     @staticmethod
     def to_object(json_attachment):
-        BaseSerializer.assure_dict(json_attachment)
+        json_attachment = BaseSerializer.assure_dict(json_attachment)
 
         return Attachment(
             title=json_attachment['title'],

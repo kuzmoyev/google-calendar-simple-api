@@ -239,3 +239,17 @@ class TestEventSerializer(TestCase):
         self.assertEqual(len(event.attachments), 2)
         self.assertIsInstance(event.attachments[0], Attachment)
         self.assertEqual(event.attachments[0].title, 'My file1')
+
+        event_json_str = """{
+            "summary": "Good day",
+            "description": "Very good day indeed",
+            "location": "Prague",
+            "start": {"dateTime": "2019-01-01T11:22:33", "timeZone": "%s"}
+        }""" % TEST_TIMEZONE
+
+        event = EventSerializer.to_object(event_json_str)
+
+        self.assertEqual(event.summary, 'Good day')
+        self.assertEqual(event.description, 'Very good day indeed')
+        self.assertEqual(event.location, 'Prague')
+        self.assertEqual(event.start, insure_localisation((1 / Jan / 2019)[11:22:33], TEST_TIMEZONE))

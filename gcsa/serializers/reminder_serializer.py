@@ -17,7 +17,7 @@ class ReminderSerializer(BaseSerializer):
 
     @staticmethod
     def to_object(json_reminder):
-        BaseSerializer.assure_dict(json_reminder)
+        json_reminder = BaseSerializer.assure_dict(json_reminder)
 
         method = json_reminder['method']
         if method == 'email':

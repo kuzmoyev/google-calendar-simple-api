@@ -29,7 +29,7 @@ class GadgetSerializer(BaseSerializer):
 
     @staticmethod
     def to_object(json_gadget):
-        BaseSerializer.assure_dict(json_gadget)
+        json_gadget = BaseSerializer.assure_dict(json_gadget)
 
         return Gadget(
             title=json_gadget['title'],
