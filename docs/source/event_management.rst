@@ -6,7 +6,7 @@ including its summary, starting and ending dates/times, attachments, reminders, 
 
 Current version of `gcsa` allows you to create new events, delete existing events and list existing events.
 
-To do so, create a ``GoogleCalendar`` instance (see :ref:`installation` to get your credentials):
+To do so, create a ``GoogleCalendar`` instance (see :ref:`getting_started` to get your credentials):
 
 .. code-block:: python
 
