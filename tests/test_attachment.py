@@ -75,3 +75,19 @@ class TestAttachmentSerializer(TestCase):
         self.assertEqual(attachment.mime_type, "application/vnd.google-apps.drawing")
         self.assertEqual(attachment.icon_link, "https://some_link.com")
         self.assertEqual(attachment.file_id, 'abc123')
+
+        attachment_json_str = """{
+            "title": "My doc3",
+            "fileUrl": "%s",
+            "mimeType": "application/vnd.google-apps.drawing",
+            "iconLink": "https://some_link.com",
+            "fileId": "abc123"
+        }
+        """ % DOC_URL
+        attachment = AttachmentSerializer.to_object(attachment_json_str)
+
+        self.assertEqual(attachment.title, 'My doc3')
+        self.assertEqual(attachment.file_url, DOC_URL)
+        self.assertEqual(attachment.mime_type, "application/vnd.google-apps.drawing")
+        self.assertEqual(attachment.icon_link, "https://some_link.com")
+        self.assertEqual(attachment.file_id, 'abc123')

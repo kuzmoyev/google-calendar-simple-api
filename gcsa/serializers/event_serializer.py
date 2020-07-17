@@ -69,7 +69,7 @@ class EventSerializer(BaseSerializer):
 
     @staticmethod
     def to_object(json_event):
-        BaseSerializer.assure_dict(json_event)
+        json_event = BaseSerializer.assure_dict(json_event)
 
         start = None
         timezone = None
