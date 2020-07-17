@@ -76,6 +76,48 @@ To **delete** an event:
 Event has to have ``event_id`` to be deleted. Events that you get from
 :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_events` method already have their ids.
 
+Attendees
+---------
+
+If you want to add and attendee(s) to your event, just create :py:class:`~gcsa.attendee.Attendee` (s) and pass
+as a ``attendees`` parameter (you can also pass just email of attendee and the :py:class:`~gcsa.attendee.Attendee`
+will be created for you):
+
+.. code-block:: python
+
+    from gcsa.attendee import Attendee
+
+    attendee = Attendee(
+        'attendee@gmail.com',
+        display_name='Friend',
+        additional_guests=3
+    )
+
+    event = Event('Meeting',
+                  start=(17/Jul/2020)[12:00],
+                  attendees=attendee)
+
+or
+
+.. code-block:: python
+
+    event = Event('Meeting',
+                  start=(17/Jul/2020)[12:00],
+                  attendees='attendee@gmail.com')
+
+You can pass multiple attendees at once in a list.
+
+
+
+.. code-block:: python
+
+    event = Event('Meeting',
+                  start=(17/Jul/2020)[12:00],
+                  attendees=[
+                    'attendee@gmail.com',
+                    Attendee('attendee2@gmail.com', display_name='Friend')
+                  ])
+
 Attachments
 -----------
 

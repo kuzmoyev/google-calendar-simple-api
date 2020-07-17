@@ -2,6 +2,7 @@ from tzlocal import get_localzone
 from datetime import datetime, date, timedelta
 
 from .attachment import Attachment
+from .attendee import Attendee
 from .reminders import PopupReminder, EmailReminder
 from util.date_time_util import insure_localisation
 
@@ -31,6 +32,7 @@ class Event:
                  recurrence=None,
                  color=None,
                  visibility=Visibility.DEFAULT,
+                 attendees=None,
                  gadget=None,
                  attachments=None,
                  reminders=None,
@@ -63,6 +65,9 @@ class Event:
                 color id referring to an entry from colors endpoint (list_event_colors)
         :param visibility:
                 visibility of the event. Default is default visibility for events on the calendar.
+        :param attendees:
+                attendee or list of attendees. See :py:class:`~gcsa.attendee.Attendee`.
+                Each attendee may be given as email string or :py:class:`~gcsa.attendee.Attendee` object.
         :param gadget:
                 a gadget that extends the event. See :py:class:`~gcsa.gadget.Gadget`
         :param attachments:
@@ -97,6 +102,7 @@ class Event:
         elif isinstance(self.start, datetime) or isinstance(self.end, datetime):
             raise TypeError('Start and end must either both be date or both be datetime.')
 
+        attendees = [self._ensure_attendee_from_email(a) for a in assure_list(attendees)]
         reminders = assure_list(reminders)
 
         if len(reminders) > 5:
@@ -112,6 +118,7 @@ class Event:
         self.recurrence = assure_list(recurrence)
         self.color_id = color
         self.visibility = visibility
+        self.attendees = attendees
         self.gadget = gadget
         self.attachments = assure_list(attachments)
         self.reminders = reminders
@@ -126,6 +133,11 @@ class Event:
     @property
     def id(self):
         return self.event_id
+
+    def add_attendee(self, attendee):
+        """Adds attendee to an event. See :py:class:`~gcsa.attendee.Attendee`.
+        Attendee may be given as email string or :py:class:`~gcsa.attendee.Attendee` object."""
+        self.attendees.append(self._ensure_attendee_from_email(attendee))
 
     def add_attachment(self, file_url, title, mime_type):
         """Adds attachment to an event. See :py:class:`~gcsa.attachment.Attachment`"""
@@ -144,6 +156,15 @@ class Event:
         if len(self.reminders) > 4:
             raise ValueError('The maximum number of override reminders is 5.')
         self.reminders.append(reminder)
+
+    @staticmethod
+    def _ensure_attendee_from_email(attendee_or_email):
+        """If attendee_or_email is email string, returns created `~gcsa.attendee.Attendee`
+        object with the given email."""
+        if isinstance(attendee_or_email, str):
+            return Attendee(email=attendee_or_email)
+        else:
+            return attendee_or_email
 
     def __str__(self):
         return '{} - {}'.format(self.start, self.summary)
