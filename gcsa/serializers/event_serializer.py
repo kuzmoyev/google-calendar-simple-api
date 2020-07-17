@@ -6,6 +6,7 @@ from tzlocal import get_localzone
 
 from gcsa.event import Event
 from .attachment_serializer import AttachmentSerializer
+from .attendee_serializer import AttendeeSerializer
 from .base_serializer import BaseSerializer
 from .gadget_serializer import GadgetSerializer
 from .reminder_serializer import ReminderSerializer
@@ -29,6 +30,7 @@ class EventSerializer(BaseSerializer):
             "recurrence": event.recurrence,
             "colorId": event.color_id,
             "visibility": event.visibility,
+            "attendees": [AttendeeSerializer.to_json(a) for a in event.attendees],
             "gadget": GadgetSerializer.to_json(event.gadget) if event.gadget else None,
             "reminders": {
                 "useDefault": event.default_reminders,
@@ -89,6 +91,9 @@ class EventSerializer(BaseSerializer):
             else:
                 end = EventSerializer._get_datetime_from_string(end_data['dateTime'])
 
+        attendees_json = json_event.get('attendees', [])
+        attendees = [AttendeeSerializer.to_object(a) for a in attendees_json]
+
         gadget_json = json_event.get('gadget', None)
         gadget = GadgetSerializer.to_object(gadget_json) if gadget_json else None
 
@@ -109,6 +114,7 @@ class EventSerializer(BaseSerializer):
             recurrence=json_event.get('recurrence', None),
             color=json_event.get('colorId', None),
             visibility=json_event.get('visibility', None),
+            attendees=attendees,
             gadget=gadget,
             attachments=attachments,
             reminders=reminders,

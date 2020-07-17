@@ -57,7 +57,7 @@ class TestReminderSerializer(TestCase):
 
         self.assertIsInstance(reminder, PopupReminder)
         self.assertEqual(reminder.minutes_before_start, 33)
-        
+
         reminder_json_str = """{
             "method": "popup",
             "minutes": 22
