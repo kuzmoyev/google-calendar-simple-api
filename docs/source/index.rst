@@ -56,7 +56,7 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   installation
+   getting_started
    event_management
    recurrence_tutorial
    code
