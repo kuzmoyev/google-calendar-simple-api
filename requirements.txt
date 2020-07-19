@@ -31,6 +31,7 @@ pyparsing==2.3.1
 pytest==5.4.3
 python-dateutil==2.7.2
 pytz==2018.9
+pytest-cov==2.10.0
 requests==2.22.0
 requests-oauthlib==1.2.0
 rsa==4.0
