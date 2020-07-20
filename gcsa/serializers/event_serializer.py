@@ -70,7 +70,7 @@ class EventSerializer(BaseSerializer):
     def _to_object(json_event):
         start = None
         timezone = None
-        start_data = json_event.get('start', None)
+        start_data = json_event.pop('start', None)
         if start_data is not None:
             if 'date' in start_data:
                 start = EventSerializer._get_datetime_from_string(start_data['date']).date()
@@ -79,42 +79,42 @@ class EventSerializer(BaseSerializer):
             timezone = start_data.get('timeZone', str(get_localzone()))
 
         end = None
-        end_data = json_event.get('end', None)
+        end_data = json_event.pop('end', None)
         if end_data is not None:
             if 'date' in end_data:
                 end = EventSerializer._get_datetime_from_string(end_data['date']).date()
             else:
                 end = EventSerializer._get_datetime_from_string(end_data['dateTime'])
 
-        attendees_json = json_event.get('attendees', [])
+        attendees_json = json_event.pop('attendees', [])
         attendees = [AttendeeSerializer.to_object(a) for a in attendees_json]
 
-        gadget_json = json_event.get('gadget', None)
+        gadget_json = json_event.pop('gadget', None)
         gadget = GadgetSerializer.to_object(gadget_json) if gadget_json else None
 
-        reminders_json = json_event.get('reminders', {})
+        reminders_json = json_event.pop('reminders', {})
         reminders = [ReminderSerializer.to_object(r) for r in reminders_json.get('overrides', [])]
 
-        attachments_json = json_event.get('attachments', [])
+        attachments_json = json_event.pop('attachments', [])
         attachments = [AttachmentSerializer.to_object(a) for a in attachments_json]
 
         return Event(
-            json_event['summary'],
+            json_event.pop('summary'),
             start=start,
             end=end,
             timezone=timezone,
-            event_id=json_event.get('id', None),
-            description=json_event.get('description', None),
-            location=json_event.get('location', None),
-            recurrence=json_event.get('recurrence', None),
-            color=json_event.get('colorId', None),
-            visibility=json_event.get('visibility', None),
+            event_id=json_event.pop('id', None),
+            description=json_event.pop('description', None),
+            location=json_event.pop('location', None),
+            recurrence=json_event.pop('recurrence', None),
+            color=json_event.pop('colorId', None),
+            visibility=json_event.pop('visibility', None),
             attendees=attendees,
             gadget=gadget,
             attachments=attachments,
             reminders=reminders,
-            default_reminders=reminders_json.get('useDefault', False),
-            other=json_event
+            default_reminders=reminders_json.pop('useDefault', False),
+            **json_event
         )
 
     @staticmethod
