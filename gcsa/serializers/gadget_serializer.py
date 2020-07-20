@@ -9,7 +9,7 @@ class GadgetSerializer(BaseSerializer):
         super().__init__(gadget)
 
     @staticmethod
-    def to_json(gadget):
+    def _to_json(gadget):
         res = {
             "title": gadget.title,
             "type": gadget.type_,
@@ -28,9 +28,7 @@ class GadgetSerializer(BaseSerializer):
         return res
 
     @staticmethod
-    def to_object(json_gadget):
-        json_gadget = BaseSerializer.assure_dict(json_gadget)
-
+    def _to_object(json_gadget):
         return Gadget(
             title=json_gadget['title'],
             type_=json_gadget['type'],

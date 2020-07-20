@@ -9,7 +9,7 @@ class AttendeeSerializer(BaseSerializer):
         super().__init__(attendee)
 
     @staticmethod
-    def to_json(attendee):
+    def _to_json(attendee):
         data = {
             'email': attendee.email,
             'displayName': attendee.display_name,
@@ -22,9 +22,7 @@ class AttendeeSerializer(BaseSerializer):
         return {k: v for k, v in data.items() if v is not None}
 
     @staticmethod
-    def to_object(json_attendee):
-        json_attendee = BaseSerializer.assure_dict(json_attendee)
-
+    def _to_object(json_attendee):
         return Attendee(
             email=json_attendee['email'],
             display_name=json_attendee.get('displayName'),

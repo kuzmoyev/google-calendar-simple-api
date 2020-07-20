@@ -94,7 +94,8 @@ class TestGadgetSerializer(TestCase):
             "iconLink": 'https://icons_url.com',
         }
 
-        gadget = GadgetSerializer.to_object(gadget_json)
+        serializer = GadgetSerializer(gadget_json)
+        gadget = serializer.get_object()
 
         self.assertEqual(gadget.title, 'My gadget')
         self.assertEqual(gadget.type_, 'gadget')

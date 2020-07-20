@@ -18,11 +18,8 @@ class EventSerializer(BaseSerializer):
     def __init__(self, event):
         super().__init__(event)
 
-    @staticmethod
-    def to_json(event):
-        if not isinstance(event, Event):
-            raise TypeError('The event object must be Event, not {!r}.'.format(event.__class__.__name__))
-
+    @classmethod
+    def _to_json(cls, event):
         data = {
             "summary": event.summary,
             "description": event.description,
@@ -70,9 +67,7 @@ class EventSerializer(BaseSerializer):
         return data
 
     @staticmethod
-    def to_object(json_event):
-        json_event = BaseSerializer.assure_dict(json_event)
-
+    def _to_object(json_event):
         start = None
         timezone = None
         start_data = json_event.get('start', None)

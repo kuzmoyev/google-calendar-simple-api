@@ -45,7 +45,8 @@ class TestAttachmentSerializer(TestCase):
             'iconLink': "https://some_link.com",
             'fileId': 'abc123'
         }
-        self.assertDictEqual(AttachmentSerializer.to_json(attachment), attachment_json)
+        serializer = AttachmentSerializer(attachment)
+        self.assertDictEqual(serializer.get_json(), attachment_json)
 
     def test_to_object(self):
         attachment_json = {
@@ -68,7 +69,8 @@ class TestAttachmentSerializer(TestCase):
             'iconLink': "https://some_link.com",
             'fileId': 'abc123'
         }
-        attachment = AttachmentSerializer.to_object(attachment_json)
+        serializer = AttachmentSerializer(attachment_json)
+        attachment = serializer.get_object()
 
         self.assertEqual(attachment.title, 'My doc2')
         self.assertEqual(attachment.file_url, DOC_URL)
