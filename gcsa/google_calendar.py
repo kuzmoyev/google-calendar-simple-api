@@ -122,7 +122,7 @@ class GoogleCalendar:
                 order of the events. Possible values: "startTime", "updated".
         :param timezone:
                 timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
-                the computers configured local timezone(if any) is used.
+                the computers local timezone is used if it is configured. UTC is used otherwise.
         """
         time_min = time_min or datetime.utcnow()
         time_max = time_max or time_min + relativedelta(years=1)
