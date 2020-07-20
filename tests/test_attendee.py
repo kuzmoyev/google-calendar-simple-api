@@ -56,7 +56,8 @@ class TestAttendeeSerializer(TestCase):
             "responseStatus": "tentative"
         }"""
 
-        attendee = AttendeeSerializer.to_object(attendee_json_str)
+        serializer = AttendeeSerializer(attendee_json_str)
+        attendee = serializer.get_object()
 
         self.assertEqual(attendee.email, "mail3@gmail.com")
         self.assertEqual(attendee.display_name, "Guest3")

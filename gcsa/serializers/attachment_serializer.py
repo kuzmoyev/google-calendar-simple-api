@@ -9,7 +9,7 @@ class AttachmentSerializer(BaseSerializer):
         super().__init__(attachment)
 
     @staticmethod
-    def to_json(attachment):
+    def _to_json(attachment):
         res = {
             "fileUrl": attachment.file_url,
             "title": attachment.title,
@@ -24,9 +24,7 @@ class AttachmentSerializer(BaseSerializer):
         return res
 
     @staticmethod
-    def to_object(json_attachment):
-        json_attachment = BaseSerializer.assure_dict(json_attachment)
-
+    def _to_object(json_attachment):
         return Attachment(
             title=json_attachment['title'],
             file_url=json_attachment['fileUrl'],
