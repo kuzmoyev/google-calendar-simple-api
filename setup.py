@@ -6,7 +6,7 @@ import sys
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '0.2.1'
+VERSION = '0.3.0'
 
 
 class UploadCommand(Command):
