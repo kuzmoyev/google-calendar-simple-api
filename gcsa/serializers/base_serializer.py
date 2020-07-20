@@ -1,7 +1,8 @@
+from abc import ABC, abstractmethod
 import json
 
 
-class BaseSerializer:
+class BaseSerializer(ABC):
     type_ = None
 
     def __init__(self, obj):
@@ -21,13 +22,25 @@ class BaseSerializer:
     def get_json(self):
         return self.data
 
-    @staticmethod
-    def to_json(obj):
-        raise NotImplementedError
+    @classmethod
+    def to_json(cls, obj):
+        cls.assure_type(obj)
+        return cls._to_json(obj)
 
     @staticmethod
-    def to_object(json_):
-        raise NotImplementedError
+    @abstractmethod
+    def _to_json(obj):
+        pass
+
+    @classmethod
+    def to_object(cls, json_):
+        json_ = cls.assure_dict(json_)
+        return cls._to_object(json_)
+
+    @staticmethod
+    @abstractmethod
+    def _to_object(json_):
+        pass
 
     @staticmethod
     def assure_dict(json_):
@@ -38,6 +51,11 @@ class BaseSerializer:
             return json.loads(json_)
         else:
             return json_
+
+    @classmethod
+    def assure_type(cls, obj):
+        if not isinstance(obj, cls.type_):
+            raise TypeError('The event object must be {}, not {!r}.'.format(cls.type_, obj.__class__.__name__))
 
     def __init_subclass__(cls, **kwargs):
         """Checks that "type_" is defined and that name of the argument in subclasses __init__ method is the name of

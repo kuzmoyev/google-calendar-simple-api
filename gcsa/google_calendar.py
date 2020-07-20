@@ -33,7 +33,7 @@ class GoogleCalendar:
         """Represents Google Calendar of the user.
 
         :param calendar:
-                users email address or name of the calendar. Default: primary calendar of the user.
+                users email address or name/id of the calendar. Default: primary calendar of the user.
         :param credentials_path:
                 path to "credentials.json" file. Default: ~/.credentials.
         :param read_only:
@@ -101,6 +101,37 @@ class GoogleCalendar:
         event_json = self.service.events().quickAdd(calendarId=self.calendar, text=event_string).execute()
         return EventSerializer.to_object(event_json)
 
+    def update_event(self, event):
+        """Updates existing event in the calendar
+
+        :param event:
+                event object with set event_id.
+
+        :return:
+                updated event object.
+        """
+        body = EventSerializer(event).get_json()
+        event_json = self.service.events().update(calendarId=self.calendar, eventId=event.id, body=body).execute()
+        return EventSerializer.to_object(event_json)
+
+    def move_event(self, event, destination_calendar_id):
+        """Moves existing event from calendar to another calendar
+
+        :param event:
+                event object with set event_id.
+        :param destination_calendar_id:
+                id of the destination calendar.
+
+        :return:
+                moved event object.
+        """
+        moved_event_json = self.service.events().move(
+            calendarId=self.calendar,
+            eventId=event.id,
+            destination=destination_calendar_id
+        ).execute()
+        return EventSerializer.to_object(moved_event_json)
+
     def delete_event(self, event):
         """ Deletes an event.
 
@@ -122,7 +153,7 @@ class GoogleCalendar:
                 order of the events. Possible values: "startTime", "updated".
         :param timezone:
                 timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
-                the computers configured local timezone(if any) is used.
+                the computers local timezone is used if it is configured. UTC is used otherwise.
         """
         time_min = time_min or datetime.utcnow()
         time_max = time_max or time_min + relativedelta(years=1)

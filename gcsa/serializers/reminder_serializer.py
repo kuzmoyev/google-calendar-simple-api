@@ -9,16 +9,14 @@ class ReminderSerializer(BaseSerializer):
         super().__init__(reminder)
 
     @staticmethod
-    def to_json(reminder):
+    def _to_json(reminder):
         return {
             'method': reminder.method,
             'minutes': reminder.minutes_before_start
         }
 
     @staticmethod
-    def to_object(json_reminder):
-        BaseSerializer.assure_dict(json_reminder)
-
+    def _to_object(json_reminder):
         method = json_reminder['method']
         if method == 'email':
             return EmailReminder(int(json_reminder['minutes']))

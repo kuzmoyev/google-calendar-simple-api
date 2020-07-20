@@ -11,3 +11,4 @@ Code documentation
    gadget
    recurrence
    reminders
+   attendees
