@@ -11,3 +11,4 @@ dist
 gcsa.egg-info
 
 example.py
+coverage.xml

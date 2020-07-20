@@ -45,19 +45,49 @@ class TestBaseSerializer(TestCase):
             def __init__(self, apple):
                 super().__init__(apple)
 
+            @staticmethod
+            def _to_json(obj):
+                pass
+
+            @staticmethod
+            def _to_object(json_):
+                pass
+
         with self.assertRaises(AssertionError):
             # type_ not defined
             class PeachSerializer(BaseSerializer):
                 def __init__(self, peach):
                     super().__init__(peach)
 
-        with self.assertRaises(AssertionError):
-            class Watermelon:
-                pass
+                @staticmethod
+                def _to_json(obj):
+                    pass
 
+                @staticmethod
+                def _to_object(json_):
+                    pass
+
+        class Watermelon:
+            pass
+
+        with self.assertRaises(AssertionError):
             # __init__ parameter should be "apple"
             class WatermelonSerializer(BaseSerializer):
                 type_ = Watermelon
 
                 def __init__(self, peach):
                     super().__init__(peach)
+
+                @staticmethod
+                def _to_json(obj):
+                    pass
+
+                @staticmethod
+                def _to_object(json_):
+                    pass
+
+        with self.assertRaises(TypeError):
+            AppleSerializer(Watermelon)
+
+        with self.assertRaises(TypeError):
+            AppleSerializer.to_json(Watermelon)

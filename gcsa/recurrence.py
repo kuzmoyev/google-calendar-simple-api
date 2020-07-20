@@ -246,7 +246,7 @@ class Recurrence:
 
         :param dts: datetime object or list of datetime objects
         :param timezone: Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
-                         the computers configured local timezone(if any) is used.
+                         the computers local timezone is used if it is configured. UTC is used otherwise.
         :return: RDATE string of datetimes with specified timezone.
         """
         return 'RDATE;' + Recurrence._times(dts, timezone)
@@ -260,7 +260,7 @@ class Recurrence:
 
         :param ps: period or list of periods.
         :param timezone: Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
-                         the computers configured local timezone(if any) is used.
+                         the computers local timezone is used if it is configured. UTC is used otherwise.
         :return: RDATE string of periods.
         """
         return 'RDATE;' + Recurrence._periods(ps, timezone)
@@ -280,7 +280,7 @@ class Recurrence:
 
         :param dts: datetime object or list of datetime objects
         :param timezone: Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
-                         the computers configured local timezone(if any) is used.
+                         the computers local timezone is used if it is configured. UTC is used otherwise.
         :return: EXDATE string of datetimes with specified timezone.
         """
         return 'EXDATE;' + Recurrence._times(dts, timezone)
@@ -294,7 +294,7 @@ class Recurrence:
 
         :param ps: period or list of periods.
         :param timezone: Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
-                         the computers configured local timezone(if any) is used.
+                         the computers local timezone is used if it is configured. UTC is used otherwise.
         :return: EXDATE string of periods.
         """
         return 'EXDATE;' + Recurrence._periods(ps, timezone)
@@ -305,7 +305,7 @@ class Recurrence:
 
         :param dts: datetime object or list of datetime objects
         :param timezone: Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
-                         the computers configured local timezone(if any) is used.
+                         the computers local timezone is used if it is configured. UTC is used otherwise.
         :return: RDATE string of datetimes with specified timezone.
         """
 
@@ -347,7 +347,7 @@ class Recurrence:
 
         :param ps: period or list of periods.
         :param timezone: Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
-                         the computers configured local timezone(if any) is used.
+                         the computers local timezone is used if it is configured. UTC is used otherwise.
         :return: RDATE string of periods.
         """
         if not isinstance(ps, list):

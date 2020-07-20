@@ -1,23 +1,22 @@
 Google Calendar Simple API
 ==========================
 
-
-.. image:: https://github.com/kuzmoyev/Google-Calendar-Simple-API/workflows/Tests/badge.svg
-    :target: https://github.com/kuzmoyev/Google-Calendar-Simple-API/actions
-    :alt: Tests
+.. image:: https://badge.fury.io/py/gcsa.svg
+    :target: https://badge.fury.io/py/gcsa
+    :alt: PyPi Package
 
 .. image:: https://readthedocs.org/projects/google-calendar-simple-api/badge/?version=latest
     :target: https://google-calendar-simple-api.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://github.com/kuzmoyev/Google-Calendar-Simple-API/workflows/Tests/badge.svg
+    :target: https://github.com/kuzmoyev/Google-Calendar-Simple-API/actions
+    :alt: Tests
 
 .. image:: https://pepy.tech/badge/gcsa
     :target: https://pepy.tech/project/gcsa
     :alt: Downloads
 
-.. image:: https://badge.fury.io/py/gcsa.svg
-    :target: https://badge.fury.io/py/gcsa
-    :alt: Downloads
 
 
 
@@ -31,31 +30,54 @@ Installation
 
     pip install gcsa
 
+
+See `Getting started page`_ for more details.
+
 Example usage
 -------------
+
+List events
+~~~~~~~~~~~
 
 .. code-block:: python
 
     from gcsa.google_calendar import GoogleCalendar
-    from gcsa.event import Event
-    from gcsa.recurrence import Recurrence, DAILY
 
     calendar = GoogleCalendar('your_email@gmail.com')
-    event = Event(
-        'Breakfast',
-        start=date(2020, 6, 14),
-        recurrence=Recurrence.rule(freq=DAILY),
-        minutes_before_email_reminder=50
-    )
-
-    calendar.add_event(event)
-
     for event in calendar:
         print(event)
 
 
-See documentation_
-for more parameters and functionality.
+Create event
+~~~~~~~~~~~~
+
+.. code-block:: python
+
+    from gcsa.event import Event
+
+    event = Event(
+        'The Glass Menagerie',
+        start=datetime(2020, 7, 10, 19, 0),
+        location='Záhřebská 468/21'
+        minutes_before_popup_reminder=15
+    )
+    calendar.add_event(event)
+
+
+Create recurring event
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    from gcsa.recurrence import Recurrence, DAILY
+
+    event = Event(
+        'Breakfast',
+        start=date(2020, 7, 16),
+        recurrence=Recurrence.rule(freq=DAILY)
+    )
+    calendar.add_event(event)
+
 
 **Suggestion**: use beautiful_date_ to creat `date` and `datetime` objects in your
 projects (*because its beautiful... just like you*).
@@ -67,7 +89,8 @@ References
 Template for `setup.py` was taken from `kennethreitz/setup.py`_
 
 
-.. _`official API`: https://github.com/googleapis/google-api-python-client
+.. _`official API`: https://developers.google.com/calendar
 .. _documentation: https://google-calendar-simple-api.readthedocs.io/en/latest/?badge=latest
+.. _`Getting started page`: https://google-calendar-simple-api.readthedocs.io/en/latest/getting_started.html
 .. _beautiful_date: https://github.com/beautiful-everything/beautiful-date
 .. _`kennethreitz/setup.py`: https://github.com/kennethreitz/setup.py
