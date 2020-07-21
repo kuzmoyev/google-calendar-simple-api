@@ -79,7 +79,7 @@ Create recurring event
     calendar.add_event(event)
 
 
-**Suggestion**: use beautiful_date_ to creat `date` and `datetime` objects in your
+**Suggestion**: use beautiful_date_ to create `date` and `datetime` objects in your
 projects (*because its beautiful... just like you*).
 
 
