@@ -26,9 +26,17 @@ It is a Pythonic object oriented adapter for the `official API`_.
 Installation
 ------------
 
-::
+.. code-block:: bash
 
     pip install gcsa
+
+from sources:
+
+.. code-block:: bash
+
+    git clone git@github.com:kuzmoyev/google-calendar-simple-api.git
+    cd google-calendar-simple-api
+    python setup.py install
 
 
 See `Getting started page`_ for more details.

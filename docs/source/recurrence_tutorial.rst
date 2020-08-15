@@ -24,8 +24,8 @@ For example:
 .. code-block:: python
 
    Event('Breakfast',
-         (1/Jan/2019)[9:00],
          (1/Jan/2020)[9:00],
+         (1/Jan/2020)[10:00],
          recurrence=Recurrence.rule(freq=DAILY))
 
 or

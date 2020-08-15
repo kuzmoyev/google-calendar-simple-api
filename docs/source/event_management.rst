@@ -4,7 +4,7 @@ Event management
 Event in `gcsa` is represented by the class :py:class:`~gcsa.event.Event`. It stores all needed information about event
 including its summary, starting and ending dates/times, attachments, reminders, recurrence rules, etc.
 
-Current version of `gcsa` allows you to create new events, delete existing events and list existing events.
+Current version of `gcsa` allows you to create a new events, retrieve, update, move and delete existing events.
 
 To do so, create a ``GoogleCalendar`` instance (see :ref:`getting_started` to get your credentials):
 
@@ -64,7 +64,22 @@ Now you can **add** your event to the calendar:
     calendar.add_event(event)
 
 
-To **delete** an event:
+You can **update** an event:
+
+.. code-block:: python
+
+    event.location = 'Prague'
+    calendar.update_event(event)
+
+
+You can **move** an event to another calendar:
+
+.. code-block:: python
+
+    calendar.move_event(event, destination_calendar_id='primary')
+
+
+And delete **delete** an event:
 
 
 .. code-block:: python
@@ -73,13 +88,13 @@ To **delete** an event:
 
 
 
-Event has to have ``event_id`` to be deleted. Events that you get from
+Event has to have ``event_id`` to be updated, moved or deleted. Events that you get from
 :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_events` method already have their ids.
 
 Attendees
 ---------
 
-If you want to add and attendee(s) to your event, just create :py:class:`~gcsa.attendee.Attendee` (s) and pass
+If you want to add attendee(s) to your event, just create :py:class:`~gcsa.attendee.Attendee` (s) and pass
 as a ``attendees`` parameter (you can also pass just email of attendee and the :py:class:`~gcsa.attendee.Attendee`
 will be created for you):
 
@@ -121,7 +136,7 @@ You can pass multiple attendees at once in a list.
 Attachments
 -----------
 
-If you want to add and attachment(s) to your event, just create :py:class:`~gcsa.attachment.Attachment` (s) and pass
+If you want to add attachment(s) to your event, just create :py:class:`~gcsa.attachment.Attachment` (s) and pass
 as a ``attachments`` parameter:
 
 .. code-block:: python
