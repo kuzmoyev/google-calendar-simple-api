@@ -155,7 +155,7 @@ class GoogleCalendar:
                 timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
                 the computers local timezone is used if it is configured. UTC is used otherwise.
         """
-        time_min = time_min or datetime.utcnow()
+        time_min = time_min or datetime.now()
         time_max = time_max or time_min + relativedelta(years=1)
 
         if not isinstance(time_min, datetime):
