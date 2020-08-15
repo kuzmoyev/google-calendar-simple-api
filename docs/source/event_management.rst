@@ -94,7 +94,7 @@ Event has to have ``event_id`` to be updated, moved or deleted. Events that you 
 Attendees
 ---------
 
-If you want to add and attendee(s) to your event, just create :py:class:`~gcsa.attendee.Attendee` (s) and pass
+If you want to add attendee(s) to your event, just create :py:class:`~gcsa.attendee.Attendee` (s) and pass
 as a ``attendees`` parameter (you can also pass just email of attendee and the :py:class:`~gcsa.attendee.Attendee`
 will be created for you):
 
@@ -136,7 +136,7 @@ You can pass multiple attendees at once in a list.
 Attachments
 -----------
 
-If you want to add and attachment(s) to your event, just create :py:class:`~gcsa.attachment.Attachment` (s) and pass
+If you want to add attachment(s) to your event, just create :py:class:`~gcsa.attachment.Attachment` (s) and pass
 as a ``attachments`` parameter:
 
 .. code-block:: python
