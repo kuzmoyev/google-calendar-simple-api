@@ -44,7 +44,7 @@ class GoogleCalendar:
         credentials_path = credentials_path or _get_default_credentials_path()
         self._credentials_dir, self._credentials_file = os.path.split(credentials_path)
 
-        self._scopes = self._READ_WRITE_SCOPES + ('.readonly' if read_only else '')
+        self._scopes = [self._READ_WRITE_SCOPES + ('.readonly' if read_only else '')]
         self._application_name = application_name
 
         self.calendar = calendar
@@ -155,7 +155,7 @@ class GoogleCalendar:
                 timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
                 the computers local timezone is used if it is configured. UTC is used otherwise.
         """
-        time_min = time_min or datetime.utcnow()
+        time_min = time_min or datetime.now()
         time_max = time_max or time_min + relativedelta(years=1)
 
         if not isinstance(time_min, datetime):
