@@ -44,7 +44,7 @@ class GoogleCalendar:
         credentials_path = credentials_path or _get_default_credentials_path()
         self._credentials_dir, self._credentials_file = os.path.split(credentials_path)
 
-        self._scopes = self._READ_WRITE_SCOPES + ('.readonly' if read_only else '')
+        self._scopes = [self._READ_WRITE_SCOPES + ('.readonly' if read_only else '')]
         self._application_name = application_name
 
         self.calendar = calendar
