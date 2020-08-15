@@ -79,7 +79,7 @@ You can **move** an event to another calendar:
     calendar.move_event(event, destination_calendar_id='primary')
 
 
-And delete **delete** an event:
+And **delete** an event:
 
 
 .. code-block:: python
