@@ -1,3 +1,6 @@
+from functools import total_ordering
+
+from beautiful_date import BeautifulDate
 from tzlocal import get_localzone
 from datetime import datetime, date, timedelta
 
@@ -20,6 +23,7 @@ class Visibility:
     PRIVATE = "private"
 
 
+@total_ordering
 class Event:
     def __init__(self,
                  summary,
@@ -102,6 +106,16 @@ class Event:
         elif isinstance(self.start, datetime) or isinstance(self.end, datetime):
             raise TypeError('Start and end must either both be date or both be datetime.')
 
+        def insure_date(d):
+            """Converts d to date if it is of type BeautifulDate."""
+            if isinstance(d, BeautifulDate):
+                return date(year=d.year, month=d.month, day=d.day)
+            else:
+                return d
+
+        self.start = insure_date(self.start)
+        self.end = insure_date(self.end)
+
         attendees = [self._ensure_attendee_from_email(a) for a in assure_list(attendees)]
         reminders = assure_list(reminders)
 
@@ -168,3 +182,39 @@ class Event:
 
     def __str__(self):
         return '{} - {}'.format(self.start, self.summary)
+
+    def __repr__(self):
+        return '<Event {} - {}>'.format(self.start, self.summary)
+
+    def __lt__(self, other):
+        def insure_datetime(d, timezone):
+            if type(d) == date:
+                return insure_localisation(datetime(year=d.year, month=d.month, day=d.day), timezone)
+            else:
+                return d
+
+        start = insure_datetime(self.start, self.timezone)
+        end = insure_datetime(self.end, self.timezone)
+
+        other_start = insure_datetime(other.start, other.timezone)
+        other_end = insure_datetime(other.end, other.timezone)
+
+        return (start, end) < (other_start, other_end)
+
+    def __eq__(self, other):
+        return isinstance(other, Event) \
+               and self.start == other.start \
+               and self.end == other.end \
+               and self.event_id == other.event_id \
+               and self.summary == other.summary \
+               and self.description == other.description \
+               and self.location == other.location \
+               and self.recurrence == other.recurrence \
+               and self.color_id == other.color_id \
+               and self.visibility == other.visibility \
+               and self.attendees == other.attendees \
+               and self.gadget == other.gadget \
+               and self.attachments == other.attachments \
+               and self.reminders == other.reminders \
+               and self.default_reminders == other.default_reminders \
+               and self.other == other.other
