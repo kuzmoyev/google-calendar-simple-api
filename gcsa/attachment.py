@@ -48,3 +48,11 @@ class Attachment:
         self.mime_type = mime_type
         self.icon_link = icon_link
         self.file_id = file_id
+
+    def __eq__(self, other):
+        return isinstance(other, Attachment) \
+               and self.title == other.title \
+               and self.file_url == other.file_url \
+               and self.mime_type == other.mime_type \
+               and self.icon_link == other.icon_link \
+               and self.file_id == other.file_id

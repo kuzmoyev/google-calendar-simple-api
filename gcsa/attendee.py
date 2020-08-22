@@ -48,3 +48,13 @@ class Attendee:
         self.is_resource = is_resource
         self.additional_guests = additional_guests
         self.response_status = response_status
+
+    def __eq__(self, other):
+        return isinstance(other, Attendee) \
+               and self.email == other.email \
+               and self.display_name == other.display_name \
+               and self.comment == other.comment \
+               and self.optional == other.optional \
+               and self.is_resource == other.is_resource \
+               and self.additional_guests == other.additional_guests \
+               and self.response_status == other.response_status

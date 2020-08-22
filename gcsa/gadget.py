@@ -64,3 +64,14 @@ class Gadget:
         self.height = height
         self.width = width
         self.preferences = preferences or {}
+
+    def __eq__(self, other):
+        return isinstance(other, Gadget) \
+               and self.title == other.title \
+               and self.type_ == other.type_ \
+               and self.link == other.link \
+               and self.icon_link == other.icon_link \
+               and self.display == other.display \
+               and self.height == other.height \
+               and self.width == other.width \
+               and self.preferences == other.preferences
