@@ -159,7 +159,7 @@ class Event:
 
     @staticmethod
     def _ensure_attendee_from_email(attendee_or_email):
-        """If attendee_or_email is email string, returns created `~gcsa.attendee.Attendee`
+        """If attendee_or_email is email string, returns created :py:class:`~gcsa.attendee.Attendee`
         object with the given email."""
         if isinstance(attendee_or_email, str):
             return Attendee(email=attendee_or_email)
