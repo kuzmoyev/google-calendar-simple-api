@@ -78,7 +78,7 @@ setup(
     author='Yevhen Kuzmovych',
     author_email='kuzmovych.yevhen@gmail.com',
     license='MIT',
-    url='https://github.com/kuzmoyev/Google-Calendar-Simple-API',
+    url='https://github.com/kuzmoyev/google-calendar-simple-api',
     zip_safe=False,
     packages=find_packages(),
     install_requires=[
