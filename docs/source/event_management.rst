@@ -64,7 +64,7 @@ Now you can **add** your event to the calendar:
     calendar.add_event(event)
 
 
-You can **update** an event:
+You can **update** an existing event:
 
 .. code-block:: python
 
@@ -72,14 +72,14 @@ You can **update** an event:
     calendar.update_event(event)
 
 
-You can **move** an event to another calendar:
+You can **move** an existing event to another calendar:
 
 .. code-block:: python
 
     calendar.move_event(event, destination_calendar_id='primary')
 
 
-And **delete** an event:
+And **delete** an existing event:
 
 
 .. code-block:: python
@@ -158,7 +158,7 @@ You can pass multiple attachments at once in a list.
 
     event = Event('Meeting',
                   start=(22/Apr/2019)[12:00],
-                  attachments=[attachment1, attachment1])
+                  attachments=[attachment1, attachment2])
 
 
 

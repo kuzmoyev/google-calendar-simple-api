@@ -10,6 +10,11 @@ class Reminder:
         self.method = method
         self.minutes_before_start = minutes_before_start
 
+    def __eq__(self, other):
+        return isinstance(other, Reminder) \
+               and self.method == other.method \
+               and self.minutes_before_start == other.minutes_before_start
+
 
 class EmailReminder(Reminder):
     def __init__(self, minutes_before_start=60):
