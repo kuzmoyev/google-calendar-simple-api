@@ -4,7 +4,8 @@ from beautiful_date import Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, De
 from gcsa.attachment import Attachment
 from gcsa.attendee import Attendee, ResponseStatus
 from gcsa.event import Event, Visibility
-from gcsa.recurrence import Recurrence, DAILY, SU, SA, MONDAY
+from gcsa.gadget import Gadget
+from gcsa.recurrence import Recurrence, DAILY, SU, SA, MONDAY, WEEKLY
 from gcsa.reminders import PopupReminder, EmailReminder
 from gcsa.serializers.event_serializer import EventSerializer
 from util.date_time_util import insure_localisation
@@ -117,10 +118,99 @@ class TestEvent(TestCase):
         with self.assertRaises(ValueError):
             e.add_email_reminder()
 
-    def test_str(self):
+    def test_str_repr(self):
         e = Event('Good event',
                   start=20 / Jul / 2020)
         self.assertEqual(str(e), '2020-07-20 - Good event')
+
+        self.assertEqual(repr(e), '<Event 2020-07-20 - Good event>')
+
+    def test_equal(self):
+        dp = {
+            'summary': 'Breakfast',
+            'start': (1 / Feb / 2019)[9:00]
+        }
+
+        gadget_dp = {
+            "type_": Gadget.ICON,
+            "link": 'https://gadget.com',
+            "icon_link": 'https://icon.com'
+        }
+
+        attachments_dp = {
+            "file_url": 'https://file.com',
+            "mime_type": "application/vnd.google-apps.map"
+        }
+
+        event1 = Event(
+            **dp,
+            event_id='123',
+            end=(31 / Dec / 2019)[23:59],
+            timezone=TEST_TIMEZONE,
+            description='Everyday breakfast',
+            location='Home',
+            recurrence=Recurrence.rule(freq=DAILY),
+            color='#254433',
+            visibility=Visibility.PRIVATE,
+            attendees='mail@gmail.com',
+            gadget=Gadget('Gadget', **gadget_dp),
+            attachments=Attachment('My doc', **attachments_dp),
+            minutes_before_popup_reminder=15,
+            other={"key": "value"}
+        )
+
+        self.assertEqual(event1, event1)
+        self.assertNotEqual(Event(**dp), Event('Breakfast', start=(22 / Jun / 2020)[22:22]))
+
+        self.assertNotEqual(Event(**dp, event_id='123'),
+                            Event(**dp, event_id='abc'))
+
+        self.assertNotEqual(Event(**dp, description='Desc1'),
+                            Event(**dp, description='Desc2'))
+
+        self.assertNotEqual(Event(**dp, location='Home'),
+                            Event(**dp, location='Work'))
+
+        self.assertNotEqual(Event(**dp, recurrence=Recurrence.rule(freq=DAILY)),
+                            Event(**dp, recurrence=Recurrence.rule(freq=WEEKLY)))
+
+        self.assertNotEqual(Event(**dp, color='#254433'),
+                            Event(**dp, color='#ffffff'))
+
+        self.assertNotEqual(Event(**dp, visibility=Visibility.PRIVATE),
+                            Event(**dp, visibility=Visibility.PUBLIC))
+
+        self.assertNotEqual(Event(**dp, attendees='mail1@gmail.com'),
+                            Event(**dp, attendees='mail2@gmail.com'))
+
+        self.assertNotEqual(Event(**dp, gadget=Gadget('Gadget1', **gadget_dp)),
+                            Event(**dp, gadget=Gadget('Gadget2', **gadget_dp)))
+
+        self.assertNotEqual(Event(**dp, attachments=Attachment('Attachment1', **attachments_dp)),
+                            Event(**dp, attachments=Attachment('Attachment2', **attachments_dp)))
+
+        self.assertNotEqual(Event(**dp, minutes_before_email_reminder=10),
+                            Event(**dp, minutes_before_popup_reminder=10))
+
+        self.assertNotEqual(Event(**dp, other={"key1": "value1"}),
+                            Event(**dp, other={"key2": "value2"}))
+
+    def test_ordering(self):
+        e1 = Event('Good day', start=(28 / Sept / 2020), end=(30 / Sept / 2020), timezone=TEST_TIMEZONE)
+        e2 = Event('Good day', start=(28 / Sept / 2020), end=(16 / Oct / 2020), timezone=TEST_TIMEZONE)
+        e3 = Event('Good day', start=(29 / Sept / 2020), end=(30 / Sept / 2020), timezone=TEST_TIMEZONE)
+        e4 = Event('Good day', start=(29 / Sept / 2020)[22:22], end=(30 / Sept / 2020)[15:15], timezone=TEST_TIMEZONE)
+        e5 = Event('Good day', start=(29 / Sept / 2020)[22:22], end=(30 / Sept / 2020)[18:15], timezone=TEST_TIMEZONE)
+        e6 = Event('Good day', start=(29 / Sept / 2020)[23:22], end=(30 / Sept / 2020)[18:15], timezone=TEST_TIMEZONE)
+
+        self.assertEqual(list(sorted([e5, e6, e1, e3, e2, e4])), [e1, e2, e3, e4, e5, e6])
+
+        self.assertTrue(e1 < e2)
+        self.assertTrue(e3 > e2)
+        self.assertTrue(e5 >= e2)
+        self.assertTrue(e2 >= e2)
+        self.assertTrue(e5 <= e5)
+        self.assertTrue(e5 <= e6)
 
 
 class TestEventSerializer(TestCase):
