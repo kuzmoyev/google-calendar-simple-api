@@ -42,7 +42,8 @@ class GoogleCalendar:
         :param application_name:
                 name of the application. Default: None
         :param token_path:
-                existing path to load the token from, or path to save the token after initial authentication flow. Default: "token.pickle" in the same directory as the credentials_path
+                existing path to load the token from, or path to save the token after initial authentication flow.
+                Default: "token.pickle" in the same directory as the credentials_path
         """
         credentials_path = credentials_path or _get_default_credentials_path()
         self._credentials_dir, self._credentials_file = os.path.split(credentials_path)
