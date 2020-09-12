@@ -38,8 +38,9 @@ Now you need to get your API credentials:
 
     .. note:: On the first run, your application will prompt you to the default browser
         to get permissions from you to use (see/edit) your calendar. This will create
-        :code:`token.pickle` file in the same folder as your :code:`credentials.json`. So
-        don't forget to also add it to :code:`.gitignore` if it is in a GIT repository.
+        :code:`token.pickle` file in the same folder (unless specified otherwise) as your
+        :code:`credentials.json`. So don't forget to also add it to :code:`.gitignore` if
+        it is in a GIT repository.
 
 
 Quick example
@@ -95,8 +96,9 @@ you can specify the path to the credentials as a second argument of the :code:`G
 
 
 .. note::   You can also specify the :code:`token_path` parameter, which overrides
-            the default :code:`token.pickle` location. That could be useful if you want to save
-            the file elsewhere, or if you have multiple google accounts.
+            the default :code:`token.pickle` location and file name. That could be
+            useful if you want to save the file elsewhere, or if you have multiple
+            google accounts.
 
 
 .. _`Calendar API Quickstart`: https://developers.google.com/calendar/quickstart/python#step_1_turn_on_the
