@@ -214,4 +214,4 @@ to ``True``.
 
 
 .. _datetime: https://docs.python.org/3/library/datetime.html
-.. _beautiful_date: https://github.com/beautiful-everything/beautiful-date
+.. _beautiful_date: https://github.com/kuzmoyev/beautiful-date
