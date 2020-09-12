@@ -103,4 +103,4 @@ you can specify the path to the credentials as a second argument of the :code:`G
 
 .. _`Calendar API Quickstart`: https://developers.google.com/calendar/quickstart/python#step_1_turn_on_the
 .. _datetime: https://docs.python.org/3/library/datetime.html
-.. _beautiful_date: https://github.com/beautiful-everything/beautiful-date
+.. _beautiful_date: https://github.com/kuzmoyev/beautiful-date
