@@ -29,7 +29,8 @@ class GoogleCalendar:
                  calendar='primary',
                  credentials_path=None,
                  read_only=False,
-                 application_name=None):
+                 application_name=None,
+                 token_path=None):
         """Represents Google Calendar of the user.
 
         :param calendar:
@@ -40,12 +41,15 @@ class GoogleCalendar:
                 if require read only access. Default: False
         :param application_name:
                 name of the application. Default: None
+        :param token_path:
+                path to save authenticated token file. Default: "token.pickle"
         """
         credentials_path = credentials_path or _get_default_credentials_path()
         self._credentials_dir, self._credentials_file = os.path.split(credentials_path)
 
         self._scopes = [self._READ_WRITE_SCOPES + ('.readonly' if read_only else '')]
         self._application_name = application_name
+        self._token_path = token_path
 
         self.calendar = calendar
         credentials = self._get_credentials()
@@ -53,7 +57,8 @@ class GoogleCalendar:
 
     def _get_credentials(self):
         _credentials_path = os.path.join(self._credentials_dir, self._credentials_file)
-        _token_path = os.path.join(self._credentials_dir, 'token.pickle')
+        _default_token_path = os.path.join(self._credentials_dir, 'token.pickle')
+        _token_path = self._token_path or _default_token_path
 
         credentials = None
 
