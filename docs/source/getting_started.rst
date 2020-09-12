@@ -94,6 +94,10 @@ you can specify the path to the credentials as a second argument of the :code:`G
 
 
 
+.. note::   You can also specify the :code:`token_path` parameter, which overrides
+            the default :code:`token.pickle` location. That could be useful if you want to save
+            the file elsewhere, or if you have multiple google accounts.
+
 
 .. _`Calendar API Quickstart`: https://developers.google.com/calendar/quickstart/python#step_1_turn_on_the
 .. _datetime: https://docs.python.org/3/library/datetime.html
