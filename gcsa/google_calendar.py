@@ -42,14 +42,14 @@ class GoogleCalendar:
         :param application_name:
                 name of the application. Default: None
         :param token_path:
-                path to save authenticated token file. Default: "token.pickle"
+                existing path to load the token from, or path to save the token after initial authentication flow. Default: "token.pickle" in the same directory as the credentials_path
         """
         credentials_path = credentials_path or _get_default_credentials_path()
         self._credentials_dir, self._credentials_file = os.path.split(credentials_path)
 
         self._scopes = [self._READ_WRITE_SCOPES + ('.readonly' if read_only else '')]
         self._application_name = application_name
-        self._token_path = token_path
+        self._token_path = token_path or os.path.join(self._credentials_dir, 'token.pickle')
 
         self.calendar = calendar
         credentials = self._get_credentials()
@@ -57,13 +57,11 @@ class GoogleCalendar:
 
     def _get_credentials(self):
         _credentials_path = os.path.join(self._credentials_dir, self._credentials_file)
-        _default_token_path = os.path.join(self._credentials_dir, 'token.pickle')
-        _token_path = self._token_path or _default_token_path
 
         credentials = None
 
-        if os.path.exists(_token_path):
-            with open(_token_path, 'rb') as token:
+        if os.path.exists(self._token_path):
+            with open(self._token_path, 'rb') as token:
                 credentials = pickle.load(token)
 
         if not credentials or not credentials.valid:
@@ -73,7 +71,7 @@ class GoogleCalendar:
                 flow = InstalledAppFlow.from_client_secrets_file(_credentials_path, self._scopes)
                 credentials = flow.run_local_server()
 
-            with open(_token_path, 'wb') as token:
+            with open(self._token_path, 'wb') as token:
                 pickle.dump(credentials, token)
 
         return credentials
