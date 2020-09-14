@@ -27,7 +27,7 @@ jobs:
 
       - name: Code style check
         run: |
-          flake8 gcsa tests util
+          flake8 gcsa tests
 
       - name: Run tests
         run: |

@@ -7,7 +7,7 @@ from datetime import datetime, date, timedelta
 from .attachment import Attachment
 from .attendee import Attendee
 from .reminders import PopupReminder, EmailReminder
-from util.date_time_util import insure_localisation
+from .util.date_time_util import insure_localisation
 
 
 class Visibility:
