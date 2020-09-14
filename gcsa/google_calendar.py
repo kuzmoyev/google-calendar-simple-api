@@ -9,7 +9,7 @@ from google.auth.transport.requests import Request
 from tzlocal import get_localzone
 
 from .serializers.event_serializer import EventSerializer
-from util.date_time_util import insure_localisation
+from .util.date_time_util import insure_localisation
 
 
 def _get_default_credentials_path():
