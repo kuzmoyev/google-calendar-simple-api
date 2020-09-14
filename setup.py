@@ -6,7 +6,7 @@ import sys
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '0.3.2'
+VERSION = '0.4.0'
 
 
 class UploadCommand(Command):
@@ -78,9 +78,9 @@ setup(
     author='Yevhen Kuzmovych',
     author_email='kuzmovych.yevhen@gmail.com',
     license='MIT',
-    url='https://github.com/kuzmoyev/Google-Calendar-Simple-API',
+    url='https://github.com/kuzmoyev/google-calendar-simple-api',
     zip_safe=False,
-    packages=find_packages(),
+    packages=find_packages(exclude=("tests", "tests.*")),
     install_requires=[
         "tzlocal>=2,<3",
         "google-api-python-client>=1.8",

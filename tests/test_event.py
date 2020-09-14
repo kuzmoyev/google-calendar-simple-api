@@ -8,7 +8,7 @@ from gcsa.gadget import Gadget
 from gcsa.recurrence import Recurrence, DAILY, SU, SA, MONDAY, WEEKLY
 from gcsa.reminders import PopupReminder, EmailReminder
 from gcsa.serializers.event_serializer import EventSerializer
-from util.date_time_util import insure_localisation
+from gcsa.util.date_time_util import insure_localisation
 
 TEST_TIMEZONE = 'Pacific/Fiji'
 

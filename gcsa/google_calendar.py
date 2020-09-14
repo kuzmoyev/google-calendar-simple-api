@@ -9,7 +9,7 @@ from google.auth.transport.requests import Request
 from tzlocal import get_localzone
 
 from .serializers.event_serializer import EventSerializer
-from util.date_time_util import insure_localisation
+from .util.date_time_util import insure_localisation
 
 
 def _get_default_credentials_path():
@@ -29,7 +29,8 @@ class GoogleCalendar:
                  calendar='primary',
                  credentials_path=None,
                  read_only=False,
-                 application_name=None):
+                 application_name=None,
+                 token_path=None):
         """Represents Google Calendar of the user.
 
         :param calendar:
@@ -40,12 +41,16 @@ class GoogleCalendar:
                 if require read only access. Default: False
         :param application_name:
                 name of the application. Default: None
+        :param token_path:
+                existing path to load the token from, or path to save the token after initial authentication flow.
+                Default: "token.pickle" in the same directory as the credentials_path
         """
         credentials_path = credentials_path or _get_default_credentials_path()
         self._credentials_dir, self._credentials_file = os.path.split(credentials_path)
 
         self._scopes = [self._READ_WRITE_SCOPES + ('.readonly' if read_only else '')]
         self._application_name = application_name
+        self._token_path = token_path or os.path.join(self._credentials_dir, 'token.pickle')
 
         self.calendar = calendar
         credentials = self._get_credentials()
@@ -53,12 +58,11 @@ class GoogleCalendar:
 
     def _get_credentials(self):
         _credentials_path = os.path.join(self._credentials_dir, self._credentials_file)
-        _token_path = os.path.join(self._credentials_dir, 'token.pickle')
 
         credentials = None
 
-        if os.path.exists(_token_path):
-            with open(_token_path, 'rb') as token:
+        if os.path.exists(self._token_path):
+            with open(self._token_path, 'rb') as token:
                 credentials = pickle.load(token)
 
         if not credentials or not credentials.valid:
@@ -68,7 +72,7 @@ class GoogleCalendar:
                 flow = InstalledAppFlow.from_client_secrets_file(_credentials_path, self._scopes)
                 credentials = flow.run_local_server()
 
-            with open(_token_path, 'wb') as token:
+            with open(self._token_path, 'wb') as token:
                 pickle.dump(credentials, token)
 
         return credentials
