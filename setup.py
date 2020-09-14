@@ -80,7 +80,7 @@ setup(
     license='MIT',
     url='https://github.com/kuzmoyev/google-calendar-simple-api',
     zip_safe=False,
-    packages=find_packages(),
+    packages=find_packages(exclude=("tests", "tests.*")),
     install_requires=[
         "tzlocal>=2,<3",
         "google-api-python-client>=1.8",
