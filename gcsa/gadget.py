@@ -13,6 +13,7 @@ class Gadget:
             height=None,
             width=None,
             preferences=None,
+            _serialized=False
     ):
         """
         A gadget that can extend the event.
@@ -44,11 +45,12 @@ class Gadget:
         def check_positive_integer(v, name):
             if v is not None and (not isinstance(v, int) or v <= 0):
                 raise ValueError('"{}" has to be a positive integer'.format(name))
-
-        check_not_empty(title, 'title')
-        check_not_empty(type_, 'type_')
-        check_not_empty(link, 'link')
-        check_not_empty(icon_link, 'icon_link')
+                
+        if not _serialized:
+            check_not_empty(title, 'title')
+            check_not_empty(type_, 'type_')
+            check_not_empty(link, 'link')
+            check_not_empty(icon_link, 'icon_link')
 
         if display and display not in (Gadget.ICON, Gadget.CHIP):
             raise ValueError('"display" has to be on of Gadget.ICON or Gadget.CHIP')
