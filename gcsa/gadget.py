@@ -45,7 +45,7 @@ class Gadget:
         def check_positive_integer(v, name):
             if v is not None and (not isinstance(v, int) or v <= 0):
                 raise ValueError('"{}" has to be a positive integer'.format(name))
-                
+
         if not _serialized:
             check_not_empty(title, 'title')
             check_not_empty(type_, 'type_')
