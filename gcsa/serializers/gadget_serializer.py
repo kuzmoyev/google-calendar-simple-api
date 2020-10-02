@@ -30,12 +30,13 @@ class GadgetSerializer(BaseSerializer):
     @staticmethod
     def _to_object(json_gadget):
         return Gadget(
-            title=json_gadget['title'],
-            type_=json_gadget['type'],
-            link=json_gadget['link'],
-            icon_link=json_gadget['iconLink'],
+            title=json_gadget.get('title', None),
+            type_=json_gadget.get('type', None),
+            link=json_gadget.get('link', None),
+            icon_link=json_gadget.get('iconLink', None),
             display=json_gadget.get('display', None),
             height=json_gadget.get('height', None),
             width=json_gadget.get('width', None),
-            preferences=json_gadget.get('preferences', None)
+            preferences=json_gadget.get('preferences', None),
+            _serialized=True
         )
