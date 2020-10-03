@@ -1,19 +1,7 @@
-from datetime import datetime, timedelta, date
+from datetime import datetime, date
 
 import pytz
 from tzlocal import get_localzone
-
-
-def get_utc_datetime(dt, *args, **kwargs):
-    if isinstance(dt, datetime):
-        return dt.isoformat()
-    else:
-        return datetime(dt, *args, **kwargs).isoformat()
-
-
-def date_range(start_date, day_count):
-    for n in range(day_count):
-        yield start_date + timedelta(n)
 
 
 def insure_localisation(dt, timezone=str(get_localzone())):
