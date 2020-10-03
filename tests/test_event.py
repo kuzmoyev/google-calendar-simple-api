@@ -4,7 +4,6 @@ from beautiful_date import Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, De
 from gcsa.attachment import Attachment
 from gcsa.attendee import Attendee, ResponseStatus
 from gcsa.event import Event, Visibility
-from gcsa.gadget import Gadget
 from gcsa.recurrence import Recurrence, DAILY, SU, SA, MONDAY, WEEKLY
 from gcsa.reminders import PopupReminder, EmailReminder
 from gcsa.serializers.event_serializer import EventSerializer
@@ -131,12 +130,6 @@ class TestEvent(TestCase):
             'start': (1 / Feb / 2019)[9:00]
         }
 
-        gadget_dp = {
-            "type_": Gadget.ICON,
-            "link": 'https://gadget.com',
-            "icon_link": 'https://icon.com'
-        }
-
         attachments_dp = {
             "file_url": 'https://file.com',
             "mime_type": "application/vnd.google-apps.map"
@@ -153,7 +146,6 @@ class TestEvent(TestCase):
             color='#254433',
             visibility=Visibility.PRIVATE,
             attendees='mail@gmail.com',
-            gadget=Gadget('Gadget', **gadget_dp),
             attachments=Attachment('My doc', **attachments_dp),
             minutes_before_popup_reminder=15,
             other={"key": "value"}
@@ -182,9 +174,6 @@ class TestEvent(TestCase):
 
         self.assertNotEqual(Event(**dp, attendees='mail1@gmail.com'),
                             Event(**dp, attendees='mail2@gmail.com'))
-
-        self.assertNotEqual(Event(**dp, gadget=Gadget('Gadget1', **gadget_dp)),
-                            Event(**dp, gadget=Gadget('Gadget2', **gadget_dp)))
 
         self.assertNotEqual(Event(**dp, attachments=Attachment('Attachment1', **attachments_dp)),
                             Event(**dp, attachments=Attachment('Attachment2', **attachments_dp)))

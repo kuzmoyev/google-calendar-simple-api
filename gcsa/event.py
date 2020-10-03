@@ -37,7 +37,6 @@ class Event:
                  color=None,
                  visibility=Visibility.DEFAULT,
                  attendees=None,
-                 gadget=None,
                  attachments=None,
                  reminders=None,
                  default_reminders=False,
@@ -72,8 +71,6 @@ class Event:
         :param attendees:
                 attendee or list of attendees. See :py:class:`~gcsa.attendee.Attendee`.
                 Each attendee may be given as email string or :py:class:`~gcsa.attendee.Attendee` object.
-        :param gadget:
-                a gadget that extends the event. See :py:class:`~gcsa.gadget.Gadget`
         :param attachments:
                 attachment or list of attachments. See :py:class:`~gcsa.attachment.Attachment`
         :param reminders:
@@ -133,7 +130,6 @@ class Event:
         self.color_id = color
         self.visibility = visibility
         self.attendees = attendees
-        self.gadget = gadget
         self.attachments = assure_list(attachments)
         self.reminders = reminders
         self.default_reminders = default_reminders
@@ -213,7 +209,6 @@ class Event:
                and self.color_id == other.color_id \
                and self.visibility == other.visibility \
                and self.attendees == other.attendees \
-               and self.gadget == other.gadget \
                and self.attachments == other.attachments \
                and self.reminders == other.reminders \
                and self.default_reminders == other.default_reminders \

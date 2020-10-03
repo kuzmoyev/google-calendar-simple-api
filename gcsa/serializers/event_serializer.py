@@ -8,7 +8,6 @@ from gcsa.event import Event
 from .attachment_serializer import AttachmentSerializer
 from .attendee_serializer import AttendeeSerializer
 from .base_serializer import BaseSerializer
-from .gadget_serializer import GadgetSerializer
 from .reminder_serializer import ReminderSerializer
 
 
@@ -28,7 +27,6 @@ class EventSerializer(BaseSerializer):
             "colorId": event.color_id,
             "visibility": event.visibility,
             "attendees": [AttendeeSerializer.to_json(a) for a in event.attendees],
-            "gadget": GadgetSerializer.to_json(event.gadget) if event.gadget else None,
             "reminders": {
                 "useDefault": event.default_reminders,
                 "overrides": [ReminderSerializer.to_json(r) for r in event.reminders]
@@ -89,9 +87,6 @@ class EventSerializer(BaseSerializer):
         attendees_json = json_event.pop('attendees', [])
         attendees = [AttendeeSerializer.to_object(a) for a in attendees_json]
 
-        gadget_json = json_event.pop('gadget', None)
-        gadget = GadgetSerializer.to_object(gadget_json) if gadget_json else None
-
         reminders_json = json_event.pop('reminders', {})
         reminders = [ReminderSerializer.to_object(r) for r in reminders_json.get('overrides', [])]
 
@@ -110,7 +105,6 @@ class EventSerializer(BaseSerializer):
             color=json_event.pop('colorId', None),
             visibility=json_event.pop('visibility', None),
             attendees=attendees,
-            gadget=gadget,
             attachments=attachments,
             reminders=reminders,
             default_reminders=reminders_json.pop('useDefault', False),

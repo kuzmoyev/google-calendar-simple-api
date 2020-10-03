@@ -8,7 +8,6 @@ Code documentation
    google_calendar
    attachment
    event
-   gadget
    recurrence
    reminders
    attendees
