@@ -87,7 +87,11 @@ class GoogleCalendar:
                 created event object with id.
         """
         body = EventSerializer(event).get_json()
-        event_json = self.service.events().insert(calendarId=self.calendar, body=body).execute()
+        event_json = self.service.events().insert(
+            calendarId=self.calendar,
+            body=body,
+            conferenceDataVersion=1
+        ).execute()
         return EventSerializer.to_object(event_json)
 
     def add_quick_event(self, event_string):
