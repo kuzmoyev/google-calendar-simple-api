@@ -27,23 +27,25 @@ class GoogleCalendar:
 
     def __init__(self,
                  calendar='primary',
+                 *,
                  credentials_path=None,
+                 token_path=None,
                  read_only=False,
-                 application_name=None,
-                 token_path=None):
+                 application_name=None
+                 ):
         """Represents Google Calendar of the user.
 
         :param calendar:
-                users email address or name/id of the calendar. Default: primary calendar of the user.
+                users email address or name/id of the calendar. Default: primary calendar of the user
         :param credentials_path:
-                path to "credentials.json" file. Default: ~/.credentials.
+                path to "credentials.json" file. Default: ~/.credentials
+        :param token_path:
+                existing path to load the token from, or path to save the token after initial authentication flow.
+                Default: "token.pickle" in the same directory as the credentials_path
         :param read_only:
                 if require read only access. Default: False
         :param application_name:
                 name of the application. Default: None
-        :param token_path:
-                existing path to load the token from, or path to save the token after initial authentication flow.
-                Default: "token.pickle" in the same directory as the credentials_path
         """
         credentials_path = credentials_path or _get_default_credentials_path()
         self._credentials_dir, self._credentials_file = os.path.split(credentials_path)
