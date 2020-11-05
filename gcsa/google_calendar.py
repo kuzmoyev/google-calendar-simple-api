@@ -21,6 +21,19 @@ def _get_default_credentials_path():
     return credential_path
 
 
+class SendUpdatesMode:
+    """ Possible values of the mode for sending updates or invitations to attendees.
+
+    ALL - Send updates to all participants. This is the default value.
+    EXTERNAL_ONLY - Send updates only to attendess not using google calendar.
+    NONE - Do not send updates.
+    """
+
+    ALL = "all"
+    EXTERNAL_ONLY = "externalOnly"
+    NONE = "none"
+
+
 class GoogleCalendar:
     _READ_WRITE_SCOPES = 'https://www.googleapis.com/auth/calendar'
     _LIST_ORDERS = ("startTime", "updated")
@@ -79,7 +92,7 @@ class GoogleCalendar:
 
         return credentials
 
-    def add_event(self, event):
+    def add_event(self, event, send_updates=SendUpdatesMode.NONE):
         """Creates event in the calendar
 
         :param event:
@@ -89,14 +102,19 @@ class GoogleCalendar:
                 created event object with id.
         """
         body = EventSerializer(event).get_json()
-        event_json = self.service.events().insert(
-            calendarId=self.calendar,
-            body=body,
-            conferenceDataVersion=1
-        ).execute()
+        event_json = (
+            self.service.events()
+            .insert(
+                calendarId=self.calendar,
+                body=body,
+                conferenceDataVersion=1,
+                send_updates=send_updates,
+            )
+            .execute()
+        )
         return EventSerializer.to_object(event_json)
 
-    def add_quick_event(self, event_string):
+    def add_quick_event(self, event_string, send_updates=SendUpdatesMode.NONE):
         """Creates event in the calendar by string description.
 
         Example:
@@ -108,10 +126,16 @@ class GoogleCalendar:
         :return:
                 created event object with id.
         """
-        event_json = self.service.events().quickAdd(calendarId=self.calendar, text=event_string).execute()
+        event_json = (
+            self.service.events()
+            .quickAdd(
+                calendarId=self.calendar, text=event_string, send_updates=send_updates,
+            )
+            .execute()
+        )
         return EventSerializer.to_object(event_json)
 
-    def update_event(self, event):
+    def update_event(self, event, send_updates=SendUpdatesMode.NONE):
         """Updates existing event in the calendar
 
         :param event:
@@ -121,10 +145,21 @@ class GoogleCalendar:
                 updated event object.
         """
         body = EventSerializer(event).get_json()
-        event_json = self.service.events().update(calendarId=self.calendar, eventId=event.id, body=body).execute()
+        event_json = (
+            self.service.events()
+            .update(
+                calendarId=self.calendar,
+                eventId=event.id,
+                body=body,
+                send_updates=send_updates,
+            )
+            .execute()
+        )
         return EventSerializer.to_object(event_json)
 
-    def move_event(self, event, destination_calendar_id):
+    def move_event(
+        self, event, destination_calendar_id, send_updates=SendUpdatesMode.NONE
+    ):
         """Moves existing event from calendar to another calendar
 
         :param event:
@@ -135,22 +170,29 @@ class GoogleCalendar:
         :return:
                 moved event object.
         """
-        moved_event_json = self.service.events().move(
-            calendarId=self.calendar,
-            eventId=event.id,
-            destination=destination_calendar_id
-        ).execute()
+        moved_event_json = (
+            self.service.events()
+            .move(
+                calendarId=self.calendar,
+                eventId=event.id,
+                destination=destination_calendar_id,
+                send_updates=send_updates,
+            )
+            .execute()
+        )
         return EventSerializer.to_object(moved_event_json)
 
-    def delete_event(self, event):
+    def delete_event(self, event, send_updates=SendUpdatesMode.NONE):
         """ Deletes an event.
 
         :param event:
                 event object with set event_id.
         """
         if event.id is None:
-            raise ValueError('Event has to have event_id to be deleted.')
-        self.service.events().delete(calendarId=self.calendar, eventId=event.id).execute()
+            raise ValueError("Event has to have event_id to be deleted.")
+        self.service.events().delete(
+            calendarId=self.calendar, eventId=event.id, send_updates=send_updates,
+        ).execute()
 
     def get_events(self, time_min=None, time_max=None, order_by='startTime', timezone=str(get_localzone())):
         """ Lists events
