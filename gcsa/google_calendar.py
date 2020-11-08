@@ -234,6 +234,24 @@ class GoogleCalendar:
             if not page_token:
                 break
 
+    def get_event(self, event_id: str):
+        """ Returns the event with the corresponding event_id.
+
+        :param event_id:
+                The unique event ID.
+				
+		:return:
+                The corresponding event object or None if 
+				no matching ID was found.
+        """
+        event_resource = (
+            self.service.events()
+            .get(calendarId=self.calendar, eventId=event_id)
+            .execute()
+        )
+
+        return EventSerializer(event_resource).get_object()
+
     def list_event_colors(self):
         """List allowed event colors for the calendar."""
         return self.service.colors().get().execute()['event']
