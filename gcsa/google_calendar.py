@@ -108,7 +108,7 @@ class GoogleCalendar:
                 calendarId=self.calendar,
                 body=body,
                 conferenceDataVersion=1,
-                send_updates=send_updates,
+                sendUpdates=send_updates,
             )
             .execute()
         )
@@ -129,7 +129,7 @@ class GoogleCalendar:
         event_json = (
             self.service.events()
             .quickAdd(
-                calendarId=self.calendar, text=event_string, send_updates=send_updates,
+                calendarId=self.calendar, text=event_string, sendUpdates=send_updates,
             )
             .execute()
         )
@@ -151,7 +151,7 @@ class GoogleCalendar:
                 calendarId=self.calendar,
                 eventId=event.id,
                 body=body,
-                send_updates=send_updates,
+                sendUpdates=send_updates,
             )
             .execute()
         )
@@ -176,7 +176,7 @@ class GoogleCalendar:
                 calendarId=self.calendar,
                 eventId=event.id,
                 destination=destination_calendar_id,
-                send_updates=send_updates,
+                sendUpdates=send_updates,
             )
             .execute()
         )
@@ -191,7 +191,7 @@ class GoogleCalendar:
         if event.id is None:
             raise ValueError("Event has to have event_id to be deleted.")
         self.service.events().delete(
-            calendarId=self.calendar, eventId=event.id, send_updates=send_updates,
+            calendarId=self.calendar, eventId=event.id, sendUpdates=send_updates,
         ).execute()
 
     def get_events(self, time_min=None, time_max=None, order_by='startTime', timezone=str(get_localzone())):
