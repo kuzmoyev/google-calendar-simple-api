@@ -140,6 +140,9 @@ class GoogleCalendar:
 
         :param event:
                 event object with set event_id.
+        :param send_updates:
+                Whether and how to send updates to attendees.
+                Default is "NONE".
 
         :return:
                 updated event object.
@@ -166,6 +169,9 @@ class GoogleCalendar:
                 event object with set event_id.
         :param destination_calendar_id:
                 id of the destination calendar.
+        :param send_updates:
+                Whether and how to send updates to attendees.
+                Default is "NONE".
 
         :return:
                 moved event object.
@@ -187,6 +193,9 @@ class GoogleCalendar:
 
         :param event:
                 event object with set event_id.
+        :param send_updates:
+                Whether and how to send updates to attendees.
+                Default is "NONE".
         """
         if event.id is None:
             raise ValueError("Event has to have event_id to be deleted.")
@@ -239,10 +248,10 @@ class GoogleCalendar:
 
         :param event_id:
                 The unique event ID.
-				
-		:return:
-                The corresponding event object or None if 
-				no matching ID was found.
+
+        :return:
+                The corresponding event object or None if
+                no matching ID was found.
         """
         event_resource = (
             self.service.events()
