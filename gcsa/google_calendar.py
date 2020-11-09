@@ -108,7 +108,7 @@ class GoogleCalendar:
                 calendarId=self.calendar,
                 body=body,
                 conferenceDataVersion=1,
-                send_updates=send_updates,
+                sendUpdates=send_updates,
             )
             .execute()
         )
@@ -129,7 +129,7 @@ class GoogleCalendar:
         event_json = (
             self.service.events()
             .quickAdd(
-                calendarId=self.calendar, text=event_string, send_updates=send_updates,
+                calendarId=self.calendar, text=event_string, sendUpdates=send_updates,
             )
             .execute()
         )
@@ -140,6 +140,9 @@ class GoogleCalendar:
 
         :param event:
                 event object with set event_id.
+        :param send_updates:
+                Whether and how to send updates to attendees.
+                Default is "NONE".
 
         :return:
                 updated event object.
@@ -151,7 +154,7 @@ class GoogleCalendar:
                 calendarId=self.calendar,
                 eventId=event.id,
                 body=body,
-                send_updates=send_updates,
+                sendUpdates=send_updates,
             )
             .execute()
         )
@@ -166,6 +169,9 @@ class GoogleCalendar:
                 event object with set event_id.
         :param destination_calendar_id:
                 id of the destination calendar.
+        :param send_updates:
+                Whether and how to send updates to attendees.
+                Default is "NONE".
 
         :return:
                 moved event object.
@@ -176,7 +182,7 @@ class GoogleCalendar:
                 calendarId=self.calendar,
                 eventId=event.id,
                 destination=destination_calendar_id,
-                send_updates=send_updates,
+                sendUpdates=send_updates,
             )
             .execute()
         )
@@ -187,11 +193,14 @@ class GoogleCalendar:
 
         :param event:
                 event object with set event_id.
+        :param send_updates:
+                Whether and how to send updates to attendees.
+                Default is "NONE".
         """
         if event.id is None:
             raise ValueError("Event has to have event_id to be deleted.")
         self.service.events().delete(
-            calendarId=self.calendar, eventId=event.id, send_updates=send_updates,
+            calendarId=self.calendar, eventId=event.id, sendUpdates=send_updates,
         ).execute()
 
     def get_events(self, time_min=None, time_max=None, order_by='startTime', timezone=str(get_localzone())):
@@ -233,6 +242,24 @@ class GoogleCalendar:
             page_token = events.get('nextPageToken')
             if not page_token:
                 break
+
+    def get_event(self, event_id: str):
+        """ Returns the event with the corresponding event_id.
+
+        :param event_id:
+                The unique event ID.
+
+        :return:
+                The corresponding event object or None if
+                no matching ID was found.
+        """
+        event_resource = (
+            self.service.events()
+            .get(calendarId=self.calendar, eventId=event_id)
+            .execute()
+        )
+
+        return EventSerializer(event_resource).get_object()
 
     def list_event_colors(self):
         """List allowed event colors for the calendar."""
