@@ -24,22 +24,22 @@ class Attendee:
         """Represents attendee of the event.
 
         :param email:
-                the attendee's email address, if available.
+                The attendee's email address, if available.
         :param display_name:
-                the attendee's name, if available
+                The attendee's name, if available
         :param comment:
-                the attendee's response comment
+                The attendee's response comment
         :param optional:
-                whether this is an optional attendee. The default is False.
+                Whether this is an optional attendee. The default is False.
         :param is_resource:
-                whether the attendee is a resource.
+                Whether the attendee is a resource.
                 Can only be set when the attendee is added to the event
                 for the first time. Subsequent modifications are ignored.
                 The default is False.
         :param additional_guests:
-                number of additional guests. The default is 0.
+                Number of additional guests. The default is 0.
         :param response_status:
-                the attendee's response status. See :py:class:`~gcsa.attendee.ResponseStatus`
+                The attendee's response status. See :py:class:`~gcsa.attendee.ResponseStatus`
         """
         self.email = email
         self.display_name = display_name

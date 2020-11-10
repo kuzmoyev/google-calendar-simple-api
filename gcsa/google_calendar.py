@@ -24,9 +24,9 @@ def _get_default_credentials_path():
 class SendUpdatesMode:
     """ Possible values of the mode for sending updates or invitations to attendees.
 
-    ALL - Send updates to all participants. This is the default value.
-    EXTERNAL_ONLY - Send updates only to attendess not using google calendar.
-    NONE - Do not send updates.
+    * ALL - Send updates to all participants. This is the default value.
+    * EXTERNAL_ONLY - Send updates only to attendees not using google calendar.
+    * NONE - Do not send updates.
     """
 
     ALL = "all"
@@ -49,16 +49,16 @@ class GoogleCalendar:
         """Represents Google Calendar of the user.
 
         :param calendar:
-                users email address or name/id of the calendar. Default: primary calendar of the user
+                Users email address or name/id of the calendar. Default: primary calendar of the user
         :param credentials_path:
-                path to "credentials.json" file. Default: ~/.credentials
+                Path to "credentials.json" file. Default: ~/.credentials
         :param token_path:
-                existing path to load the token from, or path to save the token after initial authentication flow.
+                Existing path to load the token from, or path to save the token after initial authentication flow.
                 Default: "token.pickle" in the same directory as the credentials_path
         :param read_only:
-                if require read only access. Default: False
+                If require read only access. Default: False
         :param application_name:
-                name of the application. Default: None
+                Name of the application. Default: None
         """
         credentials_path = credentials_path or _get_default_credentials_path()
         self._credentials_dir, self._credentials_file = os.path.split(credentials_path)
@@ -96,10 +96,13 @@ class GoogleCalendar:
         """Creates event in the calendar
 
         :param event:
-                event object.
+                Event object.
+        :param send_updates:
+                Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
+                Default is "NONE".
 
         :return:
-                created event object with id.
+                Created event object with id.
         """
         body = EventSerializer(event).get_json()
         event_json = (
@@ -121,10 +124,13 @@ class GoogleCalendar:
             Appointment at Somewhere on June 3rd 10am-10:25am
 
         :param event_string:
-                string that describes an event
+                String that describes an event
+        :param send_updates:
+                Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
+                Default is "NONE".
 
         :return:
-                created event object with id.
+                Created event object with id.
         """
         event_json = (
             self.service.events()
@@ -139,9 +145,9 @@ class GoogleCalendar:
         """Updates existing event in the calendar
 
         :param event:
-                event object with set event_id.
+                Event object with set event_id.
         :param send_updates:
-                Whether and how to send updates to attendees.
+                Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
 
         :return:
@@ -166,11 +172,11 @@ class GoogleCalendar:
         """Moves existing event from calendar to another calendar
 
         :param event:
-                event object with set event_id.
+                Event object with set event_id.
         :param destination_calendar_id:
-                id of the destination calendar.
+                Id of the destination calendar.
         :param send_updates:
-                Whether and how to send updates to attendees.
+                Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
 
         :return:
@@ -192,9 +198,9 @@ class GoogleCalendar:
         """ Deletes an event.
 
         :param event:
-                event object with set event_id.
+                Event object with set event_id.
         :param send_updates:
-                Whether and how to send updates to attendees.
+                Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
         """
         if event.id is None:
@@ -207,13 +213,13 @@ class GoogleCalendar:
         """ Lists events
 
         :param time_min:
-                staring date/datetime
+                Staring date/datetime
         :param time_max:
-                ending date/datetime
+                Ending date/datetime
         :param order_by:
-                order of the events. Possible values: "startTime", "updated".
+                Order of the events. Possible values: "startTime", "updated".
         :param timezone:
-                timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
+                Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
                 the computers local timezone is used if it is configured. UTC is used otherwise.
         """
         time_min = time_min or datetime.now()

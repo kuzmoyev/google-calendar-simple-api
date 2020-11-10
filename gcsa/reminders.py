@@ -3,9 +3,9 @@ class Reminder:
         """Represents base reminder object
 
         :param method:
-                method of the reminder. Possible values: email or popup
+                Method of the reminder. Possible values: email or popup
         :param minutes_before_start:
-                minutes before reminder
+                Minutes before reminder
         """
         self.method = method
         self.minutes_before_start = minutes_before_start
@@ -21,7 +21,7 @@ class EmailReminder(Reminder):
         """Represents email reminder object
 
         :param minutes_before_start:
-                minutes before reminder
+                Minutes before reminder
         """
         super().__init__('email', minutes_before_start)
 
@@ -31,6 +31,6 @@ class PopupReminder(Reminder):
         """Represents popup reminder object
 
         :param minutes_before_start:
-                minutes before reminder
+                Minutes before reminder
         """
         super().__init__('popup', minutes_before_start)
