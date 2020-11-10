@@ -92,7 +92,7 @@ class GoogleCalendar:
 
         return credentials
 
-    def add_event(self, event, send_updates=SendUpdatesMode.NONE):
+    def add_event(self, event, send_updates=SendUpdatesMode.NONE, **kwargs):
         """Creates event in the calendar
 
         :param event:
@@ -100,24 +100,23 @@ class GoogleCalendar:
         :param send_updates:
                 Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
+        :param kwargs:
+                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/insert
 
         :return:
                 Created event object with id.
         """
         body = EventSerializer(event).get_json()
-        event_json = (
-            self.service.events()
-            .insert(
-                calendarId=self.calendar,
-                body=body,
-                conferenceDataVersion=1,
-                sendUpdates=send_updates,
-            )
-            .execute()
-        )
+        event_json = self.service.events().insert(
+            calendarId=self.calendar,
+            body=body,
+            conferenceDataVersion=1,
+            sendUpdates=send_updates,
+            **kwargs
+        ).execute()
         return EventSerializer.to_object(event_json)
 
-    def add_quick_event(self, event_string, send_updates=SendUpdatesMode.NONE):
+    def add_quick_event(self, event_string, send_updates=SendUpdatesMode.NONE, **kwargs):
         """Creates event in the calendar by string description.
 
         Example:
@@ -128,20 +127,21 @@ class GoogleCalendar:
         :param send_updates:
                 Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
+        :param kwargs:
+                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/quickAdd
 
         :return:
                 Created event object with id.
         """
-        event_json = (
-            self.service.events()
-            .quickAdd(
-                calendarId=self.calendar, text=event_string, sendUpdates=send_updates,
-            )
-            .execute()
-        )
+        event_json = self.service.events().quickAdd(
+            calendarId=self.calendar,
+            text=event_string,
+            sendUpdates=send_updates,
+            **kwargs
+        ).execute()
         return EventSerializer.to_object(event_json)
 
-    def update_event(self, event, send_updates=SendUpdatesMode.NONE):
+    def update_event(self, event, send_updates=SendUpdatesMode.NONE, **kwargs):
         """Updates existing event in the calendar
 
         :param event:
@@ -149,26 +149,23 @@ class GoogleCalendar:
         :param send_updates:
                 Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
+        :param kwargs:
+                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/update
 
         :return:
-                updated event object.
+                Updated event object.
         """
         body = EventSerializer(event).get_json()
-        event_json = (
-            self.service.events()
-            .update(
-                calendarId=self.calendar,
-                eventId=event.id,
-                body=body,
-                sendUpdates=send_updates,
-            )
-            .execute()
-        )
+        event_json = self.service.events().update(
+            calendarId=self.calendar,
+            eventId=event.id,
+            body=body,
+            sendUpdates=send_updates,
+            **kwargs
+        ).execute()
         return EventSerializer.to_object(event_json)
 
-    def move_event(
-        self, event, destination_calendar_id, send_updates=SendUpdatesMode.NONE
-    ):
+    def move_event(self, event, destination_calendar_id, send_updates=SendUpdatesMode.NONE, **kwargs):
         """Moves existing event from calendar to another calendar
 
         :param event:
@@ -178,23 +175,22 @@ class GoogleCalendar:
         :param send_updates:
                 Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
+        :param kwargs:
+                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/move
 
         :return:
-                moved event object.
+                Moved event object.
         """
-        moved_event_json = (
-            self.service.events()
-            .move(
-                calendarId=self.calendar,
-                eventId=event.id,
-                destination=destination_calendar_id,
-                sendUpdates=send_updates,
-            )
-            .execute()
-        )
+        moved_event_json = self.service.events().move(
+            calendarId=self.calendar,
+            eventId=event.id,
+            destination=destination_calendar_id,
+            sendUpdates=send_updates,
+            **kwargs
+        ).execute()
         return EventSerializer.to_object(moved_event_json)
 
-    def delete_event(self, event, send_updates=SendUpdatesMode.NONE):
+    def delete_event(self, event, send_updates=SendUpdatesMode.NONE, **kwargs):
         """ Deletes an event.
 
         :param event:
@@ -202,14 +198,19 @@ class GoogleCalendar:
         :param send_updates:
                 Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
+        :param kwargs:
+                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/delete
         """
         if event.id is None:
             raise ValueError("Event has to have event_id to be deleted.")
         self.service.events().delete(
-            calendarId=self.calendar, eventId=event.id, sendUpdates=send_updates,
+            calendarId=self.calendar,
+            eventId=event.id,
+            sendUpdates=send_updates,
+            **kwargs
         ).execute()
 
-    def get_events(self, time_min=None, time_max=None, order_by='startTime', timezone=str(get_localzone())):
+    def get_events(self, time_min=None, time_max=None, order_by='startTime', timezone=str(get_localzone()), **kwargs):
         """ Lists events
 
         :param time_min:
@@ -221,6 +222,12 @@ class GoogleCalendar:
         :param timezone:
                 Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
                 the computers local timezone is used if it is configured. UTC is used otherwise.
+        :param kwargs:
+                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/list
+
+
+        :return:
+                Iterable of event objects
         """
         time_min = time_min or datetime.now()
         time_max = time_max or time_min + relativedelta(years=1)
@@ -236,12 +243,15 @@ class GoogleCalendar:
 
         page_token = None
         while True:
-            events = self.service.events().list(calendarId=self.calendar,
-                                                timeMin=time_min,
-                                                timeMax=time_max,
-                                                orderBy=order_by,
-                                                singleEvents=True,
-                                                pageToken=page_token).execute()
+            events = self.service.events().list(
+                calendarId=self.calendar,
+                timeMin=time_min,
+                timeMax=time_max,
+                orderBy=order_by,
+                singleEvents=True,
+                pageToken=page_token,
+                **kwargs
+            ).execute()
             for event_json in events['items']:
                 event = EventSerializer(event_json).get_object()
                 yield event
@@ -249,21 +259,23 @@ class GoogleCalendar:
             if not page_token:
                 break
 
-    def get_event(self, event_id: str):
+    def get_event(self, event_id, **kwargs):
         """ Returns the event with the corresponding event_id.
 
         :param event_id:
                 The unique event ID.
+        :param kwargs:
+                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/get
 
         :return:
                 The corresponding event object or None if
                 no matching ID was found.
         """
-        event_resource = (
-            self.service.events()
-            .get(calendarId=self.calendar, eventId=event_id)
-            .execute()
-        )
+        event_resource = self.service.events().get(
+            calendarId=self.calendar,
+            eventId=event_id,
+            **kwargs
+        ).execute()
 
         return EventSerializer(event_resource).get_object()
 
