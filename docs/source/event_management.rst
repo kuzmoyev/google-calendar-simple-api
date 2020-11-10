@@ -1,6 +1,8 @@
 Event management
 ================
 
+Events
+------
 Event in `gcsa` is represented by the class :py:class:`~gcsa.event.Event`. It stores all needed information about event
 including its summary, starting and ending dates/times, attachments, reminders, recurrence rules, etc.
 
@@ -14,8 +16,8 @@ To do so, create a ``GoogleCalendar`` instance (see :ref:`getting_started` to ge
 
     calendar = GoogleCalendar()
 
-then you can **list** existing events.
-
+List events
+~~~~~~~~~~~
 This code will print out events for one year starting today:
 
 
@@ -25,11 +27,11 @@ This code will print out events for one year starting today:
         print(event)
 
 
-You can specify range of listed events in two ways:
+Specify range of listed events in two ways:
 
 .. code-block:: python
 
-    calendar.get_event(start_date, end_date, order_by='updated')
+    calendar.get_events(start_date, end_date, order_by='updated')
 
 or
 
@@ -40,9 +42,17 @@ or
 ``start_date`` and ``end_date`` can be ``date`` or ``datetime`` objects. ``order_by`` can be `'startTime'` (default)
 or `'updated'`.
 
+Get event by id
+~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    calendar.get_event('<event_id>')
 
 
-You can **create** an event:
+
+Create event
+~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -57,14 +67,15 @@ For ``date``/``datetime`` objects you can use Pythons datetime_ module or as in 
 example beautiful_date_ library (*because it's beautiful... just like you*).
 
 
-Now you can **add** your event to the calendar:
+Now **add** your event to the calendar:
 
 .. code-block:: python
 
     calendar.add_event(event)
 
 
-You can **update** an existing event:
+Update event
+~~~~~~~~~~~~
 
 .. code-block:: python
 
@@ -72,15 +83,16 @@ You can **update** an existing event:
     calendar.update_event(event)
 
 
-You can **move** an existing event to another calendar:
+Move event to another calendar
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
     calendar.move_event(event, destination_calendar_id='primary')
 
 
-And **delete** an existing event:
-
+Delete event
+~~~~~~~~~~~~
 
 .. code-block:: python
 
