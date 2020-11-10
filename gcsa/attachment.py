@@ -24,15 +24,15 @@ class Attachment:
         Currently only Google Drive attachments are supported.
 
         :param title:
-                attachment title
+                Attachment title
         :param file_url:
-                a link for opening the file in a relevant Google editor or viewer.
+                A link for opening the file in a relevant Google editor or viewer.
         :param mime_type:
-                internet media type (MIME type) of the attachment. See  `available MIME types`_
+                Internet media type (MIME type) of the attachment. See  `available MIME types`_
         :param icon_link:
                 URL link to the attachment's icon (read only)
         :param file_id:
-                id of the attached file (read only)
+                Id of the attached file (read only)
 
         .. note: "read only" means that Attachment has given property only
                  when received from the existing event in the calendar.
