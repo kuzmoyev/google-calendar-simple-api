@@ -92,7 +92,8 @@ setup(
     tests_require=[
         "pytest>=5.4",
         "pytest-cov>=2.10",
-        "flake8>3.8.3"
+        "flake8>3.8.3",
+        "pep8-naming>=0.11.1"
     ],
     classifiers=[
         'License :: OSI Approved :: MIT License',
