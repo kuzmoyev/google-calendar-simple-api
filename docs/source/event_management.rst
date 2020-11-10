@@ -123,7 +123,6 @@ or
 You can pass multiple attendees at once in a list.
 
 
-
 .. code-block:: python
 
     event = Event('Meeting',
@@ -132,6 +131,9 @@ You can pass multiple attendees at once in a list.
                     'attendee@gmail.com',
                     Attendee('attendee2@gmail.com', display_name='Friend')
                   ])
+
+To notify attendees about created/updated/deleted event use `send_updates` parameter in `add_event`, `update_event`, and
+`delete_event` methods. See :py:class:`~gcsa.google_calendar.SendUpdatesMode` for possible values.
 
 Attachments
 -----------
