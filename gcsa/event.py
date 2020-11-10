@@ -123,7 +123,7 @@ class Event:
         if default_reminders and reminders:
             raise ValueError('Cannot specify both default reminders and overrides at the same time.')
 
-        self.event_id = event_id and event_id.lower()
+        self.event_id = event_id
         self.summary = summary
         self.description = description
         self.location = location
