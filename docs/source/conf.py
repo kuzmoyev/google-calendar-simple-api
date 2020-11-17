@@ -176,3 +176,9 @@ epub_exclude_files = ['search.html']
 intersphinx_mapping = {'https://docs.python.org/': None}
 
 autoclass_content = 'both'
+
+autodoc_member_order = 'bysource'
+
+html_theme_options = {
+    'analytics_id': 'G-PT0TPQSZ56',
+}
