@@ -11,3 +11,4 @@ Code documentation
    recurrence
    reminders
    attendees
+   conference

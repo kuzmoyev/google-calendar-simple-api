@@ -160,6 +160,7 @@ class GoogleCalendar:
             calendarId=self.calendar,
             eventId=event.id,
             body=body,
+            conferenceDataVersion=1,
             sendUpdates=send_updates,
             **kwargs
         ).execute()
