@@ -55,7 +55,7 @@ class BaseSerializer(ABC):
     @classmethod
     def assure_type(cls, obj):
         if not isinstance(obj, cls.type_):
-            raise TypeError('The event object must be {}, not {!r}.'.format(cls.type_, obj.__class__.__name__))
+            raise TypeError('The object must be {}, not {!r}.'.format(cls.type_, obj.__class__.__name__))
 
     def __init_subclass__(cls, **kwargs):
         """Checks that "type_" is defined and that name of the argument in subclasses __init__ method is the name of
