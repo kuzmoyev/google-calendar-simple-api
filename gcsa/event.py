@@ -38,6 +38,7 @@ class Event:
                  visibility=Visibility.DEFAULT,
                  attendees=None,
                  attachments=None,
+                 conference_solution=None,
                  reminders=None,
                  default_reminders=False,
                  minutes_before_popup_reminder=None,
@@ -74,6 +75,9 @@ class Event:
                 Each attendee may be given as email string or :py:class:`~gcsa.attendee.Attendee` object.
         :param attachments:
                 Attachment or list of attachments. See :py:class:`~gcsa.attachment.Attachment`
+        :param conference_solution:
+                :py:class:`~gcsa.conference.ConferenceSolutionCreateRequest` object to create a new conference
+                or :py:class:`~gcsa.conference.ConferenceSolution` object for existing conference.
         :param reminders:
                 Reminder or list of reminder objects. See :py:mod:`~gcsa.reminders`
         :param default_reminders:
@@ -132,6 +136,7 @@ class Event:
         self.visibility = visibility
         self.attendees = attendees
         self.attachments = assure_list(attachments)
+        self.conference_solution = conference_solution
         self.reminders = reminders
         self.default_reminders = default_reminders
         self.other = other

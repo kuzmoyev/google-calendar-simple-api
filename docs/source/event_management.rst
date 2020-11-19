@@ -159,7 +159,7 @@ as a ``attachments`` parameter:
 
     attachment = Attachment('My file',
                             file_url='https://docs.google.com/document/d/1uDvwcxOsXkzl2Bod0YIfrIQ5MqfBhnc1jusYdH1xCZo/edit'
-                            mime_type="application/vnd.google-apps.document")
+                            mime_type='application/vnd.google-apps.document')
 
     event = Event('Meeting',
                   start=(22/Apr/2019)[12:00],

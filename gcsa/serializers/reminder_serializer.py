@@ -5,11 +5,11 @@ from .base_serializer import BaseSerializer
 class ReminderSerializer(BaseSerializer):
     type_ = Reminder
 
-    def __init__(self, reminder):
+    def __init__(self, reminder: Reminder):
         super().__init__(reminder)
 
     @staticmethod
-    def _to_json(reminder):
+    def _to_json(reminder: Reminder):
         return {
             'method': reminder.method,
             'minutes': reminder.minutes_before_start

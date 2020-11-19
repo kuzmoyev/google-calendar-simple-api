@@ -5,11 +5,11 @@ from gcsa.serializers.base_serializer import BaseSerializer
 class AttendeeSerializer(BaseSerializer):
     type_ = Attendee
 
-    def __init__(self, attendee):
+    def __init__(self, attendee: Attendee):
         super().__init__(attendee)
 
     @staticmethod
-    def _to_json(attendee):
+    def _to_json(attendee: Attendee):
         data = {
             'email': attendee.email,
             'displayName': attendee.display_name,

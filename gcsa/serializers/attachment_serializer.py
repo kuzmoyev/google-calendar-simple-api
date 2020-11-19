@@ -5,11 +5,11 @@ from .base_serializer import BaseSerializer
 class AttachmentSerializer(BaseSerializer):
     type_ = Attachment
 
-    def __init__(self, attachment):
+    def __init__(self, attachment: Attachment):
         super().__init__(attachment)
 
     @staticmethod
-    def _to_json(attachment):
+    def _to_json(attachment: Attachment):
         res = {
             "fileUrl": attachment.file_url,
             "title": attachment.title,
