@@ -59,7 +59,7 @@ class EntryPoint:
 
     def __init__(
             self,
-            entry_point_type=None,
+            entry_point_type,
             uri=None,
             label=None,
             pin=None,
@@ -159,7 +159,7 @@ class ConferenceSolution(_BaseConferenceSolution):
     ):
         """
         :param entry_points:
-                :py:class:`~gcsa.conference.EntryPoint` or list of :py:class:`~gcsa.conference.EntryPoint`.
+                :py:class:`~gcsa.conference.EntryPoint` or list of :py:class:`~gcsa.conference.EntryPoint` s.
                 Information about individual conference entry points, such as URLs or phone numbers.
                 All of them must belong to the same conference.
         :param solution_type:
@@ -204,7 +204,7 @@ class ConferenceSolution(_BaseConferenceSolution):
         self.icon_uri = icon_uri
 
 
-class ConferenceSolutionRequest(_BaseConferenceSolution):
+class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
     """
     A request to generate a new conference and attach it to the event.
     The data is generated asynchronously. To see whether the data is present check the status field.
@@ -236,13 +236,15 @@ class ConferenceSolutionRequest(_BaseConferenceSolution):
                 If you specify request_id manually, they should be unique for every new CreateRequest,
                 otherwise request will be ignored.
         :param _status:
-                The current status of the conference create request. Read-only.
+                The current status of the conference create request. Should not be set by developer.
 
                 The possible values are:
 
                 * "pending": the conference create request is still being processed.
-                * "success": the conference create request succeeded, the entry points are populated.
                 * "failure": the conference create request failed, there are no entry points.
+                * | "success": the conference create request succeeded, the entry points are populated.
+                  | In this case `ConferenceSolution` with created entry points
+                    is stored in the event's `conference_data`. And `ConferenceSolutionCreateRequest` is omitted.
 
         :param conference_id:
                 The ID of the conference. Optional.

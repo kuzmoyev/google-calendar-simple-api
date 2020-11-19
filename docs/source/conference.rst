@@ -10,7 +10,7 @@ Conference data
     :members:
     :undoc-members:
 
-.. autoclass:: gcsa.conference.ConferenceSolutionRequest
+.. autoclass:: gcsa.conference.ConferenceSolutionCreateRequest
     :members:
     :undoc-members:
 
