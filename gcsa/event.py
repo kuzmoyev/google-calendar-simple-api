@@ -29,6 +29,7 @@ class Event:
                  summary,
                  start,
                  end=None,
+                 *,
                  timezone=str(get_localzone()),
                  event_id=None,
                  description=None,
