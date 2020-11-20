@@ -5,7 +5,7 @@ from gcsa.serializers.base_serializer import BaseSerializer
 class AttendeeSerializer(BaseSerializer):
     type_ = Attendee
 
-    def __init__(self, attendee: Attendee):
+    def __init__(self, attendee):
         super().__init__(attendee)
 
     @staticmethod

@@ -5,7 +5,7 @@ from .base_serializer import BaseSerializer
 class ReminderSerializer(BaseSerializer):
     type_ = Reminder
 
-    def __init__(self, reminder: Reminder):
+    def __init__(self, reminder):
         super().__init__(reminder)
 
     @staticmethod

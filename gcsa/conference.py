@@ -53,9 +53,26 @@ class _BaseConferenceSolution:
         self.signature = signature
         self.notes = notes
 
+    def __eq__(self, other):
+        if not isinstance(other, _BaseConferenceSolution):
+            return NotImplemented
+        elif self is other:
+            return True
+        else:
+            return self.conference_id == other.conference_id \
+                   and self.signature == other.signature \
+                   and self.notes == other.notes
+
 
 class EntryPoint:
     """Information about individual conference entry points, such as URLs or phone numbers."""
+
+    VIDEO = 'video'
+    PHONE = 'phone'
+    SIP = 'sip'
+    MORE = 'more'
+
+    ENTRY_POINT_TYPES = (VIDEO, PHONE, SIP, MORE)
 
     def __init__(
             self,
@@ -79,25 +96,25 @@ class EntryPoint:
 
                 Possible values are:
 
-                * | "video" - joining a conference over HTTP.
-                  | A conference can have zero or one "video" entry point.
-                * | "phone" - joining a conference by dialing a phone number.
-                  | A conference can have zero or more "phone" entry points.
-                * | "sip" - joining a conference over SIP.
-                  | A conference can have zero or one "sip" entry point.
-                * | "more" - further conference joining instructions, for example additional phone numbers.
-                  | A conference can have zero or one "more" entry point.
-                  | A conference with only a "more" entry point is not a valid conference.
+                * | VIDEO - joining a conference over HTTP.
+                  | A conference can have zero or one `VIDEO` entry point.
+                * | PHONE - joining a conference by dialing a phone number.
+                  | A conference can have zero or more `PHONE` entry points.
+                * | SIP - joining a conference over SIP.
+                  | A conference can have zero or one `SIP` entry point.
+                * | MORE - further conference joining instructions, for example additional phone numbers.
+                  | A conference can have zero or one `MORE` entry point.
+                  | A conference with only a `MORE` entry point is not a valid conference.
 
         :param uri:
                 The URI of the entry point. The maximum length is 1300 characters.
                 Format:
 
-                * | for "video", http: or https: schema is required.
-                * | for "phone", tel: schema is required.
+                * | for `VIDEO`, http: or https: schema is required.
+                * | for `PHONE`, tel: schema is required.
                   | The URI should include the entire dial sequence (e.g., tel:+12345678900,,,123456789;1234).
-                * | for "sip", sip: schema is required, e.g., sip:12345678@myprovider.com.
-                * | for "more", http: or https: schema is required.
+                * | for `SIP`, sip: schema is required, e.g., sip:12345678@myprovider.com.
+                * | for `MORE`, http: or https: schema is required.
 
         :param label:
                 The label for the URI.
@@ -105,10 +122,10 @@ class EntryPoint:
 
                 Examples:
 
-                * for "video": meet.google.com/aaa-bbbb-ccc
-                * for "phone": +1 123 268 2601
-                * for "sip": 12345678@altostrat.com
-                * for "more": should not be filled
+                * for `VIDEO`: meet.google.com/aaa-bbbb-ccc
+                * for `PHONE`: +1 123 268 2601
+                * for `SIP`: 12345678@altostrat.com
+                * for `MORE`: should not be filled
 
         :param pin:
                 The PIN to access the conference. The maximum length is 128 characters.
@@ -121,6 +138,12 @@ class EntryPoint:
         :param password:
                 The password to access the conference. The maximum length is 128 characters.
         """
+
+        if entry_point_type not in self.ENTRY_POINT_TYPES:
+            raise ValueError('"entry_point" must be one of {}. {} was provided.'.format(
+                ', '.join(self.ENTRY_POINT_TYPES),
+                entry_point_type
+            ))
         if label and len(label) > 512:
             raise ValueError('Maximum label length is 512 characters.')
         if pin and len(pin) > 128:
@@ -142,6 +165,21 @@ class EntryPoint:
         self.meeting_code = meeting_code
         self.passcode = passcode
         self.password = password
+
+    def __eq__(self, other):
+        if not isinstance(other, EntryPoint):
+            return NotImplemented
+        elif self is other:
+            return True
+        else:
+            return self.entry_point_type == other.entry_point_type \
+                   and self.uri == other.uri \
+                   and self.label == other.label \
+                   and self.pin == other.pin \
+                   and self.access_code == other.access_code \
+                   and self.meeting_code == other.meeting_code \
+                   and self.passcode == other.passcode \
+                   and self.password == other.password
 
 
 class ConferenceSolution(_BaseConferenceSolution):
@@ -198,10 +236,58 @@ class ConferenceSolution(_BaseConferenceSolution):
                 to display to the user. Can contain HTML. The maximum length is 2048 characters
         """
         super().__init__(conference_id=conference_id, signature=signature, notes=notes)
+
         self.entry_points = [entry_points] if isinstance(entry_points, EntryPoint) else entry_points
+        self._check_entry_points()
+
         self.solution_type = solution_type
         self.name = name
         self.icon_uri = icon_uri
+
+    def _check_entry_points(self):
+        """
+        Checks counts of entry points types.
+
+        * A conference can have zero or one `VIDEO` entry point.
+        * A conference can have zero or more `PHONE` entry points.
+        * A conference can have zero or one `SIP` entry point.
+        * A conference can have zero or one `MORE` entry point.
+          A conference with only a `MORE` entry point is not a valid conference.
+        """
+        if len(self.entry_points) == 0:
+            raise ValueError('At least one entry point has to be provided.')
+
+        video_count = 0
+        sip_count = 0
+        more_count = 0
+        for ep in self.entry_points:
+            if ep.entry_point_type == EntryPoint.VIDEO:
+                video_count += 1
+            elif ep.entry_point_type == EntryPoint.SIP:
+                sip_count += 1
+            elif ep.entry_point_type == EntryPoint.MORE:
+                more_count += 1
+
+        if video_count > 1:
+            raise ValueError('A conference can have zero or one `VIDEO` entry point.')
+        if sip_count > 1:
+            raise ValueError('A conference can have zero or one `SIP` entry point.')
+        if more_count > 1:
+            raise ValueError('A conference can have zero or one `MORE` entry point.')
+        if more_count == len(self.entry_points):
+            raise ValueError('A conference with only a `MORE` entry point is not a valid conference.')
+
+    def __eq__(self, other):
+        if not isinstance(other, ConferenceSolution):
+            return NotImplemented
+        elif self is other:
+            return True
+        else:
+            return super().__eq__(other) \
+                   and self.entry_points == other.entry_points \
+                   and self.solution_type == other.solution_type \
+                   and self.name == other.name \
+                   and self.icon_uri == other.icon_uri
 
 
 class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
@@ -271,3 +357,14 @@ class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
         self.request_id = request_id or uuid4().hex
         self.solution_type = solution_type
         self.status = _status
+
+    def __eq__(self, other):
+        if not isinstance(other, ConferenceSolutionCreateRequest):
+            return NotImplemented
+        elif self is other:
+            return True
+        else:
+            return super().__eq__(other) \
+                   and self.request_id == other.request_id \
+                   and self.solution_type == other.solution_type \
+                   and self.status == other.status
