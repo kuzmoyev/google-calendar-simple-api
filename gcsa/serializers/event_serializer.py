@@ -16,7 +16,7 @@ from ..conference import ConferenceSolution, ConferenceSolutionCreateRequest
 class EventSerializer(BaseSerializer):
     type_ = Event
 
-    def __init__(self, event: Event):
+    def __init__(self, event):
         super().__init__(event)
 
     @classmethod
@@ -102,7 +102,8 @@ class EventSerializer(BaseSerializer):
 
         conference_data = json_event.pop('conferenceData', None)
         if conference_data is not None:
-            if 'createRequest' not in conference_data or conference_data['status']['statusCode'] == 'success':
+            create_request = conference_data.get('createRequest', {})
+            if create_request is None or create_request.get('status', {}).get('statusCode', None) in (None, 'success'):
                 conference_solution = ConferenceSolutionSerializer.to_object(conference_data)
             else:
                 conference_solution = ConferenceSolutionCreateRequestSerializer.to_object(conference_data)

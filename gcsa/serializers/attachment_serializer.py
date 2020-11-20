@@ -5,7 +5,7 @@ from .base_serializer import BaseSerializer
 class AttachmentSerializer(BaseSerializer):
     type_ = Attachment
 
-    def __init__(self, attachment: Attachment):
+    def __init__(self, attachment):
         super().__init__(attachment)
 
     @staticmethod

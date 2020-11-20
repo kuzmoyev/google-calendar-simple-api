@@ -3,6 +3,7 @@ from beautiful_date import Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, De
 
 from gcsa.attachment import Attachment
 from gcsa.attendee import Attendee, ResponseStatus
+from gcsa.conference import ConferenceSolution, EntryPoint, SolutionType, ConferenceSolutionCreateRequest
 from gcsa.event import Event, Visibility
 from gcsa.recurrence import Recurrence, DAILY, SU, SA, MONDAY, WEEKLY
 from gcsa.reminders import PopupReminder, EmailReminder
@@ -356,6 +357,91 @@ class TestEventSerializer(TestCase):
         }
         self.assertDictEqual(EventSerializer.to_json(e), event_json)
 
+    def test_to_json_conference_solution(self):
+        e = Event(
+            'Good day',
+            start=(1 / Jul / 2020)[11:22:33],
+            timezone=TEST_TIMEZONE,
+            conference_solution=ConferenceSolution(
+                entry_points=EntryPoint(EntryPoint.VIDEO, uri='https://video.com'),
+                solution_type=SolutionType.HANGOUTS_MEET,
+                name='Hangout',
+                icon_uri='https://icon.com',
+                conference_id='aaa-bbbb-ccc',
+                signature='abc4efg12345',
+                notes='important notes'
+            )
+        )
+        event_json = {
+            'summary': 'Good day',
+            'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'recurrence': [],
+            'visibility': 'default',
+            'attendees': [],
+            'reminders': {'useDefault': False},
+            'attachments': [],
+            'conferenceData': {
+                'entryPoints': [
+                    {
+                        'entryPointType': 'video',
+                        'uri': 'https://video.com',
+                    }
+                ],
+                'conferenceSolution': {
+                    'key': {
+                        'type': 'hangoutsMeet'
+                    },
+                    'name': 'Hangout',
+                    'iconUri': 'https://icon.com'
+                },
+                'conferenceId': 'aaa-bbbb-ccc',
+                'signature': 'abc4efg12345',
+                'notes': 'important notes'
+            }
+        }
+        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+
+    def test_to_json_conference_solution_create_request(self):
+        e = Event(
+            'Good day',
+            start=(1 / Jul / 2020)[11:22:33],
+            timezone=TEST_TIMEZONE,
+            conference_solution=ConferenceSolutionCreateRequest(
+                solution_type=SolutionType.HANGOUTS_MEET,
+                request_id='hello1234',
+                conference_id='conference-id',
+                signature='signature',
+                notes='important notes',
+                _status='pending'
+            )
+        )
+        event_json = {
+            'summary': 'Good day',
+            'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'recurrence': [],
+            'visibility': 'default',
+            'attendees': [],
+            'reminders': {'useDefault': False},
+            'attachments': [],
+            'conferenceData': {
+                'createRequest': {
+                    'requestId': 'hello1234',
+                    'conferenceSolutionKey': {
+                        'type': 'hangoutsMeet'
+                    },
+                    'status': {
+                        'statusCode': 'pending'
+                    }
+                },
+                'conferenceId': 'conference-id',
+                'signature': 'signature',
+                'notes': 'important notes'
+            }
+        }
+        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+
     def test_to_object(self):
         event_json = {
             'summary': 'Good day',
@@ -391,7 +477,25 @@ class TestEventSerializer(TestCase):
                     'fileUrl': 'https://file.url2',
                     'mimeType': 'application/vnd.google-apps.document'
                 }
-            ]
+            ],
+            'conferenceData': {
+                'entryPoints': [
+                    {
+                        'entryPointType': 'video',
+                        'uri': 'https://video.com',
+                    }
+                ],
+                'conferenceSolution': {
+                    'key': {
+                        'type': 'hangoutsMeet'
+                    },
+                    'name': 'Hangout',
+                    'iconUri': 'https://icon.com'
+                },
+                'conferenceId': 'aaa-bbbb-ccc',
+                'signature': 'abc4efg12345',
+                'notes': 'important notes'
+            }
         }
 
         serializer = EventSerializer(event_json)
@@ -412,6 +516,76 @@ class TestEventSerializer(TestCase):
         self.assertEqual(len(event.attachments), 2)
         self.assertIsInstance(event.attachments[0], Attachment)
         self.assertEqual(event.attachments[0].title, 'My file1')
+        self.assertIsInstance(event.conference_solution, ConferenceSolution)
+        self.assertEqual(event.conference_solution.solution_type, 'hangoutsMeet')
+        self.assertEqual(event.conference_solution.entry_points[0].uri, 'https://video.com')
+
+        event_json = {
+            'summary': 'Good day',
+            'description': 'Very good day indeed',
+            'location': 'Prague',
+            'start': {'dateTime': '2019-01-01T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2019-01-01T12:22:33', 'timeZone': TEST_TIMEZONE},
+            'conferenceData': {
+                'createRequest': {
+                    'requestId': 'hello1234',
+                    'conferenceSolutionKey': {
+                        'type': 'hangoutsMeet'
+                    },
+                    'status': {
+                        'statusCode': 'pending'
+                    }
+                },
+                'conferenceId': 'conference-id',
+                'signature': 'signature',
+                'notes': 'important notes'
+            }
+        }
+
+        event = EventSerializer.to_object(event_json)
+        self.assertIsInstance(event.conference_solution, ConferenceSolutionCreateRequest)
+        self.assertEqual(event.conference_solution.solution_type, 'hangoutsMeet')
+
+        # with successful conference create request
+        event_json = {
+            'summary': 'Good day',
+            'description': 'Very good day indeed',
+            'location': 'Prague',
+            'start': {'dateTime': '2019-01-01T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2019-01-01T12:22:33', 'timeZone': TEST_TIMEZONE},
+            'conferenceData': {
+                'entryPoints': [
+                    {
+                        'entryPointType': 'video',
+                        'uri': 'https://video.com',
+                    }
+                ],
+                'conferenceSolution': {
+                    'key': {
+                        'type': 'hangoutsMeet'
+                    },
+                    'name': 'Hangout',
+                    'iconUri': 'https://icon.com'
+                },
+                'createRequest': {
+                    'requestId': 'hello1234',
+                    'conferenceSolutionKey': {
+                        'type': 'hangoutsMeet'
+                    },
+                    'status': {
+                        'statusCode': 'success'
+                    }
+                },
+                'conferenceId': 'conference-id',
+                'signature': 'signature',
+                'notes': 'important notes'
+            }
+        }
+
+        event = EventSerializer.to_object(event_json)
+        self.assertIsInstance(event.conference_solution, ConferenceSolution)
+        self.assertEqual(event.conference_solution.solution_type, 'hangoutsMeet')
+        self.assertEqual(event.conference_solution.entry_points[0].uri, 'https://video.com')
 
         event_json_str = """{
             "summary": "Good day",

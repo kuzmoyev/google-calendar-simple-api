@@ -11,14 +11,14 @@ class EntryPointSerializer(BaseSerializer):
     @staticmethod
     def _to_json(entry_point):
         data = {
-            "entryPointType": entry_point.entry_point_type,
-            "uri": entry_point.uri,
-            "label": entry_point.label,
-            "pin": entry_point.pin,
-            "accessCode": entry_point.access_code,
-            "meetingCode": entry_point.meeting_code,
-            "passcode": entry_point.passcode,
-            "password": entry_point.password
+            'entryPointType': entry_point.entry_point_type,
+            'uri': entry_point.uri,
+            'label': entry_point.label,
+            'pin': entry_point.pin,
+            'accessCode': entry_point.access_code,
+            'meetingCode': entry_point.meeting_code,
+            'passcode': entry_point.passcode,
+            'password': entry_point.password
         }
         return EntryPointSerializer._remove_empty_values(data)
 
@@ -49,13 +49,16 @@ class ConferenceSolutionSerializer(BaseSerializer):
                 EntryPointSerializer.to_json(ep)
                 for ep in conference_solution.entry_points
             ],
-            'conferenceSolution': {
-                'key': {
-                    'type': conference_solution.solution_type
-                },
-                'name': conference_solution.name,
-                'iconUri': conference_solution.icon_uri
-            },
+            'conferenceSolution':
+                ConferenceSolutionSerializer._remove_empty_values(
+                    {
+                        'key': {
+                            'type': conference_solution.solution_type
+                        },
+                        'name': conference_solution.name,
+                        'iconUri': conference_solution.icon_uri
+                    }
+                ),
             'conferenceId': conference_solution.conference_id,
             'signature': conference_solution.signature,
             'notes': conference_solution.notes,
@@ -67,16 +70,10 @@ class ConferenceSolutionSerializer(BaseSerializer):
     def _to_object(json_):
         entry_points = [EntryPointSerializer.to_object(ep) for ep in json_.get('entryPoints', [])]
 
-        if 'conferenceSolution' in json_:
-            conference_solution = json_['conferenceSolution']
-
-            solution_type = conference_solution.get('key', {}).get('type')
-            name = conference_solution.get('name')
-            icon_uri = conference_solution.get('iconUri')
-        else:
-            solution_type = None
-            name = None
-            icon_uri = None
+        conference_solution = json_.get('conferenceSolution', {})
+        solution_type = conference_solution.get('key', {}).get('type')
+        name = conference_solution.get('name')
+        icon_uri = conference_solution.get('iconUri')
 
         conference_id = json_.get('conferenceId')
         signature = json_.get('signature')
@@ -110,13 +107,13 @@ class ConferenceSolutionCreateRequestSerializer(BaseSerializer):
             },
             'conferenceId': cscr.conference_id,
             'signature': cscr.signature,
-            'notes': cscr.notes,
+            'notes': cscr.notes
         }
 
         if cscr.status is not None:
             data['createRequest']['status'] = {'statusCode': cscr.status}
 
-        return data
+        return ConferenceSolutionCreateRequestSerializer._remove_empty_values(data)
 
     @staticmethod
     def _to_object(json_):
