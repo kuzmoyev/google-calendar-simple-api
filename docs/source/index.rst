@@ -59,7 +59,7 @@ Contents
    getting_started
    event_management
    recurrence_tutorial
-   code
+   code/code
 
 Indices and tables
 ==================
