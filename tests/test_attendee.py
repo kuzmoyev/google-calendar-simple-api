@@ -12,7 +12,7 @@ class TestAttendeeSerializer(TestCase):
             comment='I do not know him',
             optional=True,
             additional_guests=2,
-            response_status=ResponseStatus.NEEDS_ACTION
+            _response_status=ResponseStatus.NEEDS_ACTION
         )
 
         attendee_json = AttendeeSerializer.to_json(attendee)

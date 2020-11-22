@@ -324,8 +324,8 @@ class TestEventSerializer(TestCase):
                   start=(1 / Jul / 2020)[11:22:33],
                   timezone=TEST_TIMEZONE,
                   attendees=[
-                      Attendee(email='attendee@gmail.com', response_status=ResponseStatus.NEEDS_ACTION),
-                      Attendee(email='attendee2@gmail.com', response_status=ResponseStatus.ACCEPTED),
+                      Attendee(email='attendee@gmail.com', _response_status=ResponseStatus.NEEDS_ACTION),
+                      Attendee(email='attendee2@gmail.com', _response_status=ResponseStatus.ACCEPTED),
                   ])
         event_json = {
             'summary': 'Good day',

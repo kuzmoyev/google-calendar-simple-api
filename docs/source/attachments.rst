@@ -11,7 +11,7 @@ as a ``attachments`` parameter:
     from gcsa.attachment import Attachment
 
     attachment = Attachment('My file',
-                            file_url='https://docs.google.com/document/d/1uDvwcxOsXkzl2Bod0YIfrIQ5MqfBhnc1jusYdH1xCZo/edit'
+                            file_url='https://bit.ly/3lZo0Cc',
                             mime_type='application/vnd.google-apps.document')
 
     event = Event('Meeting',

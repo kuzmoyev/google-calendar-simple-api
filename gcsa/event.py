@@ -187,7 +187,7 @@ class Event:
         return '{} - {}'.format(self.start, self.summary)
 
     def __repr__(self):
-        return '<Event {} - {}>'.format(self.start, self.summary)
+        return '<Event {}>'.format(self.__str__())
 
     def __lt__(self, other):
         def insure_datetime(d, timezone):

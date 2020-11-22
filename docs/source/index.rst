@@ -63,6 +63,7 @@ Contents
    conference
    reminders
    recurrence
+   serializers
    code/code
 
 Indices and tables

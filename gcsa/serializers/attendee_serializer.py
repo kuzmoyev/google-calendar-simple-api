@@ -30,5 +30,5 @@ class AttendeeSerializer(BaseSerializer):
             optional=json_attendee.get('optional'),
             is_resource=json_attendee.get('resource'),
             additional_guests=json_attendee.get('additionalGuests'),
-            response_status=json_attendee.get('responseStatus')
+            _response_status=json_attendee.get('responseStatus')
         )

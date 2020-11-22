@@ -77,3 +77,29 @@ available values).
 
 See more parameters for :py:class:`~gcsa.conference.ConferenceSolutionCreateRequest`.
 
+.. note:: Create requests are asynchronous. Check ``status`` field of event's ``conference_solution`` to find it's
+    status. If the status is ``"success"``, ``conference_solution`` will contain a
+    :py:class:`~gcsa.conference.ConferenceSolution` object and you'll be able to access it's field (like
+    ``entry_points``). Otherwise (if ``status`` is ``""pending"`` or ``"failure"``), ``conference_solution`` will
+    contain a :py:class:`~gcsa.conference.ConferenceSolutionCreateRequest` object.
+
+
+.. code-block:: python
+
+    event = calendar.add_event(
+        Event(
+            'Meeting',
+            start=(22 / Nov / 2020)[15:00],
+            conference_solution=ConferenceSolutionCreateRequest(
+                solution_type=SolutionType.HANGOUTS_MEET,
+            )
+        )
+    )
+
+    if event.conference_solution.status == 'success':
+        print(event.conference_solution.solution_id)
+        print(event.conference_solution.entry_points)
+    elif event.conference_solution.status == 'pending':
+        print('Conference request has not been processed yet.')
+    elif event.conference_solution.status == 'failure':
+        print('Conference request has failed.')

@@ -1,5 +1,5 @@
-Conference data
-===============
+Conference
+==========
 
 
 .. autoclass:: gcsa.conference.ConferenceSolution
