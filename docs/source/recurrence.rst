@@ -1,3 +1,5 @@
+.. _recurrence:
+
 Recurrence
 ==========
 
@@ -64,9 +66,6 @@ auxiliary classes and objects:
 Examples were taken from the `Internet Calendaring and Scheduling Core Object Specification (iCalendar)`_
 and adapted to ``gcsa``.
 
-
-:py:meth:`~gcsa.recurrence.Recurrence.rule` and :py:meth:`~gcsa.recurrence.Recurrence.exclude_rule`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `Daily for 10 occurrences`:
 
