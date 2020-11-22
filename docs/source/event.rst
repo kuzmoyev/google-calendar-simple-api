@@ -1,5 +1,7 @@
-Event management
-================
+.. _events:
+
+Events
+======
 
 Event in `gcsa` is represented by the class :py:class:`~gcsa.event.Event`. It stores all needed information about event
 including its summary, starting and ending dates/times, attachments, reminders, recurrence rules, etc.
@@ -72,6 +74,10 @@ Now **add** your event to the calendar:
     calendar.add_event(event)
 
 
+See dedicated pages on how to add :ref:`attendees`, :ref:`attachments`, :ref:`conference`, :ref:`reminders`, and
+:ref:`recurrence` to an event.
+
+
 Update event
 ~~~~~~~~~~~~
 
@@ -100,182 +106,6 @@ Delete event
 
 Event has to have ``event_id`` to be updated, moved or deleted. Events that you get from
 :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_events` method already have their ids.
-
-Attendees
----------
-
-If you want to add attendee(s) to your event, just create :py:class:`~gcsa.attendee.Attendee` (s) and pass
-as a ``attendees`` parameter (you can also pass just email of attendee and the :py:class:`~gcsa.attendee.Attendee`
-will be created for you):
-
-.. code-block:: python
-
-    from gcsa.attendee import Attendee
-
-    attendee = Attendee(
-        'attendee@gmail.com',
-        display_name='Friend',
-        additional_guests=3
-    )
-
-    event = Event('Meeting',
-                  start=(17/Jul/2020)[12:00],
-                  attendees=attendee)
-
-or
-
-.. code-block:: python
-
-    event = Event('Meeting',
-                  start=(17/Jul/2020)[12:00],
-                  attendees='attendee@gmail.com')
-
-You can pass multiple attendees at once in a list.
-
-
-.. code-block:: python
-
-    event = Event('Meeting',
-                  start=(17/Jul/2020)[12:00],
-                  attendees=[
-                    'attendee@gmail.com',
-                    Attendee('attendee2@gmail.com', display_name='Friend')
-                  ])
-
-To notify attendees about created/updated/deleted event use `send_updates` parameter in `add_event`, `update_event`, and
-`delete_event` methods. See :py:class:`~gcsa.google_calendar.SendUpdatesMode` for possible values.
-
-Attachments
------------
-
-If you want to add attachment(s) to your event, just create :py:class:`~gcsa.attachment.Attachment` (s) and pass
-as a ``attachments`` parameter:
-
-.. code-block:: python
-
-    from gcsa.attachment import Attachment
-
-    attachment = Attachment('My file',
-                            file_url='https://docs.google.com/document/d/1uDvwcxOsXkzl2Bod0YIfrIQ5MqfBhnc1jusYdH1xCZo/edit'
-                            mime_type='application/vnd.google-apps.document')
-
-    event = Event('Meeting',
-                  start=(22/Apr/2019)[12:00],
-                  attachments=attachment)
-
-
-You can pass multiple attachments at once in a list.
-
-.. code-block:: python
-
-    event = Event('Meeting',
-                  start=(22/Apr/2019)[12:00],
-                  attachments=[attachment1, attachment2])
-
-
-
-Reminders
----------
-
-To add reminder(s) to an event you can create :py:class:`~gcsa.reminders.EmailReminder` or
-:py:class:`~gcsa.reminders.PopupReminder` and pass them as a ``reminders`` parameter (single reminder
-or list of reminders):
-
-
-.. code-block:: python
-
-
-    from gcsa.reminders import EmailReminder, PopupReminder
-
-    event = Event('Meeting',
-                  start=(22/Apr/2019)[12:00],
-                  reminders=EmailReminder(minutes_before_start=30))
-
-or
-
-.. code-block:: python
-
-    event = Event('Meeting',
-                  start=(22/Apr/2019)[12:00],
-                  reminders=[
-                        EmailReminder(minutes_before_start=30),
-                        EmailReminder(minutes_before_start=60),
-                        PopupReminder(minutes_before_start=15)
-                  ])
-
-
-You can also simply add reminders by specifying ``minutes_before_popup_reminder`` and/or
-``minutes_before_email_reminder`` parameter of the :py:class:`~gcsa.event.Event` object:
-
-.. code-block:: python
-
-    event = Event('Meeting',
-                  start=(22/Apr/2019)[12:00],
-                  minutes_before_popup_reminder=15,
-                  minutes_before_email_reminder=30)
-
-
-If you want to add a reminder to an existing event use :py:meth:`~gcsa.event.Event.add_email_reminder`
-and/or :py:meth:`~gcsa.event.Event.add_popup_reminder` methods.
-
-To use default reminders of the calendar, set ``default_reminders`` parameter of the :py:class:`~gcsa.event.Event`
-to ``True``.
-
-.. note:: You can add up to 5 reminders to one event.
-
-
-Conference
-----------
-
-To add conference (such as Hangouts or Google Meet) to an event you can use :py:class:`~gcsa.conference.ConferenceSolution`
-(for existing conferences) or :py:class:`~gcsa.conference.ConferenceSolutionCreateRequest` (to create new conference)
-and pass it as a ``conference_solution`` parameter:
-
-To add existing conference you need to specify its ``solution_type`` (see :py:class:`~gcsa.conference.SolutionType` for
-available values) and at least one :py:class:`~gcsa.conference.EntryPoint` in ``entry_points`` parameter. You can pass
-single :py:class:`~gcsa.conference.EntryPoint`:
-
-.. code-block:: python
-
-
-    from gcsa.conference import ConferenceSolution, EntryPoint
-
-    event = Event(
-        'Event with conference',
-        start=(22 / Nov / 2020)[15:00],
-        conference_solution=ConferenceSolution(
-            entry_points=EntryPoint(
-                EntryPoint.VIDEO,
-                uri='https://meet.google.com/aaa-bbbb-ccc'
-            ),
-            solution_type=SolutionType.HANGOUTS_MEET,
-        )
-    )
-
-or multiple entry points in a list:
-
-.. code-block:: python
-
-    event = Event(
-        'Event with conference',
-        start=(22 / Nov / 2020)[15:00],
-        conference_solution=ConferenceSolution(
-            entry_points=[
-                EntryPoint(
-                    EntryPoint.VIDEO,
-                    uri='https://meet.google.com/aaa-bbbb-ccc'
-                ),
-                EntryPoint(
-                    EntryPoint.PHONE,
-                    uri='tel:+12345678900'
-                )
-            ],
-            solution_type=SolutionType.HANGOUTS_MEET,
-        )
-    )
-
-See more parameters for :py:class:`~gcsa.conference.ConferenceSolution` and :py:class:`~gcsa.conference.EntryPoint`.
-
 
 
 
