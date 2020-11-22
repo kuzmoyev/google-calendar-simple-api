@@ -3,7 +3,7 @@ from unittest import TestCase
 from gcsa.attachment import Attachment
 from gcsa.serializers.attachment_serializer import AttachmentSerializer
 
-DOC_URL = 'https://docs.google.com/document/d/1uDvwcxOsXkzl2Bod0YIfrIQ5MqfBhnc1jusYdH1xCZo/edit?usp=sharing'
+DOC_URL = 'https://bit.ly/3lZo0Cc'
 
 
 class TestAttachment(TestCase):

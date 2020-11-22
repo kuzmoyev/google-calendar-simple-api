@@ -1,5 +1,5 @@
 class Attachment:
-    _SUPPORTED_MIME_TYPES = [
+    _SUPPORTED_MIME_TYPES = {
         "application/vnd.google-apps.audio",
         "application/vnd.google-apps.document",  # Google Docs
         "application/vnd.google-apps.drawing",  # Google Drawing
@@ -16,7 +16,7 @@ class Attachment:
         "application/vnd.google-apps.unknown",
         "application/vnd.google-apps.video",
         "application/vnd.google-apps.drive-sdk"  # 3rd party shortcut
-    ]
+    }
 
     def __init__(self, title, file_url, mime_type, icon_link=None, file_id=None):
         """File attachment for the event.
@@ -56,3 +56,9 @@ class Attachment:
                and self.mime_type == other.mime_type \
                and self.icon_link == other.icon_link \
                and self.file_id == other.file_id
+
+    def __str__(self):
+        return "'{}' - '{}'".format(self.title, self.file_url)
+
+    def __repr__(self):
+        return '<Attachment {}>'.format(self.__str__())

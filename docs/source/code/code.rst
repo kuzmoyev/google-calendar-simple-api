@@ -6,9 +6,9 @@ Code documentation
    :caption: Contents:
 
    google_calendar
-   attachment
    event
-   recurrence
-   reminders
    attendees
+   attachment
    conference
+   reminders
+   recurrence

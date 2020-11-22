@@ -15,6 +15,12 @@ class Reminder:
                and self.method == other.method \
                and self.minutes_before_start == other.minutes_before_start
 
+    def __str__(self):
+        return '{} - minutes_before_start:{}'.format(self.__class__.__name__, self.minutes_before_start)
+
+    def __repr__(self):
+        return '<{}>'.format(self.__str__())
+
 
 class EmailReminder(Reminder):
     def __init__(self, minutes_before_start=60):

@@ -20,7 +20,7 @@ class Attendee:
                  optional=None,
                  is_resource=None,
                  additional_guests=None,
-                 response_status=None):
+                 _response_status=None):
         """Represents attendee of the event.
 
         :param email:
@@ -38,7 +38,7 @@ class Attendee:
                 The default is False.
         :param additional_guests:
                 Number of additional guests. The default is 0.
-        :param response_status:
+        :param _response_status:
                 The attendee's response status. See :py:class:`~gcsa.attendee.ResponseStatus`
         """
         self.email = email
@@ -47,7 +47,7 @@ class Attendee:
         self.optional = optional
         self.is_resource = is_resource
         self.additional_guests = additional_guests
-        self.response_status = response_status
+        self.response_status = _response_status
 
     def __eq__(self, other):
         return isinstance(other, Attendee) \
@@ -58,3 +58,9 @@ class Attendee:
                and self.is_resource == other.is_resource \
                and self.additional_guests == other.additional_guests \
                and self.response_status == other.response_status
+
+    def __str__(self):
+        return "'{}' - response: '{}'".format(self.email, self.response_status)
+
+    def __repr__(self):
+        return '<Attendee {}>'.format(self.__str__())

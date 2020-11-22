@@ -22,7 +22,8 @@ class _BaseConferenceSolution:
             self,
             conference_id=None,
             signature=None,
-            notes=None
+            notes=None,
+            _status='success'
     ):
         """
         :param conference_id:
@@ -45,6 +46,24 @@ class _BaseConferenceSolution:
         :param notes:
                 String of additional notes (such as instructions from the domain administrator, legal notices)
                 to display to the user. Can contain HTML. The maximum length is 2048 characters
+
+        :param _status:
+                The current status of the conference create request. Should not be set by developer.
+
+                The possible values are:
+
+                * "pending": the conference create request is still being processed.
+                * "failure": the conference create request failed, there are no entry points.
+                * | "success": the conference create request succeeded, the entry points are populated.
+                  | In this case `ConferenceSolution` with created entry points
+                    is stored in the event's `conference_data`. And `ConferenceSolutionCreateRequest` is omitted.
+
+                Create requests are asynchronous. Check ``status`` field of event's ``conference_solution`` to find it's
+                status. If the status is ``"success"``, ``conference_solution`` will contain a
+                :py:class:`~gcsa.conference.ConferenceSolution` object and you'll be able to access it's field (like
+                ``entry_points``). Otherwise (if ``status`` is ``""pending"`` or ``"failure"``), ``conference_solution``
+                will contain a :py:class:`~gcsa.conference.ConferenceSolutionCreateRequest` object.
+
         """
         if notes and len(notes) > 2048:
             raise ValueError('Maximum notes length is 2048 characters.')
@@ -52,6 +71,7 @@ class _BaseConferenceSolution:
         self.conference_id = conference_id
         self.signature = signature
         self.notes = notes
+        self.status = _status
 
     def __eq__(self, other):
         if not isinstance(other, _BaseConferenceSolution):
@@ -181,6 +201,12 @@ class EntryPoint:
                    and self.passcode == other.passcode \
                    and self.password == other.password
 
+    def __str__(self):
+        return "{} - '{}'".format(self.entry_point_type, self.uri)
+
+    def __repr__(self):
+        return '<EntryPoint {}>'.format(self.__str__())
+
 
 class ConferenceSolution(_BaseConferenceSolution):
     """Information about the conference solution, such as Hangouts or Google Meet."""
@@ -289,6 +315,12 @@ class ConferenceSolution(_BaseConferenceSolution):
                    and self.name == other.name \
                    and self.icon_uri == other.icon_uri
 
+    def __str__(self):
+        return '{} - {}'.format(self.solution_type, self.entry_points)
+
+    def __repr__(self):
+        return '<ConferenceSolution {}>'.format(self.__str__())
+
 
 class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
     """
@@ -321,6 +353,7 @@ class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
                 By default it is generated as UUID.
                 If you specify request_id manually, they should be unique for every new CreateRequest,
                 otherwise request will be ignored.
+
         :param _status:
                 The current status of the conference create request. Should not be set by developer.
 
@@ -331,7 +364,6 @@ class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
                 * | "success": the conference create request succeeded, the entry points are populated.
                   | In this case `ConferenceSolution` with created entry points
                     is stored in the event's `conference_data`. And `ConferenceSolutionCreateRequest` is omitted.
-
         :param conference_id:
                 The ID of the conference. Optional.
                 Can be used by developers to keep track of conferences, should not be displayed to users.
@@ -353,10 +385,9 @@ class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
                 String of additional notes (such as instructions from the domain administrator, legal notices)
                 to display to the user. Can contain HTML. The maximum length is 2048 characters
         """
-        super().__init__(conference_id=conference_id, signature=signature, notes=notes)
+        super().__init__(conference_id=conference_id, signature=signature, notes=notes, _status=_status)
         self.request_id = request_id or uuid4().hex
         self.solution_type = solution_type
-        self.status = _status
 
     def __eq__(self, other):
         if not isinstance(other, ConferenceSolutionCreateRequest):
@@ -368,3 +399,9 @@ class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
                    and self.request_id == other.request_id \
                    and self.solution_type == other.solution_type \
                    and self.status == other.status
+
+    def __str__(self):
+        return "{} - status:'{}'".format(self.solution_type, self.status)
+
+    def __repr__(self):
+        return '<ConferenceSolutionCreateRequest {}>'.format(self.__str__())
