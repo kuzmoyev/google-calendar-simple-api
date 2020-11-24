@@ -101,7 +101,8 @@ class GoogleCalendar:
                 Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
         :param kwargs:
-                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/insert
+                Additional API parameters.
+                See https://developers.google.com/calendar/v3/reference/events/insert#optional-parameters
 
         :return:
                 Created event object with id.
@@ -128,7 +129,8 @@ class GoogleCalendar:
                 Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
         :param kwargs:
-                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/quickAdd
+                Additional API parameters.
+                See https://developers.google.com/calendar/v3/reference/events/quickAdd#optional-parameters
 
         :return:
                 Created event object with id.
@@ -150,7 +152,8 @@ class GoogleCalendar:
                 Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
         :param kwargs:
-                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/update
+                Additional API parameters.
+                See https://developers.google.com/calendar/v3/reference/events/update#optional-parameters
 
         :return:
                 Updated event object.
@@ -177,7 +180,8 @@ class GoogleCalendar:
                 Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
         :param kwargs:
-                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/move
+                Additional API parameters.
+                See https://developers.google.com/calendar/v3/reference/events/move#optional-parameters
 
         :return:
                 Moved event object.
@@ -200,7 +204,8 @@ class GoogleCalendar:
                 Whether and how to send updates to attendees. See :py:class:`~gcsa.google_calendar.SendUpdatesMode`
                 Default is "NONE".
         :param kwargs:
-                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/delete
+                Additional API parameters.
+                See https://developers.google.com/calendar/v3/reference/events/delete#optional-parameters
         """
         if event.id is None:
             raise ValueError("Event has to have event_id to be deleted.")
@@ -237,7 +242,8 @@ class GoogleCalendar:
                 Free text search terms to find events that match these terms in any field, except for
                 extended properties.
         :param kwargs:
-                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/list
+                Additional API parameters.
+                See https://developers.google.com/calendar/v3/reference/events/list#optional-parameters
 
 
         :return:
@@ -282,7 +288,8 @@ class GoogleCalendar:
         :param event_id:
                 The unique event ID.
         :param kwargs:
-                Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/get
+                Additional API parameters.
+                See https://developers.google.com/calendar/v3/reference/events/get#optional-parameters
 
         :return:
                 The corresponding event object or None if
