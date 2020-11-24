@@ -118,7 +118,7 @@ class TestEvent(TestCase):
         with self.assertRaises(ValueError):
             e.add_email_reminder()
 
-    def test_str_repr(self):
+    def test_repr_str(self):
         e = Event('Good event',
                   start=20 / Jul / 2020)
         self.assertEqual(str(e), '2020-07-20 - Good event')

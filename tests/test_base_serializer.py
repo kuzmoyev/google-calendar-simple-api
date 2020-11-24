@@ -4,9 +4,6 @@ from gcsa.serializers.base_serializer import BaseSerializer
 
 
 class TestBaseSerializer(TestCase):
-    def test_init(self):
-        pass
-
     def test_assure_dict(self):
         json_str = """
         {
