@@ -3,22 +3,13 @@ import pickle
 import os.path
 
 from dateutil.relativedelta import relativedelta
-from googleapiclient.discovery import build
+from googleapiclient import discovery
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from tzlocal import get_localzone
 
 from .serializers.event_serializer import EventSerializer
 from .util.date_time_util import insure_localisation
-
-
-def _get_default_credentials_path():
-    home_dir = os.path.expanduser('~')
-    credential_dir = os.path.join(home_dir, '.credentials')
-    if not os.path.exists(credential_dir):
-        os.makedirs(credential_dir)
-    credential_path = os.path.join(credential_dir, 'credentials.json')
-    return credential_path
 
 
 class SendUpdatesMode:
@@ -38,14 +29,15 @@ class GoogleCalendar:
     _READ_WRITE_SCOPES = 'https://www.googleapis.com/auth/calendar'
     _LIST_ORDERS = ("startTime", "updated")
 
-    def __init__(self,
-                 calendar='primary',
-                 *,
-                 credentials_path=None,
-                 token_path=None,
-                 read_only=False,
-                 application_name=None
-                 ):
+    def __init__(
+            self,
+            calendar='primary',
+            *,
+            credentials_path=None,
+            token_path=None,
+            read_only=False,
+            application_name=None
+    ):
         """Represents Google Calendar of the user.
 
         :param calendar:
@@ -60,37 +52,48 @@ class GoogleCalendar:
         :param application_name:
                 Name of the application. Default: None
         """
-        credentials_path = credentials_path or _get_default_credentials_path()
+        credentials_path = credentials_path or GoogleCalendar._get_default_credentials_path()
         self._credentials_dir, self._credentials_file = os.path.split(credentials_path)
+        self._token_path = token_path or os.path.join(self._credentials_dir, 'token.pickle')
 
         self._scopes = [self._READ_WRITE_SCOPES + ('.readonly' if read_only else '')]
         self._application_name = application_name
-        self._token_path = token_path or os.path.join(self._credentials_dir, 'token.pickle')
 
         self.calendar = calendar
-        credentials = self._get_credentials()
-        self.service = build('calendar', 'v3', credentials=credentials)
+        self.token = self._get_token()
+        self.service = discovery.build('calendar', 'v3', credentials=self.token)
 
-    def _get_credentials(self):
-        _credentials_path = os.path.join(self._credentials_dir, self._credentials_file)
-
-        credentials = None
+    def _get_token(self):
+        token = None
 
         if os.path.exists(self._token_path):
             with open(self._token_path, 'rb') as token_file:
-                credentials = pickle.load(token_file)
+                token = pickle.load(token_file)
 
-        if not credentials or not credentials.valid:
-            if credentials and credentials.expired and credentials.refresh_token:
-                credentials.refresh(Request())
+        if not token or not token.valid:
+            if token and token.expired and token.refresh_token:
+                token.refresh(Request())
             else:
-                flow = InstalledAppFlow.from_client_secrets_file(_credentials_path, self._scopes)
-                credentials = flow.run_local_server()
+                credentials_path = os.path.join(self._credentials_dir, self._credentials_file)
+                flow = InstalledAppFlow.from_client_secrets_file(credentials_path, self._scopes)
+                token = flow.run_local_server()
 
             with open(self._token_path, 'wb') as token_file:
-                pickle.dump(credentials, token_file)
+                pickle.dump(token, token_file)
 
-        return credentials
+        return token
+
+    @staticmethod
+    def _get_default_credentials_path():
+        """ Checks if ".credentials" folder in home directory exists. If not, creates it.
+        :return: expanded path to .credentials folder
+        """
+        home_dir = os.path.expanduser('~')
+        credential_dir = os.path.join(home_dir, '.credentials')
+        if not os.path.exists(credential_dir):
+            os.makedirs(credential_dir)
+        credential_path = os.path.join(credential_dir, 'credentials.json')
+        return credential_path
 
     def add_event(self, event, send_updates=SendUpdatesMode.NONE, **kwargs):
         """Creates event in the calendar

@@ -56,3 +56,4 @@ tzlocal==2.1
 uritemplate==3.0.1
 urllib3==1.25.9
 wcwidth==0.2.5
+pyfakefs==4.3.1
