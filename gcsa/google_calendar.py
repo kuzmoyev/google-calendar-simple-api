@@ -77,8 +77,8 @@ class GoogleCalendar:
         credentials = None
 
         if os.path.exists(self._token_path):
-            with open(self._token_path, 'rb') as token:
-                credentials = pickle.load(token)
+            with open(self._token_path, 'rb') as token_file:
+                credentials = pickle.load(token_file)
 
         if not credentials or not credentials.valid:
             if credentials and credentials.expired and credentials.refresh_token:
@@ -87,8 +87,8 @@ class GoogleCalendar:
                 flow = InstalledAppFlow.from_client_secrets_file(_credentials_path, self._scopes)
                 credentials = flow.run_local_server()
 
-            with open(self._token_path, 'wb') as token:
-                pickle.dump(credentials, token)
+            with open(self._token_path, 'wb') as token_file:
+                pickle.dump(credentials, token_file)
 
         return credentials
 
@@ -214,8 +214,9 @@ class GoogleCalendar:
     def get_events(self,
                    time_min=None,
                    time_max=None,
-                   order_by='startTime',
+                   order_by=None,
                    timezone=str(get_localzone()),
+                   single_events=False,
                    query=None,
                    **kwargs):
         """ Lists events
@@ -229,6 +230,9 @@ class GoogleCalendar:
         :param timezone:
                 Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
                 the computers local timezone is used if it is configured. UTC is used otherwise.
+        :param single_events:
+                Whether to expand recurring events into instances and only return single one-off events and
+                instances of recurring events, but not the underlying recurring events themselves.
         :param query:
                 Free text search terms to find events that match these terms in any field, except for
                 extended properties.
@@ -251,6 +255,8 @@ class GoogleCalendar:
         time_min = insure_localisation(time_min, timezone).isoformat()
         time_max = insure_localisation(time_max, timezone).isoformat()
 
+        order_by = order_by or ('startTime' if single_events else 'updated')
+
         page_token = None
         while True:
             events = self.service.events().list(
@@ -258,7 +264,7 @@ class GoogleCalendar:
                 timeMin=time_min,
                 timeMax=time_max,
                 orderBy=order_by,
-                singleEvents=True,
+                singleEvents=single_events,
                 pageToken=page_token,
                 q=query,
                 **kwargs
