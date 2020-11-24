@@ -19,6 +19,13 @@ class TestAttachment(TestCase):
                        file_url=DOC_URL,
                        mime_type="application/vnd.google-apps.something")
 
+    def test_repr_str(self):
+        attachment = Attachment('My doc',
+                                file_url=DOC_URL,
+                                mime_type="application/vnd.google-apps.document")
+        self.assertEqual(attachment.__repr__(), "<Attachment 'My doc' - 'https://bit.ly/3lZo0Cc'>")
+        self.assertEqual(attachment.__str__(), "'My doc' - 'https://bit.ly/3lZo0Cc'")
+
 
 class TestAttachmentSerializer(TestCase):
 

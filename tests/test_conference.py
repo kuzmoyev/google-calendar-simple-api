@@ -84,6 +84,20 @@ class TestEntryPoint(TestCase):
         self.assertFalse(entry_point == 5)
         self.assertTrue(entry_point == entry_point)
 
+    def test_repr_str(self):
+        entry_point = EntryPoint(
+            EntryPoint.VIDEO,
+            uri='https://video-conf.com/123123',
+            label='label',
+            pin='rU9xzGHz',
+            access_code='sUhk4QPn',
+            meeting_code='sUhk4QPn',
+            passcode='YKa7m4D6',
+            password='JW7t7f35'
+        )
+        self.assertEqual(entry_point.__repr__(), "<EntryPoint video - 'https://video-conf.com/123123'>")
+        self.assertEqual(entry_point.__str__(), "video - 'https://video-conf.com/123123'")
+
 
 class TestEntryPointSerializer(TestCase):
     def test_to_json(self):
@@ -245,6 +259,37 @@ class TestConferenceSolution(TestCase):
         )
         self.assertFalse(conference_solution == 5)
         self.assertTrue(conference_solution == conference_solution)
+
+    def test_repr_str(self):
+        conference_solution = ConferenceSolution(
+            entry_points=EntryPoint(EntryPoint.VIDEO),
+            solution_type=SolutionType.HANGOUTS_MEET,
+            name='Hangout',
+            icon_uri='https://icon.com',
+            conference_id='aaa-bbbb-ccc',
+            signature='abc4efg12345',
+            notes='important notes'
+        )
+
+        self.assertEqual(conference_solution.__repr__(),
+                         "<ConferenceSolution hangoutsMeet - [<EntryPoint video - 'None'>]>")
+        self.assertEqual(conference_solution.__str__(),
+                         "hangoutsMeet - [<EntryPoint video - 'None'>]")
+
+        conference_solution = ConferenceSolution(
+            entry_points=[EntryPoint(EntryPoint.VIDEO), EntryPoint(EntryPoint.SIP)],
+            solution_type=SolutionType.HANGOUTS_MEET,
+            name='Hangout',
+            icon_uri='https://icon.com',
+            conference_id='aaa-bbbb-ccc',
+            signature='abc4efg12345',
+            notes='important notes'
+        )
+
+        self.assertEqual(conference_solution.__repr__(),
+                         "<ConferenceSolution hangoutsMeet - [<EntryPoint video - 'None'>, <EntryPoint sip - 'None'>]>")
+        self.assertEqual(conference_solution.__str__(),
+                         "hangoutsMeet - [<EntryPoint video - 'None'>, <EntryPoint sip - 'None'>]")
 
 
 class TestConferenceSolutionSerializer(TestCase):
@@ -411,6 +456,18 @@ class TestConferenceSolutionCreateRequest(TestCase):
         )
         self.assertFalse(cscr == 5)
         self.assertTrue(cscr == cscr)
+
+    def test_repr_str(self):
+        cscr = ConferenceSolutionCreateRequest(
+            solution_type=SolutionType.HANGOUTS_MEET,
+            request_id='hello1234',
+            conference_id='conference-id',
+            signature='signature',
+            notes='important notes'
+        )
+
+        self.assertEqual(cscr.__repr__(), "<ConferenceSolutionCreateRequest hangoutsMeet - status:'None'>")
+        self.assertEqual(cscr.__str__(), "hangoutsMeet - status:'None'")
 
 
 class TestConferenceSolutionCreateRequestSerializer(TestCase):
