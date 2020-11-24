@@ -42,6 +42,22 @@ or
 ``start_date`` and ``end_date`` can be ``date`` or ``datetime`` objects. ``order_by`` can be `'startTime'` (default)
 or `'updated'`.
 
+
+Use ``query`` parameter for free text search through all event fields (except for extended properties):
+
+.. code-block:: python
+
+    calendar.get_events(query='Meeting')
+    calendar.get_events(query='John') # Name of attendee
+
+Use ``single_events`` parameter to expand recurring events into instances and only return single one-off events and
+instances of recurring events, but not the underlying recurring events themselves.
+
+.. code-block:: python
+
+    calendar.get_events(single_events=True)
+
+
 Get event by id
 ~~~~~~~~~~~~~~~
 
