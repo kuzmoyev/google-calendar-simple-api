@@ -93,7 +93,8 @@ setup(
         "pytest>=5.4",
         "pytest-cov>=2.10",
         "flake8>3.8.3",
-        "pep8-naming>=0.11.1"
+        "pep8-naming>=0.11.1",
+        "pyfakefs>=4.3.1,<5.0",
     ],
     classifiers=[
         'License :: OSI Approved :: MIT License',
