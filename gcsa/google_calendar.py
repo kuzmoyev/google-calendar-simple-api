@@ -211,7 +211,13 @@ class GoogleCalendar:
             **kwargs
         ).execute()
 
-    def get_events(self, time_min=None, time_max=None, order_by='startTime', timezone=str(get_localzone()), **kwargs):
+    def get_events(self,
+                   time_min=None,
+                   time_max=None,
+                   order_by='startTime',
+                   timezone=str(get_localzone()),
+                   query=None,
+                   **kwargs):
         """ Lists events
 
         :param time_min:
@@ -223,6 +229,9 @@ class GoogleCalendar:
         :param timezone:
                 Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
                 the computers local timezone is used if it is configured. UTC is used otherwise.
+        :param query:
+                Free text search terms to find events that match these terms in any field, except for
+                extended properties.
         :param kwargs:
                 Additional API parameters. See https://developers.google.com/calendar/v3/reference/events/list
 
@@ -251,6 +260,7 @@ class GoogleCalendar:
                 orderBy=order_by,
                 singleEvents=True,
                 pageToken=page_token,
+                q=query,
                 **kwargs
             ).execute()
             for event_json in events['items']:
