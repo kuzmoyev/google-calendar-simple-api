@@ -45,6 +45,7 @@ class Event:
                  minutes_before_popup_reminder=None,
                  minutes_before_email_reminder=None,
                  _updated=None,
+                 _recurring_event_id=None,
                  **other):
         """
         :param summary:
@@ -90,6 +91,9 @@ class Event:
                 Minutes before email reminder or None if reminder is not needed.
         :param _updated:
                 Last modification time of the event. Read-only.
+        :param _recurring_event_id:
+                For an instance of a recurring event, this is the id of the recurring event to which
+                this instance belongs. Read-only.
         :param other:
                 Other fields that should be included in request json. Will be included as they are.
         """
@@ -144,6 +148,7 @@ class Event:
         self.conference_solution = conference_solution
         self.reminders = reminders
         self.default_reminders = default_reminders
+        self.recurring_event_id = _recurring_event_id
         self.other = other
 
         if minutes_before_popup_reminder is not None:
@@ -186,6 +191,10 @@ class Event:
             return Attendee(email=attendee_or_email)
         else:
             return attendee_or_email
+
+    @property
+    def is_recurring_instance(self):
+        return self.recurring_event_id is not None
 
     def __str__(self):
         return '{} - {}'.format(self.start, self.summary)
