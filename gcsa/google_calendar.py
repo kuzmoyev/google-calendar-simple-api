@@ -234,7 +234,7 @@ class GoogleCalendar:
         :param time_max:
                 Ending date/datetime
         :param order_by:
-                Order of the events. Possible values: "startTime", "updated".
+                Order of the events. Possible values: "startTime", "updated". Default is unspecified stable order.
         :param timezone:
                 Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
                 the computers local timezone is used if it is configured. UTC is used otherwise.
@@ -247,7 +247,6 @@ class GoogleCalendar:
         :param kwargs:
                 Additional API parameters.
                 See https://developers.google.com/calendar/v3/reference/events/list#optional-parameters
-
 
         :return:
                 Iterable of event objects
@@ -264,7 +263,10 @@ class GoogleCalendar:
         time_min = insure_localisation(time_min, timezone).isoformat()
         time_max = insure_localisation(time_max, timezone).isoformat()
 
-        order_by = order_by or ('startTime' if single_events else 'updated')
+        if not single_events and order_by == 'startTime':
+            raise ValueError(
+                '"startTime" ordering is only available when querying single events, i.e. single_events=True'
+            )
 
         page_token = None
         while True:
@@ -303,7 +305,6 @@ class GoogleCalendar:
             eventId=event_id,
             **kwargs
         ).execute()
-
         return EventSerializer(event_resource).get_object()
 
     def list_event_colors(self):
@@ -315,9 +316,9 @@ class GoogleCalendar:
 
     def __getitem__(self, r):
         if isinstance(r, slice):
-            time_min, time_max, order_by = r.start or None, r.stop or None, r.step or 'startTime'
+            time_min, time_max, order_by = r.start or None, r.stop or None, r.step or None
         elif isinstance(r, (date, datetime)):
-            time_min, time_max, order_by = r, None, 'startTime'
+            time_min, time_max, order_by = r, None, None
         else:
             return NotImplemented
 
