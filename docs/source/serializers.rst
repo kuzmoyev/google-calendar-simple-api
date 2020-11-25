@@ -5,6 +5,11 @@ The library implements the JSON serializers for all available Google Calendar ob
 the `official API documentation`_. In general, you won't need to use them, ``gcsa`` serializes everything as needed
 under the hood. It is documented just so you know they exist and can be used if necessary.
 
+.. note::
+    Note that serializer's ``to_json`` methods ignore read-only fields of the objects.
+    Read only fields of the objects are ones that are passed to the parameters of their ``__init__`` with
+    underscores, e.g. ``Event(_updated=25/Nov/2020)``.
+
 Events serializer
 ~~~~~~~~~~~~~~~~~
 

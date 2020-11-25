@@ -44,6 +44,7 @@ class Event:
                  default_reminders=False,
                  minutes_before_popup_reminder=None,
                  minutes_before_email_reminder=None,
+                 _updated=None,
                  **other):
         """
         :param summary:
@@ -87,6 +88,8 @@ class Event:
                 Minutes before popup reminder or None if reminder is not needed.
         :param minutes_before_email_reminder:
                 Minutes before email reminder or None if reminder is not needed.
+        :param _updated:
+                Last modification time of the event. Read-only.
         :param other:
                 Other fields that should be included in request json. Will be included as they are.
         """
@@ -118,6 +121,7 @@ class Event:
 
         self.start = insure_date(self.start)
         self.end = insure_date(self.end)
+        self.updated = _updated
 
         attendees = [self._ensure_attendee_from_email(a) for a in assure_list(attendees)]
         reminders = assure_list(reminders)
