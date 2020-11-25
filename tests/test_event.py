@@ -1,5 +1,5 @@
 from unittest import TestCase
-from beautiful_date import Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, Dec, hours, days
+from beautiful_date import Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, Dec, hours, days, Nov
 
 from gcsa.attachment import Attachment
 from gcsa.attendee import Attendee, ResponseStatus
@@ -20,6 +20,7 @@ class TestEvent(TestCase):
             event_id='123',
             start=(1 / Feb / 2019)[9:00],
             end=(31 / Dec / 2019)[23:59],
+            _updated=insure_localisation((25 / Nov / 2020)[16:19], TEST_TIMEZONE),
             timezone=TEST_TIMEZONE,
             description='Everyday breakfast',
             location='Home',
@@ -39,6 +40,8 @@ class TestEvent(TestCase):
         self.assertEqual(event.summary, 'Breakfast')
         self.assertEqual(event.id, '123')
         self.assertEqual(event.start, insure_localisation((1 / Feb / 2019)[9:00], TEST_TIMEZONE))
+        self.assertEqual(event.end, insure_localisation((31 / Dec / 2019)[23:59], TEST_TIMEZONE))
+        self.assertEqual(event.updated, insure_localisation((25 / Nov / 2020)[16:19], TEST_TIMEZONE))
         self.assertEqual(event.description, 'Everyday breakfast')
         self.assertEqual(event.location, 'Home')
         self.assertEqual(len(event.recurrence), 3)
@@ -209,7 +212,7 @@ class TestEventSerializer(TestCase):
 
     def test_to_json(self):
         e = Event('Good day', start=(28 / Sept / 2019), timezone=TEST_TIMEZONE)
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'date': '2019-09-28'},
             'end': {'date': '2019-09-29'},
@@ -219,10 +222,10 @@ class TestEventSerializer(TestCase):
             'reminders': {'useDefault': False},
             'attachments': []
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
         e = Event('Good day', start=(28 / Oct / 2019)[11:22:33], timezone=TEST_TIMEZONE)
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'dateTime': '2019-10-28T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2019-10-28T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
@@ -232,7 +235,7 @@ class TestEventSerializer(TestCase):
             'reminders': {'useDefault': False},
             'attachments': []
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
     def test_to_json_recurrence(self):
         e = Event('Good day',
@@ -248,7 +251,7 @@ class TestEventSerializer(TestCase):
                           12 / May / 2019
                       ])
                   ])
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'dateTime': '2019-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2020-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
@@ -262,7 +265,7 @@ class TestEventSerializer(TestCase):
             'reminders': {'useDefault': False},
             'attachments': []
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
     def test_to_json_attachments(self):
         e = Event('Good day',
@@ -272,7 +275,7 @@ class TestEventSerializer(TestCase):
                       Attachment('My file1', 'https://file.url1', "application/vnd.google-apps.document"),
                       Attachment('My file2', 'https://file.url2', "application/vnd.google-apps.document")
                   ])
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'dateTime': '2019-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2019-01-01T12:22:33+13:00', 'timeZone': TEST_TIMEZONE},
@@ -293,7 +296,7 @@ class TestEventSerializer(TestCase):
                 }
             ]
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
     def test_to_json_reminders(self):
         e = Event('Good day',
@@ -301,7 +304,7 @@ class TestEventSerializer(TestCase):
                   timezone=TEST_TIMEZONE,
                   minutes_before_popup_reminder=30,
                   minutes_before_email_reminder=120)
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'dateTime': '2019-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2019-01-01T12:22:33+13:00', 'timeZone': TEST_TIMEZONE},
@@ -317,7 +320,7 @@ class TestEventSerializer(TestCase):
             },
             'attachments': []
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
     def test_to_json_attendees(self):
         e = Event('Good day',
@@ -327,7 +330,7 @@ class TestEventSerializer(TestCase):
                       Attendee(email='attendee@gmail.com', _response_status=ResponseStatus.NEEDS_ACTION),
                       Attendee(email='attendee2@gmail.com', _response_status=ResponseStatus.ACCEPTED),
                   ])
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
@@ -340,12 +343,12 @@ class TestEventSerializer(TestCase):
             'reminders': {'useDefault': False},
             'attachments': []
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
         e = Event('Good day2',
                   start=20 / Jul / 2020,
                   default_reminders=True)
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day2',
             'start': {'date': '2020-07-20'},
             'end': {'date': '2020-07-21'},
@@ -355,7 +358,7 @@ class TestEventSerializer(TestCase):
             'reminders': {'useDefault': True},
             'attachments': []
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
     def test_to_json_conference_solution(self):
         e = Event(
@@ -372,7 +375,7 @@ class TestEventSerializer(TestCase):
                 notes='important notes'
             )
         )
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
@@ -400,7 +403,7 @@ class TestEventSerializer(TestCase):
                 'notes': 'important notes'
             }
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
     def test_to_json_conference_solution_create_request(self):
         e = Event(
@@ -416,7 +419,7 @@ class TestEventSerializer(TestCase):
                 _status='pending'
             )
         )
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
@@ -440,7 +443,26 @@ class TestEventSerializer(TestCase):
                 'notes': 'important notes'
             }
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
+
+    def test_to_json_updated(self):
+        e = Event(
+            'Good day',
+            start=(1 / Jul / 2020)[11:22:33],
+            timezone=TEST_TIMEZONE,
+            _updated=insure_localisation((25 / Nov / 2020)[11:22:33], timezone=TEST_TIMEZONE)
+        )
+        expected_event_json = {
+            'summary': 'Good day',
+            'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'recurrence': [],
+            'visibility': 'default',
+            'attendees': [],
+            'reminders': {'useDefault': False},
+            'attachments': [],
+        }
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
     def test_to_object(self):
         event_json = {
@@ -449,6 +471,7 @@ class TestEventSerializer(TestCase):
             'location': 'Prague',
             'start': {'dateTime': '2019-01-01T11:22:33', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2019-01-01T12:22:33', 'timeZone': TEST_TIMEZONE},
+            'updated': '2020-11-25T14:53:46.0Z',
             'recurrence': [
                 'RRULE:FREQ=DAILY;WKST=SU',
                 'EXRULE:FREQ=DAILY;BYDAY=MO;WKST=SU',
@@ -504,6 +527,7 @@ class TestEventSerializer(TestCase):
         self.assertEqual(event.summary, 'Good day')
         self.assertEqual(event.start, insure_localisation((1 / Jan / 2019)[11:22:33], TEST_TIMEZONE))
         self.assertEqual(event.end, insure_localisation((1 / Jan / 2019)[12:22:33], TEST_TIMEZONE))
+        self.assertEqual(event.updated, insure_localisation((25 / Nov / 2020)[14:53:46], 'UTC'))
         self.assertEqual(event.description, 'Very good day indeed')
         self.assertEqual(event.location, 'Prague')
         self.assertEqual(len(event.recurrence), 3)
