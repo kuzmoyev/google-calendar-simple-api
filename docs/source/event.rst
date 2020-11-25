@@ -39,8 +39,8 @@ or
 
     calendar[start_date:end_date:'updated']
 
-``start_date`` and ``end_date`` can be ``date`` or ``datetime`` objects. ``order_by`` can be `'startTime'` (default)
-or `'updated'`.
+``start_date`` and ``end_date`` can be ``date`` or ``datetime`` objects. ``order_by`` can be `'startTime'`
+or `'updated'`. If not specified, unspecified stable order is used.
 
 
 Use ``query`` parameter for free text search through all event fields (except for extended properties):
