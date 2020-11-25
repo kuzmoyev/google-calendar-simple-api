@@ -626,3 +626,19 @@ class TestEventSerializer(TestCase):
         self.assertEqual(event.location, 'Prague')
         self.assertEqual(event.start, 20 / Jul / 2020)
         self.assertEqual(event.end, 22 / Jul / 2020)
+
+        event_json_str = {
+            "id": 'recurring_event_id_20201107T070000Z',
+            "summary": "Good day",
+            "description": "Very good day indeed",
+            "location": "Prague",
+            "start": {"date": "2020-07-20"},
+            "end": {"date": "2020-07-22"},
+            "recurringEventId": 'recurring_event_id'
+        }
+
+        event = EventSerializer.to_object(event_json_str)
+
+        self.assertEqual(event.id, 'recurring_event_id_20201107T070000Z')
+        self.assertTrue(event.is_recurring_instance)
+        self.assertEqual(event.recurring_event_id, 'recurring_event_id')

@@ -133,6 +133,7 @@ class EventSerializer(BaseSerializer):
             conference_solution=conference_solution,
             default_reminders=reminders_json.pop('useDefault', False),
             _updated=updated,
+            _recurring_event_id=json_event.pop('recurringEventId', None),
             **json_event
         )
 
