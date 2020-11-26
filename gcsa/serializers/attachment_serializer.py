@@ -26,9 +26,9 @@ class AttachmentSerializer(BaseSerializer):
     @staticmethod
     def _to_object(json_attachment):
         return Attachment(
-            title=json_attachment['title'],
             file_url=json_attachment['fileUrl'],
-            mime_type=json_attachment['mimeType'],
-            icon_link=json_attachment.get('iconLink', None),
-            file_id=json_attachment.get('fileId', None)
+            title=json_attachment.get('title', None),
+            mime_type=json_attachment.get('mimeType', None),
+            _icon_link=json_attachment.get('iconLink', None),
+            _file_id=json_attachment.get('fileId', None)
         )

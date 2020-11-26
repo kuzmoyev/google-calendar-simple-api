@@ -25,10 +25,10 @@ class AttendeeSerializer(BaseSerializer):
     def _to_object(json_attendee):
         return Attendee(
             email=json_attendee['email'],
-            display_name=json_attendee.get('displayName'),
-            comment=json_attendee.get('comment'),
-            optional=json_attendee.get('optional'),
-            is_resource=json_attendee.get('resource'),
-            additional_guests=json_attendee.get('additionalGuests'),
-            _response_status=json_attendee.get('responseStatus')
+            display_name=json_attendee.get('displayName', None),
+            comment=json_attendee.get('comment', None),
+            optional=json_attendee.get('optional', None),
+            is_resource=json_attendee.get('resource', None),
+            additional_guests=json_attendee.get('additionalGuests', None),
+            _response_status=json_attendee.get('responseStatus', None)
         )
