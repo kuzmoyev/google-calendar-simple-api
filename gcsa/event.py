@@ -44,7 +44,12 @@ class Event:
                  default_reminders=False,
                  minutes_before_popup_reminder=None,
                  minutes_before_email_reminder=None,
+                 guests_can_invite_others=True,
+                 guests_can_modify=False,
+                 guests_can_see_other_guests=True,
+                 _created=None,
                  _updated=None,
+                 _creator=None,
                  _recurring_event_id=None,
                  **other):
         """
@@ -63,7 +68,7 @@ class Event:
                 5-1024 long string of characters used in base32hex ([a-vA-V0-9]). The ID must be unique per
                 calendar.
         :param description:
-                Description of the event.
+                Description of the event. Can contain HTML.
         :param location:
                 Geographic location of the event as free-form text.
         :param recurrence:
@@ -89,6 +94,14 @@ class Event:
                 Minutes before popup reminder or None if reminder is not needed.
         :param minutes_before_email_reminder:
                 Minutes before email reminder or None if reminder is not needed.
+        :param guests_can_invite_others:
+                Whether attendees other than the organizer can invite others to the event.
+        :param guests_can_modify:
+                Whether attendees other than the organizer can modify the event.
+        :param guests_can_see_other_guests:
+                Whether attendees other than the organizer can see who the event's attendees are.
+        :param _created:
+                Creation time of the event. Read-only.
         :param _updated:
                 Last modification time of the event. Read-only.
         :param _recurring_event_id:
@@ -125,6 +138,8 @@ class Event:
 
         self.start = insure_date(self.start)
         self.end = insure_date(self.end)
+
+        self.created = _created
         self.updated = _updated
 
         attendees = [self._ensure_attendee_from_email(a) for a in assure_list(attendees)]
@@ -149,6 +164,10 @@ class Event:
         self.reminders = reminders
         self.default_reminders = default_reminders
         self.recurring_event_id = _recurring_event_id
+        self.guests_can_invite_others = guests_can_invite_others
+        self.guests_can_modify = guests_can_modify
+        self.guests_can_see_other_guests = guests_can_see_other_guests
+
         self.other = other
 
         if minutes_before_popup_reminder is not None:
@@ -218,18 +237,26 @@ class Event:
         return (start, end) < (other_start, other_end)
 
     def __eq__(self, other):
-        return isinstance(other, Event) \
-               and self.start == other.start \
-               and self.end == other.end \
-               and self.event_id == other.event_id \
-               and self.summary == other.summary \
-               and self.description == other.description \
-               and self.location == other.location \
-               and self.recurrence == other.recurrence \
-               and self.color_id == other.color_id \
-               and self.visibility == other.visibility \
-               and self.attendees == other.attendees \
-               and self.attachments == other.attachments \
-               and self.reminders == other.reminders \
-               and self.default_reminders == other.default_reminders \
-               and self.other == other.other
+        return (
+                isinstance(other, Event)
+                and self.start == other.start
+                and self.end == other.end
+                and self.event_id == other.event_id
+                and self.summary == other.summary
+                and self.description == other.description
+                and self.location == other.location
+                and self.recurrence == other.recurrence
+                and self.color_id == other.color_id
+                and self.visibility == other.visibility
+                and self.attendees == other.attendees
+                and self.attachments == other.attachments
+                and self.reminders == other.reminders
+                and self.default_reminders == other.default_reminders
+                and self.created == other.created
+                and self.updated == other.updated
+                and self.recurring_event_id == other.recurring_event_id
+                and self.guests_can_invite_others == other.guests_can_invite_others
+                and self.guests_can_modify == other.guests_can_modify
+                and self.guests_can_see_other_guests == other.guests_can_see_other_guests
+                and self.other == other.other
+        )

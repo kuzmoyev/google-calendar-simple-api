@@ -322,9 +322,11 @@ class GoogleCalendar:
         else:
             raise NotImplementedError
 
-        if (time_min and not isinstance(time_min, (date, datetime))) \
-                or (time_max and not isinstance(time_max, (date, datetime))) \
-                or (order_by and (not isinstance(order_by, str) or order_by not in self._LIST_ORDERS)):
+        if (
+                (time_min and not isinstance(time_min, (date, datetime)))
+                or (time_max and not isinstance(time_max, (date, datetime)))
+                or (order_by and (not isinstance(order_by, str) or order_by not in self._LIST_ORDERS))
+        ):
             raise ValueError('Calendar indexing is in the following format:  time_min[:time_max[:order_by]],'
                              ' where time_min and time_max are date/datetime objects'
                              ' and order_by is None or one of "startTime" or "updated" strings.')

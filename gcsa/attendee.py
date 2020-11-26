@@ -50,14 +50,16 @@ class Attendee:
         self.response_status = _response_status
 
     def __eq__(self, other):
-        return isinstance(other, Attendee) \
-               and self.email == other.email \
-               and self.display_name == other.display_name \
-               and self.comment == other.comment \
-               and self.optional == other.optional \
-               and self.is_resource == other.is_resource \
-               and self.additional_guests == other.additional_guests \
-               and self.response_status == other.response_status
+        return (
+                isinstance(other, Attendee)
+                and self.email == other.email
+                and self.display_name == other.display_name
+                and self.comment == other.comment
+                and self.optional == other.optional
+                and self.is_resource == other.is_resource
+                and self.additional_guests == other.additional_guests
+                and self.response_status == other.response_status
+        )
 
     def __str__(self):
         return "'{}' - response: '{}'".format(self.email, self.response_status)
