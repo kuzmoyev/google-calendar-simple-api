@@ -79,9 +79,11 @@ class _BaseConferenceSolution:
         elif self is other:
             return True
         else:
-            return self.conference_id == other.conference_id \
-                   and self.signature == other.signature \
-                   and self.notes == other.notes
+            return (
+                    self.conference_id == other.conference_id
+                    and self.signature == other.signature
+                    and self.notes == other.notes
+            )
 
 
 class EntryPoint:
@@ -192,14 +194,16 @@ class EntryPoint:
         elif self is other:
             return True
         else:
-            return self.entry_point_type == other.entry_point_type \
-                   and self.uri == other.uri \
-                   and self.label == other.label \
-                   and self.pin == other.pin \
-                   and self.access_code == other.access_code \
-                   and self.meeting_code == other.meeting_code \
-                   and self.passcode == other.passcode \
-                   and self.password == other.password
+            return (
+                    self.entry_point_type == other.entry_point_type
+                    and self.uri == other.uri
+                    and self.label == other.label
+                    and self.pin == other.pin
+                    and self.access_code == other.access_code
+                    and self.meeting_code == other.meeting_code
+                    and self.passcode == other.passcode
+                    and self.password == other.password
+            )
 
     def __str__(self):
         return "{} - '{}'".format(self.entry_point_type, self.uri)
@@ -309,11 +313,13 @@ class ConferenceSolution(_BaseConferenceSolution):
         elif self is other:
             return True
         else:
-            return super().__eq__(other) \
-                   and self.entry_points == other.entry_points \
-                   and self.solution_type == other.solution_type \
-                   and self.name == other.name \
-                   and self.icon_uri == other.icon_uri
+            return (
+                    super().__eq__(other)
+                    and self.entry_points == other.entry_points
+                    and self.solution_type == other.solution_type
+                    and self.name == other.name
+                    and self.icon_uri == other.icon_uri
+            )
 
     def __str__(self):
         return '{} - {}'.format(self.solution_type, self.entry_points)
@@ -395,10 +401,12 @@ class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
         elif self is other:
             return True
         else:
-            return super().__eq__(other) \
-                   and self.request_id == other.request_id \
-                   and self.solution_type == other.solution_type \
-                   and self.status == other.status
+            return (
+                    super().__eq__(other)
+                    and self.request_id == other.request_id
+                    and self.solution_type == other.solution_type
+                    and self.status == other.status
+            )
 
     def __str__(self):
         return "{} - status:'{}'".format(self.solution_type, self.status)

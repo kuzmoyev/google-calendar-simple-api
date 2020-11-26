@@ -11,9 +11,11 @@ class Reminder:
         self.minutes_before_start = minutes_before_start
 
     def __eq__(self, other):
-        return isinstance(other, Reminder) \
-               and self.method == other.method \
-               and self.minutes_before_start == other.minutes_before_start
+        return (
+                isinstance(other, Reminder)
+                and self.method == other.method
+                and self.minutes_before_start == other.minutes_before_start
+        )
 
     def __str__(self):
         return '{} - minutes_before_start:{}'.format(self.__class__.__name__, self.minutes_before_start)

@@ -20,10 +20,14 @@ class TestEvent(TestCase):
             event_id='123',
             start=(1 / Feb / 2019)[9:00],
             end=(31 / Dec / 2019)[23:59],
+            _created=insure_localisation((20 / Nov / 2020)[16:19], TEST_TIMEZONE),
             _updated=insure_localisation((25 / Nov / 2020)[16:19], TEST_TIMEZONE),
             timezone=TEST_TIMEZONE,
             description='Everyday breakfast',
             location='Home',
+            guests_can_invite_others=False,
+            guests_can_modify=True,
+            guests_can_see_other_guests=False,
             recurrence=[
                 Recurrence.rule(freq=DAILY),
                 Recurrence.exclude_rule(by_week_day=[SU, SA]),
@@ -41,6 +45,7 @@ class TestEvent(TestCase):
         self.assertEqual(event.id, '123')
         self.assertEqual(event.start, insure_localisation((1 / Feb / 2019)[9:00], TEST_TIMEZONE))
         self.assertEqual(event.end, insure_localisation((31 / Dec / 2019)[23:59], TEST_TIMEZONE))
+        self.assertEqual(event.created, insure_localisation((20 / Nov / 2020)[16:19], TEST_TIMEZONE))
         self.assertEqual(event.updated, insure_localisation((25 / Nov / 2020)[16:19], TEST_TIMEZONE))
         self.assertEqual(event.description, 'Everyday breakfast')
         self.assertEqual(event.location, 'Home')
@@ -48,6 +53,9 @@ class TestEvent(TestCase):
         self.assertEqual(event.visibility, Visibility.PRIVATE)
         self.assertIsInstance(event.reminders[0], PopupReminder)
         self.assertEqual(event.reminders[0].minutes_before_start, 15)
+        self.assertFalse(event.guests_can_invite_others)
+        self.assertTrue(event.guests_can_modify)
+        self.assertFalse(event.guests_can_see_other_guests)
 
     def test_init_no_end(self):
         start = 1 / Jun / 2019
@@ -220,7 +228,10 @@ class TestEventSerializer(TestCase):
             'visibility': 'default',
             'attendees': [],
             'reminders': {'useDefault': False},
-            'attachments': []
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
         self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
@@ -233,7 +244,10 @@ class TestEventSerializer(TestCase):
             'visibility': 'default',
             'attendees': [],
             'reminders': {'useDefault': False},
-            'attachments': []
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
         self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
@@ -263,7 +277,10 @@ class TestEventSerializer(TestCase):
             'visibility': 'default',
             'attendees': [],
             'reminders': {'useDefault': False},
-            'attachments': []
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
         self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
@@ -294,7 +311,10 @@ class TestEventSerializer(TestCase):
                     'fileUrl': 'https://file.url2',
                     'mimeType': 'application/vnd.google-apps.document'
                 }
-            ]
+            ],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
         self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
@@ -318,7 +338,10 @@ class TestEventSerializer(TestCase):
                 ],
                 'useDefault': False
             },
-            'attachments': []
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
         self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
@@ -341,7 +364,10 @@ class TestEventSerializer(TestCase):
                 {'email': 'attendee2@gmail.com', 'responseStatus': ResponseStatus.ACCEPTED},
             ],
             'reminders': {'useDefault': False},
-            'attachments': []
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
         self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
@@ -356,7 +382,10 @@ class TestEventSerializer(TestCase):
             'visibility': 'default',
             'attendees': [],
             'reminders': {'useDefault': True},
-            'attachments': []
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
         self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
@@ -401,7 +430,10 @@ class TestEventSerializer(TestCase):
                 'conferenceId': 'aaa-bbbb-ccc',
                 'signature': 'abc4efg12345',
                 'notes': 'important notes'
-            }
+            },
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
         self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
@@ -441,7 +473,10 @@ class TestEventSerializer(TestCase):
                 'conferenceId': 'conference-id',
                 'signature': 'signature',
                 'notes': 'important notes'
-            }
+            },
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
         self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
@@ -461,6 +496,9 @@ class TestEventSerializer(TestCase):
             'attendees': [],
             'reminders': {'useDefault': False},
             'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
         self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
@@ -518,7 +556,10 @@ class TestEventSerializer(TestCase):
                 'conferenceId': 'aaa-bbbb-ccc',
                 'signature': 'abc4efg12345',
                 'notes': 'important notes'
-            }
+            },
+            'guestsCanInviteOthers': False,
+            'guestsCanModify': True,
+            'guestsCanSeeOtherGuests': False,
         }
 
         serializer = EventSerializer(event_json)
@@ -543,6 +584,9 @@ class TestEventSerializer(TestCase):
         self.assertIsInstance(event.conference_solution, ConferenceSolution)
         self.assertEqual(event.conference_solution.solution_type, 'hangoutsMeet')
         self.assertEqual(event.conference_solution.entry_points[0].uri, 'https://video.com')
+        self.assertFalse(event.guests_can_invite_others)
+        self.assertTrue(event.guests_can_modify)
+        self.assertFalse(event.guests_can_see_other_guests)
 
         event_json = {
             'summary': 'Good day',
