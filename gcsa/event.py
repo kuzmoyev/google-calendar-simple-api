@@ -186,7 +186,7 @@ class Event:
 
     def add_attachment(self, file_url, title, mime_type):
         """Adds attachment to an event. See :py:class:`~gcsa.attachment.Attachment`"""
-        self.attachments.append(Attachment(title=title, file_url=file_url, mime_type=mime_type))
+        self.attachments.append(Attachment(file_url=file_url, title=title, mime_type=mime_type))
 
     def add_email_reminder(self, minutes_before_start=60):
         """Adds email reminder to an event. See :py:class:`~gcsa.reminders.EmailReminder`"""

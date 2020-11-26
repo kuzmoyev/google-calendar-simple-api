@@ -158,7 +158,7 @@ class TestEvent(TestCase):
             color='#254433',
             visibility=Visibility.PRIVATE,
             attendees='mail@gmail.com',
-            attachments=Attachment('My doc', **attachments_dp),
+            attachments=Attachment(title='My doc', **attachments_dp),
             minutes_before_popup_reminder=15,
             other={"key": "value"}
         )
@@ -187,8 +187,8 @@ class TestEvent(TestCase):
         self.assertNotEqual(Event(**dp, attendees='mail1@gmail.com'),
                             Event(**dp, attendees='mail2@gmail.com'))
 
-        self.assertNotEqual(Event(**dp, attachments=Attachment('Attachment1', **attachments_dp)),
-                            Event(**dp, attachments=Attachment('Attachment2', **attachments_dp)))
+        self.assertNotEqual(Event(**dp, attachments=Attachment(title='Attachment1', **attachments_dp)),
+                            Event(**dp, attachments=Attachment(title='Attachment2', **attachments_dp)))
 
         self.assertNotEqual(Event(**dp, minutes_before_email_reminder=10),
                             Event(**dp, minutes_before_popup_reminder=10))
@@ -289,8 +289,8 @@ class TestEventSerializer(TestCase):
                   start=(1 / Jan / 2019)[11:22:33],
                   timezone=TEST_TIMEZONE,
                   attachments=[
-                      Attachment('My file1', 'https://file.url1', "application/vnd.google-apps.document"),
-                      Attachment('My file2', 'https://file.url2', "application/vnd.google-apps.document")
+                      Attachment('https://file.url1', 'My file1', "application/vnd.google-apps.document"),
+                      Attachment('https://file.url2', 'My file2', "application/vnd.google-apps.document")
                   ])
         expected_event_json = {
             'summary': 'Good day',
