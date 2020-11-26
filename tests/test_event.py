@@ -510,6 +510,7 @@ class TestEventSerializer(TestCase):
             'start': {'dateTime': '2019-01-01T11:22:33', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2019-01-01T12:22:33', 'timeZone': TEST_TIMEZONE},
             'updated': '2020-11-25T14:53:46.0Z',
+            'created': '2020-11-24T14:53:46.0Z',
             'recurrence': [
                 'RRULE:FREQ=DAILY;WKST=SU',
                 'EXRULE:FREQ=DAILY;BYDAY=MO;WKST=SU',
@@ -569,6 +570,7 @@ class TestEventSerializer(TestCase):
         self.assertEqual(event.start, insure_localisation((1 / Jan / 2019)[11:22:33], TEST_TIMEZONE))
         self.assertEqual(event.end, insure_localisation((1 / Jan / 2019)[12:22:33], TEST_TIMEZONE))
         self.assertEqual(event.updated, insure_localisation((25 / Nov / 2020)[14:53:46], 'UTC'))
+        self.assertEqual(event.created, insure_localisation((24 / Nov / 2020)[14:53:46], 'UTC'))
         self.assertEqual(event.description, 'Very good day indeed')
         self.assertEqual(event.location, 'Prague')
         self.assertEqual(len(event.recurrence), 3)
