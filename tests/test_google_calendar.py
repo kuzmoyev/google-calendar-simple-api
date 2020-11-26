@@ -77,19 +77,19 @@ class TestGoogleCalendarCredentials(TestCase):
 
     def test_get_token_valid(self):
         gc = GoogleCalendar(token_path=self.valid_token_path)
-        self.assertTrue(gc.token.valid)
+        self.assertTrue(gc.credentials.valid)
         self.assertFalse(self.from_client_secrets_file.called)
 
     def test_get_token_expired(self):
         gc = GoogleCalendar(token_path=self.expired_token_path)
-        self.assertTrue(gc.token.valid)
-        self.assertFalse(gc.token.expired)
+        self.assertTrue(gc.credentials.valid)
+        self.assertFalse(gc.credentials.expired)
         self.assertFalse(self.from_client_secrets_file.called)
 
     def test_get_token_invalid_refresh(self):
         gc = GoogleCalendar(credentials_path=self.credentials_path)
-        self.assertTrue(gc.token.valid)
-        self.assertFalse(gc.token.expired)
+        self.assertTrue(gc.credentials.valid)
+        self.assertFalse(gc.credentials.expired)
         self.assertTrue(self.from_client_secrets_file.called)
 
 
@@ -115,6 +115,41 @@ class MockEventsRequests:
     """Emulates GoogleCalendar.service.events()"""
 
     EVENTS_PER_PAGE = 3
+
+    @executable
+    def instances(self, **kwargs):
+        event_id = kwargs.pop('eventId')
+
+        if event_id == 'event_id_1':
+            recurring_instances = [
+                Event(
+                    'Recurring event 1',
+                    start=D.now() + 1 * days,
+                    event_id='event_id_1_' + (D.now() + (i + 1) * days).isoformat() + 'Z',
+                    _updated=D.now() + 5 * days,
+                    _recurring_event_id='event_id_1',
+
+                ) for i in range(1, 10)
+            ]
+        elif event_id == 'event_id_2':
+            recurring_instances = [
+                Event(
+                    'Recurring event 2',
+                    start=D.now() + 2 * days,
+                    event_id='event_id_2_' + (D.now() + (i + 2) * days).isoformat() + 'Z',
+                    _updated=D.now() + 5 * days,
+                    _recurring_event_id='event_id_2',
+
+                ) for i in range(1, 5)
+            ]
+        else:
+            # should get here in tests
+            raise ValueError
+
+        return {
+            'items': recurring_instances,
+            'nextPageToken': None
+        }
 
     @executable
     def list(self, **kwargs):
@@ -148,7 +183,7 @@ class MockEventsRequests:
             Event(
                 recurring_event.summary,
                 start=recurring_event.start + i * days,
-                event_id=recurring_event.id + '_' + (recurring_event.start + i * days).isoformat(),
+                event_id=recurring_event.id + '_' + (recurring_event.start + i * days).isoformat() + 'Z',
                 _updated=recurring_event.updated,
                 _recurring_event_id=recurring_event.id,
 
@@ -328,3 +363,17 @@ class TestGoogleCalendarAPI(TestCase):
 
         events = list(self.gc.get_events(query='Frank', time_max=D.now() + 2 * years))
         self.assertEqual(len(events), 1)
+
+    def test_get_recurring_instances(self):
+        events = list(self.gc.get_instances(recurring_event='event_id_1'))
+        self.assertEqual(len(events), 9)
+        self.assertTrue(all(e.id.startswith('event_id_1') for e in events))
+
+        recurring_event = Event(
+            'recurring event',
+            D.now(),
+            event_id='event_id_2'
+        )
+        events = list(self.gc.get_instances(recurring_event=recurring_event))
+        self.assertEqual(len(events), 4)
+        self.assertTrue(all(e.id.startswith('event_id_2') for e in events))

@@ -60,28 +60,28 @@ class GoogleCalendar:
         self._application_name = application_name
 
         self.calendar = calendar
-        self.token = self._get_token()
-        self.service = discovery.build('calendar', 'v3', credentials=self.token)
+        self.credentials = self._get_token()
+        self.service = discovery.build('calendar', 'v3', credentials=self.credentials)
 
     def _get_token(self):
-        token = None
+        credentials = None
 
         if os.path.exists(self._token_path):
             with open(self._token_path, 'rb') as token_file:
-                token = pickle.load(token_file)
+                credentials = pickle.load(token_file)
 
-        if not token or not token.valid:
-            if token and token.expired and token.refresh_token:
-                token.refresh(Request())
+        if not credentials or not credentials.valid:
+            if credentials and credentials.expired and credentials.refresh_token:
+                credentials.refresh(Request())
             else:
                 credentials_path = os.path.join(self._credentials_dir, self._credentials_file)
                 flow = InstalledAppFlow.from_client_secrets_file(credentials_path, self._scopes)
-                token = flow.run_local_server()
+                credentials = flow.run_local_server()
 
             with open(self._token_path, 'wb') as token_file:
-                pickle.dump(token, token_file)
+                pickle.dump(credentials, token_file)
 
-        return token
+        return credentials
 
     @staticmethod
     def _get_default_credentials_path():
@@ -219,6 +219,40 @@ class GoogleCalendar:
             **kwargs
         ).execute()
 
+    def _list_events(self,
+                     request_method,
+                     time_min,
+                     time_max,
+                     timezone,
+                     **kwargs):
+        time_min = time_min or datetime.now()
+        time_max = time_max or time_min + relativedelta(years=1)
+
+        if not isinstance(time_min, datetime):
+            time_min = datetime.combine(time_min, datetime.min.time())
+
+        if not isinstance(time_max, datetime):
+            time_max = datetime.combine(time_max, datetime.max.time())
+
+        time_min = insure_localisation(time_min, timezone).isoformat()
+        time_max = insure_localisation(time_max, timezone).isoformat()
+
+        page_token = None
+        while True:
+            events = request_method(
+                calendarId=self.calendar,
+                timeMin=time_min,
+                timeMax=time_max,
+                pageToken=page_token,
+                **kwargs
+            ).execute()
+            for event_json in events['items']:
+                event = EventSerializer(event_json).get_object()
+                yield event
+            page_token = events.get('nextPageToken')
+            if not page_token:
+                break
+
     def get_events(self,
                    time_min=None,
                    time_max=None,
@@ -251,41 +285,59 @@ class GoogleCalendar:
         :return:
                 Iterable of event objects
         """
-        time_min = time_min or datetime.now()
-        time_max = time_max or time_min + relativedelta(years=1)
-
-        if not isinstance(time_min, datetime):
-            time_min = datetime.combine(time_min, datetime.min.time())
-
-        if not isinstance(time_max, datetime):
-            time_max = datetime.combine(time_max, datetime.max.time())
-
-        time_min = insure_localisation(time_min, timezone).isoformat()
-        time_max = insure_localisation(time_max, timezone).isoformat()
 
         if not single_events and order_by == 'startTime':
             raise ValueError(
                 '"startTime" ordering is only available when querying single events, i.e. single_events=True'
             )
 
-        page_token = None
-        while True:
-            events = self.service.events().list(
-                calendarId=self.calendar,
-                timeMin=time_min,
-                timeMax=time_max,
-                orderBy=order_by,
-                singleEvents=single_events,
-                pageToken=page_token,
-                q=query,
+        yield from self._list_events(
+            self.service.events().list,
+            time_min=time_min,
+            time_max=time_max,
+            timezone=timezone,
+            **{
+                'singleEvents': single_events,
+                'orderBy': order_by,
+                'q': query,
                 **kwargs
-            ).execute()
-            for event_json in events['items']:
-                event = EventSerializer(event_json).get_object()
-                yield event
-            page_token = events.get('nextPageToken')
-            if not page_token:
-                break
+            }
+        )
+
+    def get_instances(self,
+                      recurring_event,
+                      time_min=None,
+                      time_max=None,
+                      timezone=str(get_localzone()),
+                      **kwargs):
+        """ Lists instances of recurring event
+
+        :param recurring_event:
+                Recurring event (Event object with id) or id of a recurring event
+        :param time_min:
+                Staring date/datetime
+        :param time_max:
+                Ending date/datetime
+        :param timezone:
+                Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
+                the computers local timezone is used if it is configured. UTC is used otherwise.
+        :param kwargs:
+                Additional API parameters.
+                See https://developers.google.com/calendar/v3/reference/events/instances#optional-parameters
+
+        :return:
+                Iterable of event objects
+        """
+        yield from self._list_events(
+            self.service.events().instances,
+            time_min=time_min,
+            time_max=time_max,
+            timezone=timezone,
+            **{
+                'eventId': recurring_event if isinstance(recurring_event, str) else recurring_event.id,
+                **kwargs
+            }
+        )
 
     def get_event(self, event_id, **kwargs):
         """ Returns the event with the corresponding event_id.
