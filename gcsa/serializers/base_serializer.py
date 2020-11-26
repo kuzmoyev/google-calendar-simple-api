@@ -12,20 +12,18 @@ class BaseSerializer(ABC):
 
     def __init__(self, obj):
         if isinstance(obj, self.type_):
-            self.data = self.to_json(obj)
-        elif isinstance(obj, str):
-            self.data = json.loads(obj)
-        elif isinstance(obj, dict):
-            self.data = obj
+            self.obj = obj
+        elif isinstance(obj, (str, dict)):
+            self.obj = self.to_object(obj)
         else:
             raise TypeError('The "{}" object must be {}, str or dict, not {!r}.'
                             .format(_type_to_snake_case(self.type_), self.type_.__name__, obj.__class__.__name__))
 
     def get_object(self):
-        return self.to_object(self.data)
+        return self.obj
 
     def get_json(self):
-        return self.data
+        return self.to_json(self.obj)
 
     @staticmethod
     def _remove_empty_values(data):

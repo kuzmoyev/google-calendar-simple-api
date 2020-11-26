@@ -74,6 +74,8 @@ class EventSerializer(BaseSerializer):
     @staticmethod
     def _to_object(json_event):
         timezone = None
+
+        start = None
         start_data = json_event.pop('start', None)
         if start_data is not None:
             if 'date' in start_data:
@@ -81,17 +83,14 @@ class EventSerializer(BaseSerializer):
             else:
                 start = EventSerializer._get_datetime_from_string(start_data['dateTime'])
             timezone = start_data.get('timeZone', str(get_localzone()))
-        else:
-            start = None
 
+        end = None
         end_data = json_event.pop('end', None)
         if end_data is not None:
             if 'date' in end_data:
                 end = EventSerializer._get_datetime_from_string(end_data['date']).date()
             else:
                 end = EventSerializer._get_datetime_from_string(end_data['dateTime'])
-        else:
-            end = None
 
         updated = json_event.pop('updated', None)
         if updated:
