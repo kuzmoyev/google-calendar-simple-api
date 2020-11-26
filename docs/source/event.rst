@@ -67,6 +67,24 @@ Get event by id
 
 
 
+List recurring event instances
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    calendar.get_instances('<recurring_event_id>')
+
+or
+
+.. code-block:: python
+
+    calendar.get_instances(recurring_event)
+
+where ``recurring_event`` is :py:class:`~gcsa.event.Event` object with set ``event_id``. You'd probably get it from
+the ``get_events`` method.
+
+
+
 Create event
 ~~~~~~~~~~~~
 
