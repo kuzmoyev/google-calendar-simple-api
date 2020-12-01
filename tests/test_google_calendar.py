@@ -255,7 +255,7 @@ class TestGoogleCalendarAPI(TestCase):
         self.get_credentials_patcher = patch('gcsa.google_calendar.GoogleCalendar._get_default_credentials_path',
                                              return_value='/')
         self.get_credentials_patcher.start()
-        self.get_token_patcher = patch('gcsa.google_calendar.GoogleCalendar._get_token')
+        self.get_token_patcher = patch('gcsa.google_calendar.GoogleCalendar._get_credentials')
         self.get_token_patcher.start()
 
         self.gc = GoogleCalendar()
