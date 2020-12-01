@@ -60,10 +60,10 @@ class GoogleCalendar:
         self._application_name = application_name
 
         self.calendar = calendar
-        self.credentials = self._get_token()
+        self.credentials = self._get_credentials()
         self.service = discovery.build('calendar', 'v3', credentials=self.credentials)
 
-    def _get_token(self):
+    def _get_credentials(self):
         credentials = None
 
         if os.path.exists(self._token_path):
