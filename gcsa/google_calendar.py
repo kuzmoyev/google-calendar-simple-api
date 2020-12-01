@@ -225,6 +225,8 @@ class GoogleCalendar:
                      time_max,
                      timezone,
                      **kwargs):
+        """Lists paginated events received from request_method."""
+
         time_min = time_min or datetime.now()
         time_max = time_max or time_min + relativedelta(years=1)
 
