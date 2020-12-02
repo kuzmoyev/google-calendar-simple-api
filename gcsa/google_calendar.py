@@ -1,7 +1,9 @@
 from datetime import date, datetime
 import pickle
 import os.path
+from typing import List, Union, Callable
 
+from beautiful_date import BeautifulDate
 from dateutil.relativedelta import relativedelta
 from googleapiclient import discovery
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -9,6 +11,8 @@ from google.auth.transport.requests import Request
 from tzlocal import get_localzone
 
 from google.oauth2.credentials import Credentials
+
+from .event import Event
 from .serializers.event_serializer import EventSerializer
 from .util.date_time_util import insure_localisation
 
@@ -77,19 +81,19 @@ class GoogleCalendar:
         self.service = discovery.build('calendar', 'v3', credentials=self.credentials)
 
     @staticmethod
-    def _assure_refreshed(credentials):
+    def _assure_refreshed(credentials: Credentials):
         if not credentials.valid and credentials.expired and credentials.refresh_token:
             credentials.refresh(Request())
         return credentials
 
     @staticmethod
     def _get_credentials(
-            token_path,
-            credentials_dir,
-            credentials_file,
-            scopes,
-            save_token
-    ):
+            token_path: str,
+            credentials_dir: str,
+            credentials_file: str,
+            scopes: List[str],
+            save_token: bool
+    ) -> Credentials:
         credentials = None
 
         if os.path.exists(token_path):
@@ -111,7 +115,7 @@ class GoogleCalendar:
         return credentials
 
     @staticmethod
-    def _get_default_credentials_path():
+    def _get_default_credentials_path() -> str:
         """ Checks if ".credentials" folder in home directory exists. If not, creates it.
         :return: expanded path to .credentials folder
         """
@@ -122,7 +126,12 @@ class GoogleCalendar:
         credential_path = os.path.join(credential_dir, 'credentials.json')
         return credential_path
 
-    def add_event(self, event, send_updates=SendUpdatesMode.NONE, **kwargs):
+    def add_event(
+            self,
+            event,
+            send_updates=SendUpdatesMode.NONE,
+            **kwargs
+    ):
         """Creates event in the calendar
 
         :param event:
@@ -147,7 +156,12 @@ class GoogleCalendar:
         ).execute()
         return EventSerializer.to_object(event_json)
 
-    def add_quick_event(self, event_string, send_updates=SendUpdatesMode.NONE, **kwargs):
+    def add_quick_event(
+            self,
+            event_string,
+            send_updates=SendUpdatesMode.NONE,
+            **kwargs
+    ):
         """Creates event in the calendar by string description.
 
         Example:
@@ -173,7 +187,12 @@ class GoogleCalendar:
         ).execute()
         return EventSerializer.to_object(event_json)
 
-    def update_event(self, event, send_updates=SendUpdatesMode.NONE, **kwargs):
+    def update_event(
+            self,
+            event,
+            send_updates=SendUpdatesMode.NONE,
+            **kwargs
+    ):
         """Updates existing event in the calendar
 
         :param event:
@@ -199,7 +218,13 @@ class GoogleCalendar:
         ).execute()
         return EventSerializer.to_object(event_json)
 
-    def move_event(self, event, destination_calendar_id, send_updates=SendUpdatesMode.NONE, **kwargs):
+    def move_event(
+            self,
+            event,
+            destination_calendar_id,
+            send_updates=SendUpdatesMode.NONE,
+            **kwargs
+    ):
         """Moves existing event from calendar to another calendar
 
         :param event:
@@ -225,7 +250,12 @@ class GoogleCalendar:
         ).execute()
         return EventSerializer.to_object(moved_event_json)
 
-    def delete_event(self, event, send_updates=SendUpdatesMode.NONE, **kwargs):
+    def delete_event(
+            self,
+            event,
+            send_updates=SendUpdatesMode.NONE,
+            **kwargs
+    ):
         """ Deletes an event.
 
         :param event:
@@ -246,12 +276,14 @@ class GoogleCalendar:
             **kwargs
         ).execute()
 
-    def _list_events(self,
-                     request_method,
-                     time_min,
-                     time_max,
-                     timezone,
-                     **kwargs):
+    def _list_events(
+            self,
+            request_method: Callable,
+            time_min: Union[date, datetime, BeautifulDate],
+            time_max: Union[date, datetime, BeautifulDate],
+            timezone: str,
+            **kwargs
+    ):
         """Lists paginated events received from request_method."""
 
         time_min = time_min or datetime.now()
@@ -282,14 +314,16 @@ class GoogleCalendar:
             if not page_token:
                 break
 
-    def get_events(self,
-                   time_min=None,
-                   time_max=None,
-                   order_by=None,
-                   timezone=str(get_localzone()),
-                   single_events=False,
-                   query=None,
-                   **kwargs):
+    def get_events(
+            self,
+            time_min=None,
+            time_max=None,
+            order_by=None,
+            timezone=str(get_localzone()),
+            single_events=False,
+            query=None,
+            **kwargs
+    ):
         """ Lists events
 
         :param time_min:
@@ -333,16 +367,18 @@ class GoogleCalendar:
             }
         )
 
-    def get_instances(self,
-                      recurring_event,
-                      time_min=None,
-                      time_max=None,
-                      timezone=str(get_localzone()),
-                      **kwargs):
+    def get_instances(
+            self,
+            recurring_event,
+            time_min=None,
+            time_max=None,
+            timezone=str(get_localzone()),
+            **kwargs
+    ):
         """ Lists instances of recurring event
 
         :param recurring_event:
-                Recurring event (Event object with id) or id of a recurring event
+                Recurring event (Event object) or id of a recurring event
         :param time_min:
                 Staring date/datetime
         :param time_max:
