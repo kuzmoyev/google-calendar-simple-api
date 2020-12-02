@@ -89,8 +89,8 @@ To json
     from gcsa.serializers.attachment_serializer import AttachmentSerializer
 
     attachment = Attachment(
-        'My file',
         file_url='https://bit.ly/3lZo0Cc',
+        title='My file',
         mime_type='application/vnd.google-apps.document'
     )
 

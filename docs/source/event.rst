@@ -3,12 +3,13 @@
 Events
 ======
 
-Event in `gcsa` is represented by the class :py:class:`~gcsa.event.Event`. It stores all needed information about event
-including its summary, starting and ending dates/times, attachments, reminders, recurrence rules, etc.
+Event in `gcsa` is represented by the class :py:class:`~gcsa.event.Event`. It stores all the needed information about
+the event including its summary, starting and ending dates/times, attachments, reminders, recurrence rules, etc.
 
 Current version of `gcsa` allows you to create a new events, retrieve, update, move and delete existing events.
 
-To do so, create a :py:class:`~gcsa.google_calendar.GoogleCalendar` instance (see :ref:`getting_started` to get your credentials):
+To do so, create a :py:class:`~gcsa.google_calendar.GoogleCalendar` instance (see :ref:`getting_started` to get your
+credentials):
 
 .. code-block:: python
 
@@ -16,10 +17,11 @@ To do so, create a :py:class:`~gcsa.google_calendar.GoogleCalendar` instance (se
 
     calendar = GoogleCalendar()
 
+
 List events
 ~~~~~~~~~~~
-This code will print out events for one year starting today:
 
+This code will print out events for one year starting today:
 
 .. code-block:: python
 
@@ -66,7 +68,6 @@ Get event by id
     calendar.get_event('<event_id>')
 
 
-
 List recurring event instances
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -84,29 +85,28 @@ where ``recurring_event`` is :py:class:`~gcsa.event.Event` object with set ``eve
 the ``get_events`` method.
 
 
-
 Create event
 ~~~~~~~~~~~~
 
 .. code-block:: python
 
-    from beautiful_date import Apr
+    from beautiful_date import Apr, hours
 
+    start = (22/Apr/2019)[12:00]
+    end = start + 2 * hours
     event = Event('Meeting',
-                  start=(22/Apr/2019)[12:00],
-                  end=(22/Apr/2019)[13:00])
+                  start=start,
+                  end=end)
 
 
 For ``date``/``datetime`` objects you can use Pythons datetime_ module or as in the
 example beautiful_date_ library (*because it's beautiful... just like you*).
-
 
 Now **add** your event to the calendar:
 
 .. code-block:: python
 
     calendar.add_event(event)
-
 
 See dedicated pages on how to add :ref:`attendees`, :ref:`attachments`, :ref:`conference`, :ref:`reminders`, and
 :ref:`recurrence` to an event.

@@ -52,13 +52,13 @@ class GoogleCalendar:
                 Existing path to load the token from, or path to save the token after initial authentication flow.
                 Default: "token.pickle" in the same directory as the credentials_path
         :param save_token:
-                Whether to pickle token after authentication flow for future uses.
+                Whether to pickle token after authentication flow for future uses
         :param credentials:
                 Credentials with token and refresh token.
                 If specified, ``credentials_path``, ``token_path``, and ``save_token`` are ignored.
                 If not specified, credentials are retrieved from "token.pickle" file (specified in ``token_path`` or
                 default path) or with authentication flow using secret from "credentials.json" (specified in
-                ``credentials_path`` or default path).
+                ``credentials_path`` or default path)
         :param read_only:
                 If require read only access. Default: False
         """

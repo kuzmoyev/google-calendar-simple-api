@@ -7,7 +7,7 @@ Getting started
 Installation
 ------------
 
-To install ``gcsa`` run following command:
+To install ``gcsa`` run the following command:
 
 .. code-block:: bash
 
@@ -32,21 +32,20 @@ Now you need to get your API credentials:
     3. Click ``DOWNLOAD CLIENT CONFIGURATION``
     4. Put downloaded ``credentials.json`` file into ``~/.credentials/`` directory
 
+See more options in :ref:`authentication`.
+
     .. note:: You can put ``credentials.json`` file anywhere you want and specify
         the path to it in your code afterwords. But remember not to share it (e.g. add it
         to ``.gitignore``) as it is your private credentials.
 
     .. note::
         | On the first run, your application will prompt you to the default browser
-          to get permissions from you to use (see/edit) your calendar. This will create
+          to get permissions from you to use your calendar. This will create
           ``token.pickle`` file in the same folder (unless specified otherwise) as your
           ``credentials.json``. So don't forget to also add it to ``.gitignore`` if
           it is in a GIT repository.
         | If you don't want to save it in ``.pickle`` file, you can use ``save_token=False``
           when initializing the ``GoogleCalendar``.
-
-See more options in :ref:`authentication`.
-
 
 Quick example
 -------------
@@ -87,24 +86,6 @@ example beautiful_date_ library (*because it's beautiful... just like you*).
 
     for event in calendar:
         print(event)
-
-
-
-If you have put ``credentials.json`` elsewhere (not in ``~/.credentials/``),
-you can specify the path to the credentials as a second argument of the ``GoogleCalendar``:
-
-.. code-block:: python
-
-    calendar = GoogleCalendar('your_email@gmail.com',
-                              'path_to_credentials/credentials.json')
-
-
-
-.. note::   You can also specify the ``token_path`` parameter, which overrides
-            the default ``token.pickle`` location and file name. That could be
-            useful if you want to save the file elsewhere, or if you have multiple
-            google accounts.
-
 
 .. _`Calendar API Quickstart`: https://developers.google.com/calendar/quickstart/python#step_1_turn_on_the
 .. _datetime: https://docs.python.org/3/library/datetime.html

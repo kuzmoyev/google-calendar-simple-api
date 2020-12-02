@@ -79,8 +79,8 @@ See more parameters for :py:class:`~gcsa.conference.ConferenceSolutionCreateRequ
 
 .. note:: Create requests are asynchronous. Check ``status`` field of event's ``conference_solution`` to find it's
     status. If the status is ``"success"``, ``conference_solution`` will contain a
-    :py:class:`~gcsa.conference.ConferenceSolution` object and you'll be able to access it's field (like
-    ``entry_points``). Otherwise (if ``status`` is ``""pending"`` or ``"failure"``), ``conference_solution`` will
+    :py:class:`~gcsa.conference.ConferenceSolution` object and you'll be able to access its fields (like
+    ``entry_points``). Otherwise (if ``status`` is ``"pending"`` or ``"failure"``), ``conference_solution`` will
     contain a :py:class:`~gcsa.conference.ConferenceSolutionCreateRequest` object.
 
 
