@@ -12,7 +12,6 @@ from tzlocal import get_localzone
 
 from google.oauth2.credentials import Credentials
 
-from .event import Event
 from .serializers.event_serializer import EventSerializer
 from .util.date_time_util import insure_localisation
 
@@ -38,11 +37,13 @@ class GoogleCalendar:
             self,
             calendar: str = 'primary',
             *,
+            credentials: Credentials = None,
             credentials_path: str = None,
             token_path: str = None,
             save_token: bool = True,
-            credentials: Credentials = None,
-            read_only: bool = False
+            read_only: bool = False,
+            authentication_flow_host='localhost',
+            authentication_flow_port=8080
     ):
         """Represents Google Calendar of the user.
 
@@ -50,6 +51,12 @@ class GoogleCalendar:
 
         :param calendar:
                 Users email address or name/id of the calendar. Default: primary calendar of the user
+        :param credentials:
+                Credentials with token and refresh token.
+                If specified, ``credentials_path``, ``token_path``, and ``save_token`` are ignored.
+                If not specified, credentials are retrieved from "token.pickle" file (specified in ``token_path`` or
+                default path) or with authentication flow using secret from "credentials.json" (specified in
+                ``credentials_path`` or default path)
         :param credentials_path:
                 Path to "credentials.json" file. Default: ~/.credentials
         :param token_path:
@@ -57,14 +64,12 @@ class GoogleCalendar:
                 Default: "token.pickle" in the same directory as the credentials_path
         :param save_token:
                 Whether to pickle token after authentication flow for future uses
-        :param credentials:
-                Credentials with token and refresh token.
-                If specified, ``credentials_path``, ``token_path``, and ``save_token`` are ignored.
-                If not specified, credentials are retrieved from "token.pickle" file (specified in ``token_path`` or
-                default path) or with authentication flow using secret from "credentials.json" (specified in
-                ``credentials_path`` or default path)
         :param read_only:
                 If require read only access. Default: False
+        :param authentication_flow_host:
+                Host to receive response during authentication flow
+        :param authentication_flow_port:
+                Port to receive response during authentication flow
         """
 
         if credentials:
@@ -75,7 +80,15 @@ class GoogleCalendar:
             token_path = token_path or os.path.join(credentials_dir, 'token.pickle')
             scopes = [self._READ_WRITE_SCOPES + ('.readonly' if read_only else '')]
 
-            self.credentials = self._get_credentials(token_path, credentials_dir, credentials_file, scopes, save_token)
+            self.credentials = self._get_credentials(
+                token_path,
+                credentials_dir,
+                credentials_file,
+                scopes,
+                save_token,
+                authentication_flow_host,
+                authentication_flow_port
+            )
 
         self.calendar = calendar
         self.service = discovery.build('calendar', 'v3', credentials=self.credentials)
@@ -92,7 +105,9 @@ class GoogleCalendar:
             credentials_dir: str,
             credentials_file: str,
             scopes: List[str],
-            save_token: bool
+            save_token: bool,
+            host: str,
+            port: int
     ) -> Credentials:
         credentials = None
 
@@ -106,7 +121,7 @@ class GoogleCalendar:
             else:
                 credentials_path = os.path.join(credentials_dir, credentials_file)
                 flow = InstalledAppFlow.from_client_secrets_file(credentials_path, scopes)
-                credentials = flow.run_local_server()
+                credentials = flow.run_local_server(host=host, port=port)
 
             if save_token:
                 with open(token_path, 'wb') as token_file:

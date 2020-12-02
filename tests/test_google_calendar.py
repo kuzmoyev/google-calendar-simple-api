@@ -48,7 +48,7 @@ class TestGoogleCalendarCredentials(TestCase):
         self.build_patcher = patch('googleapiclient.discovery.build', return_value=None).start()
 
         class MockAuthFlow:
-            def run_local_server(self):
+            def run_local_server(self, *args, **kwargs):
                 return MockToken(valid=True)
 
         self.from_client_secrets_file_patcher = patch(
