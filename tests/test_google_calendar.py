@@ -3,7 +3,7 @@ from os import path
 from unittest.mock import patch
 
 import dateutil
-from beautiful_date import D, days, years
+from beautiful_date import D, days, years, hours
 from pyfakefs.fake_filesystem_unittest import TestCase
 
 from gcsa.attendee import Attendee
@@ -51,14 +51,23 @@ class TestGoogleCalendarCredentials(TestCase):
             def run_local_server(self):
                 return MockToken(valid=True)
 
-        self.from_client_secrets_file = patch(
+        self.from_client_secrets_file_patcher = patch(
             'google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file',
             return_value=MockAuthFlow()
         ).start()
 
     def tearDown(self):
         self.build_patcher.stop()
-        self.from_client_secrets_file.stop()
+        self.from_client_secrets_file_patcher.stop()
+
+    def test_with_given_credentials(self):
+        GoogleCalendar(credentials=MockToken(valid=True))
+        self.assertFalse(self.from_client_secrets_file_patcher.called)
+
+    def test_with_given_credentials_expired(self):
+        gc = GoogleCalendar(credentials=MockToken(valid=False))
+        self.assertTrue(gc.credentials.valid)
+        self.assertFalse(gc.credentials.expired)
 
     def test_get_default_credentials_path_exist(self):
         self.fs.create_dir(path.join(path.expanduser('~'), '.credentials'))
@@ -78,19 +87,19 @@ class TestGoogleCalendarCredentials(TestCase):
     def test_get_token_valid(self):
         gc = GoogleCalendar(token_path=self.valid_token_path)
         self.assertTrue(gc.credentials.valid)
-        self.assertFalse(self.from_client_secrets_file.called)
+        self.assertFalse(self.from_client_secrets_file_patcher.called)
 
     def test_get_token_expired(self):
         gc = GoogleCalendar(token_path=self.expired_token_path)
         self.assertTrue(gc.credentials.valid)
         self.assertFalse(gc.credentials.expired)
-        self.assertFalse(self.from_client_secrets_file.called)
+        self.assertFalse(self.from_client_secrets_file_patcher.called)
 
     def test_get_token_invalid_refresh(self):
         gc = GoogleCalendar(credentials_path=self.credentials_path)
         self.assertTrue(gc.credentials.valid)
         self.assertFalse(gc.credentials.expired)
-        self.assertTrue(self.from_client_secrets_file.called)
+        self.assertTrue(self.from_client_secrets_file_patcher.called)
 
 
 def executable(fn):
@@ -124,9 +133,9 @@ class MockEventsRequests:
             recurring_instances = [
                 Event(
                     'Recurring event 1',
-                    start=D.now() + 1 * days,
-                    event_id='event_id_1_' + (D.now() + (i + 1) * days).isoformat() + 'Z',
-                    _updated=D.now() + 5 * days,
+                    start=D.today()[:] + 1 * days,
+                    event_id='event_id_1_' + (D.today()[:] + (i + 1) * days).isoformat() + 'Z',
+                    _updated=D.today()[:] + 5 * days,
                     _recurring_event_id='event_id_1',
 
                 ) for i in range(1, 10)
@@ -135,15 +144,15 @@ class MockEventsRequests:
             recurring_instances = [
                 Event(
                     'Recurring event 2',
-                    start=D.now() + 2 * days,
-                    event_id='event_id_2_' + (D.now() + (i + 2) * days).isoformat() + 'Z',
-                    _updated=D.now() + 5 * days,
+                    start=D.today()[:] + 2 * days,
+                    event_id='event_id_2_' + (D.today()[:] + (i + 2) * days).isoformat() + 'Z',
+                    _updated=D.today()[:] + 5 * days,
                     _recurring_event_id='event_id_2',
 
                 ) for i in range(1, 5)
             ]
         else:
-            # should get here in tests
+            # shouldn't get here in tests
             raise ValueError
 
         return {
@@ -165,9 +174,9 @@ class MockEventsRequests:
         test_events = [
             Event(
                 'test{}'.format(i),
-                start=insure_localisation(D.now() + i * days),
+                start=insure_localisation(D.today()[:] + i * days + i * hours),
                 event_id='1',
-                _updated=insure_localisation(D.now() + (i + 1) * days),
+                _updated=insure_localisation(D.today()[:] + (i + 1) * days + i * hours),
                 attendees=[
                     Attendee(email='{}@gmail.com'.format(attendee_name.lower()), display_name=attendee_name)
                 ] if attendee_name else None
@@ -176,9 +185,9 @@ class MockEventsRequests:
         ]
 
         recurring_event = Event('Recurring event',
-                                start=D.now() + 9 * days,
+                                start=insure_localisation(D.today()[:] + 2 * days),
                                 event_id='recurring_id',
-                                _updated=insure_localisation(D.now() + 10 * days))
+                                _updated=insure_localisation(D.today()[:] + 3 * days))
         recurring_instances = [
             Event(
                 recurring_event.summary,
@@ -197,9 +206,9 @@ class MockEventsRequests:
 
         event_in_a_year = Event(
             'test42',
-            start=insure_localisation(D.now() + 1 * years + 1 * days),
+            start=insure_localisation(D.today()[:] + 1 * years + 2 * days),
             event_id='42',
-            _updated=insure_localisation(D.now() + 1 * years + 2 * days),
+            _updated=insure_localisation(D.today()[:] + 1 * years + 3 * days),
             attendees=[
                 Attendee(email='frank@gmail.com', display_name='Frank')
             ]
@@ -252,18 +261,11 @@ class TestGoogleCalendarAPI(TestCase):
     def setUp(self):
         self.build_patcher = patch('googleapiclient.discovery.build', return_value=MockService())
         self.build_patcher.start()
-        self.get_credentials_patcher = patch('gcsa.google_calendar.GoogleCalendar._get_default_credentials_path',
-                                             return_value='/')
-        self.get_credentials_patcher.start()
-        self.get_token_patcher = patch('gcsa.google_calendar.GoogleCalendar._get_credentials')
-        self.get_token_patcher.start()
 
-        self.gc = GoogleCalendar()
+        self.gc = GoogleCalendar(credentials=MockToken(valid=True))
 
     def tearDown(self):
         self.build_patcher.stop()
-        self.get_credentials_patcher.stop()
-        self.get_token_patcher.stop()
 
     def test_get_events_default(self):
         events = list(self.gc.get_events())
@@ -275,24 +277,24 @@ class TestGoogleCalendarAPI(TestCase):
         self.assertFalse(any(e.is_recurring_instance for e in events))
 
     def test_get_events_time_limits(self):
-        time_min = insure_localisation(D.now() + 5 * days)
+        time_min = insure_localisation(D.today()[:] + 5 * days)
         events = list(self.gc.get_events(time_min=time_min))
-        self.assertEqual(len(events), 7)
+        self.assertEqual(len(events), 6)
         self.assertTrue(all(e.start >= time_min for e in events))
 
-        time_min = insure_localisation(D.now() + 5 * days)
+        time_min = insure_localisation(D.today()[:] + 5 * days)
         events = list(self.gc[time_min])
-        self.assertEqual(len(events), 7)
+        self.assertEqual(len(events), 6)
         self.assertTrue(all(e.start >= time_min for e in events))
 
-        time_max = insure_localisation(D.now() + 1 * years + 7 * days)
+        time_max = insure_localisation(D.today()[:] + 1 * years + 7 * days)
         events = list(self.gc.get_events(time_max=time_max))
         self.assertEqual(len(events), 11)
         self.assertTrue(all(e.end < time_max for e in events))
 
-        time_max = insure_localisation(D.now() + 7 * days)
+        time_max = insure_localisation(D.today()[:] + 7 * days)
         events = list(self.gc.get_events(time_max=time_max))
-        self.assertEqual(len(events), 6)
+        self.assertEqual(len(events), 7)
         self.assertTrue(all(e.end < time_max for e in events))
 
         events = list(self.gc.get_events(time_min=time_min, time_max=time_max))
@@ -352,16 +354,16 @@ class TestGoogleCalendarAPI(TestCase):
         self.assertEqual(events[-1].id, max(events, key=lambda e: e.start).id)
 
     def test_get_events_query(self):
-        events = list(self.gc.get_events(query='test4', time_max=D.now() + 2 * years))
+        events = list(self.gc.get_events(query='test4', time_max=D.today()[:] + 2 * years))
         self.assertEqual(len(events), 2)  # test4 and test42
 
-        events = list(self.gc.get_events(query='Jo', time_max=D.now() + 2 * years))
+        events = list(self.gc.get_events(query='Jo', time_max=D.today()[:] + 2 * years))
         self.assertEqual(len(events), 2)  # with John and Josh
 
-        events = list(self.gc.get_events(query='Josh', time_max=D.now() + 2 * years))
+        events = list(self.gc.get_events(query='Josh', time_max=D.today()[:] + 2 * years))
         self.assertEqual(len(events), 1)
 
-        events = list(self.gc.get_events(query='Frank', time_max=D.now() + 2 * years))
+        events = list(self.gc.get_events(query='Frank', time_max=D.today()[:] + 2 * years))
         self.assertEqual(len(events), 1)
 
     def test_get_recurring_instances(self):
@@ -371,7 +373,7 @@ class TestGoogleCalendarAPI(TestCase):
 
         recurring_event = Event(
             'recurring event',
-            D.now(),
+            D.today()[:],
             event_id='event_id_2'
         )
         events = list(self.gc.get_instances(recurring_event=recurring_event))

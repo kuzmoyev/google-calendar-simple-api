@@ -57,6 +57,7 @@ Contents
    :maxdepth: 2
 
    getting_started
+   authentication
    event
    attendees
    attachments
