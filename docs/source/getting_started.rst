@@ -28,19 +28,24 @@ Credentials
 Now you need to get your API credentials:
 
     1. Go to `Calendar API Quickstart`_
-    2. Click :code:`ENABLE THE GOOGLE CALENDAR API`
-    3. Click :code:`DOWNLOAD CLIENT CONFIGURATION`
-    4. Put downloaded :code:`credentials.json` file into :code:`~/.credentials/` directory
+    2. Click ``ENABLE THE GOOGLE CALENDAR API``
+    3. Click ``DOWNLOAD CLIENT CONFIGURATION``
+    4. Put downloaded ``credentials.json`` file into ``~/.credentials/`` directory
 
-    .. note:: You can put :code:`credentials.json` file anywhere you want and specify
-        the path to it in your code afterwords. But remember not to share it (ex. add it
-        to :code:`.gitignore`) as it is your private credentials.
+    .. note:: You can put ``credentials.json`` file anywhere you want and specify
+        the path to it in your code afterwords. But remember not to share it (e.g. add it
+        to ``.gitignore``) as it is your private credentials.
 
-    .. note:: On the first run, your application will prompt you to the default browser
-        to get permissions from you to use (see/edit) your calendar. This will create
-        :code:`token.pickle` file in the same folder (unless specified otherwise) as your
-        :code:`credentials.json`. So don't forget to also add it to :code:`.gitignore` if
-        it is in a GIT repository.
+    .. note::
+        | On the first run, your application will prompt you to the default browser
+          to get permissions from you to use (see/edit) your calendar. This will create
+          ``token.pickle`` file in the same folder (unless specified otherwise) as your
+          ``credentials.json``. So don't forget to also add it to ``.gitignore`` if
+          it is in a GIT repository.
+        | If you don't want to save it in ``.pickle`` file, you can use ``save_token=False``
+          when initializing the ``GoogleCalendar``.
+
+See more options in :ref:`authentication`.
 
 
 Quick example
@@ -51,7 +56,7 @@ repeating everyday at 9:00am except weekends and two holidays (April 19, April 2
 
 Then it will list all events for one year starting today.
 
-For :code:`date`/:code:`datetime` objects you can use Pythons datetime_ module or as in the
+For ``date``/``datetime`` objects you can use Pythons datetime_ module or as in the
 example beautiful_date_ library (*because it's beautiful... just like you*).
 
 .. code-block:: python
@@ -85,8 +90,8 @@ example beautiful_date_ library (*because it's beautiful... just like you*).
 
 
 
-If you have put :code:`credentials.json` elsewhere (not in :code:`~/.credentials/`),
-you can specify the path to the credentials as a second argument of the :code:`GoogleCalendar`:
+If you have put ``credentials.json`` elsewhere (not in ``~/.credentials/``),
+you can specify the path to the credentials as a second argument of the ``GoogleCalendar``:
 
 .. code-block:: python
 
@@ -95,8 +100,8 @@ you can specify the path to the credentials as a second argument of the :code:`G
 
 
 
-.. note::   You can also specify the :code:`token_path` parameter, which overrides
-            the default :code:`token.pickle` location and file name. That could be
+.. note::   You can also specify the ``token_path`` parameter, which overrides
+            the default ``token.pickle`` location and file name. That could be
             useful if you want to save the file elsewhere, or if you have multiple
             google accounts.
 

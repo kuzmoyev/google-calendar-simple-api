@@ -1,0 +1,71 @@
+.. _authentication:
+
+Authentication
+==============
+
+There are several ways to authenticate in ``GoogleCalendar``.
+
+Credentials file
+----------------
+
+If you have a ``credentials.json`` file (see :ref:`getting_started`), ``GoogleCalendar`` will read all the needed data
+to generate the token and refresh-token from it.
+
+To read ``credentials.json`` from the default path (``~/.credentials/credentials.json``) use:
+
+.. code-block:: python
+
+    gc = GoogleCalendar()
+
+In this case, if ``~/.credentials/token.pickle`` file exists, it will read it and refresh only if needed. If
+``token.pickle`` does not exist, it will be created during authentication flow and saved alongside with
+``credentials.json`` in ``~/.credentials/token.pickle``.
+
+To **avoid saving** the token use:
+
+.. code-block:: python
+
+    gc = GoogleCalendar(save_token=False)
+
+After token is generated during authentication flow, it can be accessed in ``gc.credentials`` field.
+
+To specify ``credentials.json`` file path use ``credentials_path`` parameter:
+
+.. code-block:: python
+
+    gc = GoogleCalendar(credentials_path='path/to/credentials.json')
+
+Similarly, if ``token.pickle`` file exists in the same folder (``path/to/``), it will be used and refreshed only if
+needed. If it doesn't exist, it will be generated and stored alongside the ``credentials.json`` (in
+``path/to/token.pickle``).
+
+To specify different path for the pickled token file use ``token_path`` parameter:
+
+.. code-block:: python
+
+    gc = GoogleCalendar(credentials_path='path/to/credentials.json',
+                        token_path='another/path/user1_token.pickle')
+
+That could be useful if you want to save the file elsewhere, or if you have multiple google accounts.
+
+Token object
+------------
+
+If you store/receive/generate the token in a different way (e.g. store it in a database), you can pass loaded token
+directly:
+
+.. code-block:: python
+
+    from google.oauth2.credentials import Credentials
+
+    token = Credentials(
+        token='<access_token>',
+        refresh_token='<refresh_token>',
+        client_id='<client_id>',
+        client_secret='<client_secret>',
+        scopes=['https://www.googleapis.com/auth/calendar'],
+        token_uri='https://oauth2.googleapis.com/token'
+    )
+    gc = GoogleCalendar(credentials=token)
+
+It will be refreshed using ``refresh_token`` during initialization of ``GoogleCalendar`` if needed.
