@@ -42,7 +42,15 @@ You can also simply add reminders by specifying ``minutes_before_popup_reminder`
 
 
 If you want to add a reminder to an existing event use :py:meth:`~gcsa.event.Event.add_email_reminder`
-and/or :py:meth:`~gcsa.event.Event.add_popup_reminder` methods.
+and/or :py:meth:`~gcsa.event.Event.add_popup_reminder` methods:
+
+
+.. code-block:: python
+
+    event.add_popup_reminder(minutes_before_start=30)
+    event.add_email_reminder(minutes_before_start=50)
+
+Update event using :py:meth:`~gcsa.google_calendar.GoogleCalendar.update_event` method to save the changes.
 
 To use default reminders of the calendar, set ``default_reminders`` parameter of the :py:class:`~gcsa.event.Event`
 to ``True``.

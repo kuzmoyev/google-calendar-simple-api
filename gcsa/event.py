@@ -184,7 +184,7 @@ class Event:
         Attendee may be given as email string or :py:class:`~gcsa.attendee.Attendee` object."""
         self.attendees.append(self._ensure_attendee_from_email(attendee))
 
-    def add_attachment(self, file_url, title, mime_type):
+    def add_attachment(self, file_url, title=None, mime_type=None):
         """Adds attachment to an event. See :py:class:`~gcsa.attachment.Attachment`"""
         self.attachments.append(Attachment(file_url=file_url, title=title, mime_type=mime_type))
 

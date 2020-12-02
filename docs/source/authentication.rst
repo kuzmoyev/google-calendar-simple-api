@@ -51,8 +51,7 @@ That could be useful if you want to save the file elsewhere, or if you have mult
 Token object
 ------------
 
-If you store/receive/generate the token in a different way (e.g. store it in a database), you can pass loaded token
-directly:
+If you store/receive/generate the token in a different way, you can pass loaded token directly:
 
 .. code-block:: python
 
