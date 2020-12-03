@@ -142,6 +142,14 @@ Event has to have ``event_id`` to be updated, moved or deleted. Events that you 
 :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_events` method already have their ids.
 
 
+Clear calendar
+~~~~~~~~~~~~~~
+
+Remove all events from the calendar:
+
+.. code-block:: python
+
+    calendar.clear()
 
 .. _datetime: https://docs.python.org/3/library/datetime.html
 .. _beautiful_date: https://github.com/kuzmoyev/beautiful-date

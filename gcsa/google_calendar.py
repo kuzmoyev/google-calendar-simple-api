@@ -141,6 +141,10 @@ class GoogleCalendar:
         credential_path = os.path.join(credential_dir, 'credentials.json')
         return credential_path
 
+    def clear(self):
+        """Deletes all the events in the calendar"""
+        self.service.calendars().clear(self.calendar).execute()
+
     def add_event(
             self,
             event,
