@@ -57,9 +57,15 @@ Contents
    :maxdepth: 2
 
    getting_started
-   event_management
-   recurrence_tutorial
-   code
+   authentication
+   events
+   attendees
+   attachments
+   conference
+   reminders
+   recurrence
+   serializers
+   code/code
 
 Indices and tables
 ==================

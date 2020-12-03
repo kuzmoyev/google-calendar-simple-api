@@ -1,10 +1,10 @@
 from unittest import TestCase
-from beautiful_date import Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, Dec, hours, days
+from beautiful_date import Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, Dec, hours, days, Nov
 
 from gcsa.attachment import Attachment
 from gcsa.attendee import Attendee, ResponseStatus
+from gcsa.conference import ConferenceSolution, EntryPoint, SolutionType, ConferenceSolutionCreateRequest
 from gcsa.event import Event, Visibility
-from gcsa.gadget import Gadget
 from gcsa.recurrence import Recurrence, DAILY, SU, SA, MONDAY, WEEKLY
 from gcsa.reminders import PopupReminder, EmailReminder
 from gcsa.serializers.event_serializer import EventSerializer
@@ -20,9 +20,14 @@ class TestEvent(TestCase):
             event_id='123',
             start=(1 / Feb / 2019)[9:00],
             end=(31 / Dec / 2019)[23:59],
+            _created=insure_localisation((20 / Nov / 2020)[16:19], TEST_TIMEZONE),
+            _updated=insure_localisation((25 / Nov / 2020)[16:19], TEST_TIMEZONE),
             timezone=TEST_TIMEZONE,
             description='Everyday breakfast',
             location='Home',
+            guests_can_invite_others=False,
+            guests_can_modify=True,
+            guests_can_see_other_guests=False,
             recurrence=[
                 Recurrence.rule(freq=DAILY),
                 Recurrence.exclude_rule(by_week_day=[SU, SA]),
@@ -39,12 +44,18 @@ class TestEvent(TestCase):
         self.assertEqual(event.summary, 'Breakfast')
         self.assertEqual(event.id, '123')
         self.assertEqual(event.start, insure_localisation((1 / Feb / 2019)[9:00], TEST_TIMEZONE))
+        self.assertEqual(event.end, insure_localisation((31 / Dec / 2019)[23:59], TEST_TIMEZONE))
+        self.assertEqual(event.created, insure_localisation((20 / Nov / 2020)[16:19], TEST_TIMEZONE))
+        self.assertEqual(event.updated, insure_localisation((25 / Nov / 2020)[16:19], TEST_TIMEZONE))
         self.assertEqual(event.description, 'Everyday breakfast')
         self.assertEqual(event.location, 'Home')
         self.assertEqual(len(event.recurrence), 3)
         self.assertEqual(event.visibility, Visibility.PRIVATE)
         self.assertIsInstance(event.reminders[0], PopupReminder)
         self.assertEqual(event.reminders[0].minutes_before_start, 15)
+        self.assertFalse(event.guests_can_invite_others)
+        self.assertTrue(event.guests_can_modify)
+        self.assertFalse(event.guests_can_see_other_guests)
 
     def test_init_no_end(self):
         start = 1 / Jun / 2019
@@ -118,7 +129,7 @@ class TestEvent(TestCase):
         with self.assertRaises(ValueError):
             e.add_email_reminder()
 
-    def test_str_repr(self):
+    def test_repr_str(self):
         e = Event('Good event',
                   start=20 / Jul / 2020)
         self.assertEqual(str(e), '2020-07-20 - Good event')
@@ -129,12 +140,6 @@ class TestEvent(TestCase):
         dp = {
             'summary': 'Breakfast',
             'start': (1 / Feb / 2019)[9:00]
-        }
-
-        gadget_dp = {
-            "type_": Gadget.ICON,
-            "link": 'https://gadget.com',
-            "icon_link": 'https://icon.com'
         }
 
         attachments_dp = {
@@ -153,8 +158,7 @@ class TestEvent(TestCase):
             color='#254433',
             visibility=Visibility.PRIVATE,
             attendees='mail@gmail.com',
-            gadget=Gadget('Gadget', **gadget_dp),
-            attachments=Attachment('My doc', **attachments_dp),
+            attachments=Attachment(title='My doc', **attachments_dp),
             minutes_before_popup_reminder=15,
             other={"key": "value"}
         )
@@ -183,11 +187,8 @@ class TestEvent(TestCase):
         self.assertNotEqual(Event(**dp, attendees='mail1@gmail.com'),
                             Event(**dp, attendees='mail2@gmail.com'))
 
-        self.assertNotEqual(Event(**dp, gadget=Gadget('Gadget1', **gadget_dp)),
-                            Event(**dp, gadget=Gadget('Gadget2', **gadget_dp)))
-
-        self.assertNotEqual(Event(**dp, attachments=Attachment('Attachment1', **attachments_dp)),
-                            Event(**dp, attachments=Attachment('Attachment2', **attachments_dp)))
+        self.assertNotEqual(Event(**dp, attachments=Attachment(title='Attachment1', **attachments_dp)),
+                            Event(**dp, attachments=Attachment(title='Attachment2', **attachments_dp)))
 
         self.assertNotEqual(Event(**dp, minutes_before_email_reminder=10),
                             Event(**dp, minutes_before_popup_reminder=10))
@@ -219,7 +220,7 @@ class TestEventSerializer(TestCase):
 
     def test_to_json(self):
         e = Event('Good day', start=(28 / Sept / 2019), timezone=TEST_TIMEZONE)
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'date': '2019-09-28'},
             'end': {'date': '2019-09-29'},
@@ -227,12 +228,15 @@ class TestEventSerializer(TestCase):
             'visibility': 'default',
             'attendees': [],
             'reminders': {'useDefault': False},
-            'attachments': []
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
         e = Event('Good day', start=(28 / Oct / 2019)[11:22:33], timezone=TEST_TIMEZONE)
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'dateTime': '2019-10-28T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2019-10-28T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
@@ -240,9 +244,12 @@ class TestEventSerializer(TestCase):
             'visibility': 'default',
             'attendees': [],
             'reminders': {'useDefault': False},
-            'attachments': []
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
     def test_to_json_recurrence(self):
         e = Event('Good day',
@@ -258,7 +265,7 @@ class TestEventSerializer(TestCase):
                           12 / May / 2019
                       ])
                   ])
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'dateTime': '2019-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2020-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
@@ -270,19 +277,22 @@ class TestEventSerializer(TestCase):
             'visibility': 'default',
             'attendees': [],
             'reminders': {'useDefault': False},
-            'attachments': []
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
     def test_to_json_attachments(self):
         e = Event('Good day',
                   start=(1 / Jan / 2019)[11:22:33],
                   timezone=TEST_TIMEZONE,
                   attachments=[
-                      Attachment('My file1', 'https://file.url1', "application/vnd.google-apps.document"),
-                      Attachment('My file2', 'https://file.url2', "application/vnd.google-apps.document")
+                      Attachment('https://file.url1', 'My file1', "application/vnd.google-apps.document"),
+                      Attachment('https://file.url2', 'My file2', "application/vnd.google-apps.document")
                   ])
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'dateTime': '2019-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2019-01-01T12:22:33+13:00', 'timeZone': TEST_TIMEZONE},
@@ -301,9 +311,12 @@ class TestEventSerializer(TestCase):
                     'fileUrl': 'https://file.url2',
                     'mimeType': 'application/vnd.google-apps.document'
                 }
-            ]
+            ],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
     def test_to_json_reminders(self):
         e = Event('Good day',
@@ -311,7 +324,7 @@ class TestEventSerializer(TestCase):
                   timezone=TEST_TIMEZONE,
                   minutes_before_popup_reminder=30,
                   minutes_before_email_reminder=120)
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'dateTime': '2019-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2019-01-01T12:22:33+13:00', 'timeZone': TEST_TIMEZONE},
@@ -325,19 +338,22 @@ class TestEventSerializer(TestCase):
                 ],
                 'useDefault': False
             },
-            'attachments': []
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
     def test_to_json_attendees(self):
         e = Event('Good day',
                   start=(1 / Jul / 2020)[11:22:33],
                   timezone=TEST_TIMEZONE,
                   attendees=[
-                      Attendee(email='attendee@gmail.com', response_status=ResponseStatus.NEEDS_ACTION),
-                      Attendee(email='attendee2@gmail.com', response_status=ResponseStatus.ACCEPTED),
+                      Attendee(email='attendee@gmail.com', _response_status=ResponseStatus.NEEDS_ACTION),
+                      Attendee(email='attendee2@gmail.com', _response_status=ResponseStatus.ACCEPTED),
                   ])
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day',
             'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
@@ -348,14 +364,17 @@ class TestEventSerializer(TestCase):
                 {'email': 'attendee2@gmail.com', 'responseStatus': ResponseStatus.ACCEPTED},
             ],
             'reminders': {'useDefault': False},
-            'attachments': []
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
         e = Event('Good day2',
                   start=20 / Jul / 2020,
                   default_reminders=True)
-        event_json = {
+        expected_event_json = {
             'summary': 'Good day2',
             'start': {'date': '2020-07-20'},
             'end': {'date': '2020-07-21'},
@@ -363,9 +382,125 @@ class TestEventSerializer(TestCase):
             'visibility': 'default',
             'attendees': [],
             'reminders': {'useDefault': True},
-            'attachments': []
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
         }
-        self.assertDictEqual(EventSerializer.to_json(e), event_json)
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
+
+    def test_to_json_conference_solution(self):
+        e = Event(
+            'Good day',
+            start=(1 / Jul / 2020)[11:22:33],
+            timezone=TEST_TIMEZONE,
+            conference_solution=ConferenceSolution(
+                entry_points=EntryPoint(EntryPoint.VIDEO, uri='https://video.com'),
+                solution_type=SolutionType.HANGOUTS_MEET,
+                name='Hangout',
+                icon_uri='https://icon.com',
+                conference_id='aaa-bbbb-ccc',
+                signature='abc4efg12345',
+                notes='important notes'
+            )
+        )
+        expected_event_json = {
+            'summary': 'Good day',
+            'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'recurrence': [],
+            'visibility': 'default',
+            'attendees': [],
+            'reminders': {'useDefault': False},
+            'attachments': [],
+            'conferenceData': {
+                'entryPoints': [
+                    {
+                        'entryPointType': 'video',
+                        'uri': 'https://video.com',
+                    }
+                ],
+                'conferenceSolution': {
+                    'key': {
+                        'type': 'hangoutsMeet'
+                    },
+                    'name': 'Hangout',
+                    'iconUri': 'https://icon.com'
+                },
+                'conferenceId': 'aaa-bbbb-ccc',
+                'signature': 'abc4efg12345',
+                'notes': 'important notes'
+            },
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
+        }
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
+
+    def test_to_json_conference_solution_create_request(self):
+        e = Event(
+            'Good day',
+            start=(1 / Jul / 2020)[11:22:33],
+            timezone=TEST_TIMEZONE,
+            conference_solution=ConferenceSolutionCreateRequest(
+                solution_type=SolutionType.HANGOUTS_MEET,
+                request_id='hello1234',
+                conference_id='conference-id',
+                signature='signature',
+                notes='important notes',
+                _status='pending'
+            )
+        )
+        expected_event_json = {
+            'summary': 'Good day',
+            'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'recurrence': [],
+            'visibility': 'default',
+            'attendees': [],
+            'reminders': {'useDefault': False},
+            'attachments': [],
+            'conferenceData': {
+                'createRequest': {
+                    'requestId': 'hello1234',
+                    'conferenceSolutionKey': {
+                        'type': 'hangoutsMeet'
+                    },
+                    'status': {
+                        'statusCode': 'pending'
+                    }
+                },
+                'conferenceId': 'conference-id',
+                'signature': 'signature',
+                'notes': 'important notes'
+            },
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
+        }
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
+
+    def test_to_json_updated(self):
+        e = Event(
+            'Good day',
+            start=(1 / Jul / 2020)[11:22:33],
+            timezone=TEST_TIMEZONE,
+            _updated=insure_localisation((25 / Nov / 2020)[11:22:33], timezone=TEST_TIMEZONE)
+        )
+        expected_event_json = {
+            'summary': 'Good day',
+            'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'recurrence': [],
+            'visibility': 'default',
+            'attendees': [],
+            'reminders': {'useDefault': False},
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
+        }
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
 
     def test_to_object(self):
         event_json = {
@@ -374,6 +509,8 @@ class TestEventSerializer(TestCase):
             'location': 'Prague',
             'start': {'dateTime': '2019-01-01T11:22:33', 'timeZone': TEST_TIMEZONE},
             'end': {'dateTime': '2019-01-01T12:22:33', 'timeZone': TEST_TIMEZONE},
+            'updated': '2020-11-25T14:53:46.0Z',
+            'created': '2020-11-24T14:53:46.0Z',
             'recurrence': [
                 'RRULE:FREQ=DAILY;WKST=SU',
                 'EXRULE:FREQ=DAILY;BYDAY=MO;WKST=SU',
@@ -402,7 +539,28 @@ class TestEventSerializer(TestCase):
                     'fileUrl': 'https://file.url2',
                     'mimeType': 'application/vnd.google-apps.document'
                 }
-            ]
+            ],
+            'conferenceData': {
+                'entryPoints': [
+                    {
+                        'entryPointType': 'video',
+                        'uri': 'https://video.com',
+                    }
+                ],
+                'conferenceSolution': {
+                    'key': {
+                        'type': 'hangoutsMeet'
+                    },
+                    'name': 'Hangout',
+                    'iconUri': 'https://icon.com'
+                },
+                'conferenceId': 'aaa-bbbb-ccc',
+                'signature': 'abc4efg12345',
+                'notes': 'important notes'
+            },
+            'guestsCanInviteOthers': False,
+            'guestsCanModify': True,
+            'guestsCanSeeOtherGuests': False,
         }
 
         serializer = EventSerializer(event_json)
@@ -411,6 +569,8 @@ class TestEventSerializer(TestCase):
         self.assertEqual(event.summary, 'Good day')
         self.assertEqual(event.start, insure_localisation((1 / Jan / 2019)[11:22:33], TEST_TIMEZONE))
         self.assertEqual(event.end, insure_localisation((1 / Jan / 2019)[12:22:33], TEST_TIMEZONE))
+        self.assertEqual(event.updated, insure_localisation((25 / Nov / 2020)[14:53:46], 'UTC'))
+        self.assertEqual(event.created, insure_localisation((24 / Nov / 2020)[14:53:46], 'UTC'))
         self.assertEqual(event.description, 'Very good day indeed')
         self.assertEqual(event.location, 'Prague')
         self.assertEqual(len(event.recurrence), 3)
@@ -423,6 +583,79 @@ class TestEventSerializer(TestCase):
         self.assertEqual(len(event.attachments), 2)
         self.assertIsInstance(event.attachments[0], Attachment)
         self.assertEqual(event.attachments[0].title, 'My file1')
+        self.assertIsInstance(event.conference_solution, ConferenceSolution)
+        self.assertEqual(event.conference_solution.solution_type, 'hangoutsMeet')
+        self.assertEqual(event.conference_solution.entry_points[0].uri, 'https://video.com')
+        self.assertFalse(event.guests_can_invite_others)
+        self.assertTrue(event.guests_can_modify)
+        self.assertFalse(event.guests_can_see_other_guests)
+
+        event_json = {
+            'summary': 'Good day',
+            'description': 'Very good day indeed',
+            'location': 'Prague',
+            'start': {'dateTime': '2019-01-01T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2019-01-01T12:22:33', 'timeZone': TEST_TIMEZONE},
+            'conferenceData': {
+                'createRequest': {
+                    'requestId': 'hello1234',
+                    'conferenceSolutionKey': {
+                        'type': 'hangoutsMeet'
+                    },
+                    'status': {
+                        'statusCode': 'pending'
+                    }
+                },
+                'conferenceId': 'conference-id',
+                'signature': 'signature',
+                'notes': 'important notes'
+            }
+        }
+
+        event = EventSerializer.to_object(event_json)
+        self.assertIsInstance(event.conference_solution, ConferenceSolutionCreateRequest)
+        self.assertEqual(event.conference_solution.solution_type, 'hangoutsMeet')
+
+        # with successful conference create request
+        event_json = {
+            'summary': 'Good day',
+            'description': 'Very good day indeed',
+            'location': 'Prague',
+            'start': {'dateTime': '2019-01-01T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2019-01-01T12:22:33', 'timeZone': TEST_TIMEZONE},
+            'conferenceData': {
+                'entryPoints': [
+                    {
+                        'entryPointType': 'video',
+                        'uri': 'https://video.com',
+                    }
+                ],
+                'conferenceSolution': {
+                    'key': {
+                        'type': 'hangoutsMeet'
+                    },
+                    'name': 'Hangout',
+                    'iconUri': 'https://icon.com'
+                },
+                'createRequest': {
+                    'requestId': 'hello1234',
+                    'conferenceSolutionKey': {
+                        'type': 'hangoutsMeet'
+                    },
+                    'status': {
+                        'statusCode': 'success'
+                    }
+                },
+                'conferenceId': 'conference-id',
+                'signature': 'signature',
+                'notes': 'important notes'
+            }
+        }
+
+        event = EventSerializer.to_object(event_json)
+        self.assertIsInstance(event.conference_solution, ConferenceSolution)
+        self.assertEqual(event.conference_solution.solution_type, 'hangoutsMeet')
+        self.assertEqual(event.conference_solution.entry_points[0].uri, 'https://video.com')
 
         event_json_str = """{
             "summary": "Good day",
@@ -439,3 +672,19 @@ class TestEventSerializer(TestCase):
         self.assertEqual(event.location, 'Prague')
         self.assertEqual(event.start, 20 / Jul / 2020)
         self.assertEqual(event.end, 22 / Jul / 2020)
+
+        event_json_str = {
+            "id": 'recurring_event_id_20201107T070000Z',
+            "summary": "Good day",
+            "description": "Very good day indeed",
+            "location": "Prague",
+            "start": {"date": "2020-07-20"},
+            "end": {"date": "2020-07-22"},
+            "recurringEventId": 'recurring_event_id'
+        }
+
+        event = EventSerializer.to_object(event_json_str)
+
+        self.assertEqual(event.id, 'recurring_event_id_20201107T070000Z')
+        self.assertTrue(event.is_recurring_instance)
+        self.assertEqual(event.recurring_event_id, 'recurring_event_id')

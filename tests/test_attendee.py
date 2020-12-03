@@ -4,6 +4,20 @@ from gcsa.attendee import Attendee, ResponseStatus
 from gcsa.serializers.attendee_serializer import AttendeeSerializer
 
 
+class TestAttendee(TestCase):
+    def test_repr_str(self):
+        attendee = Attendee(
+            email='mail@gmail.com',
+            display_name='Guest',
+            comment='I do not know him',
+            optional=True,
+            additional_guests=2,
+            _response_status=ResponseStatus.NEEDS_ACTION
+        )
+        self.assertEqual(attendee.__repr__(), "<Attendee 'mail@gmail.com' - response: 'needsAction'>")
+        self.assertEqual(attendee.__str__(), "'mail@gmail.com' - response: 'needsAction'")
+
+
 class TestAttendeeSerializer(TestCase):
     def test_to_json(self):
         attendee = Attendee(
@@ -12,7 +26,7 @@ class TestAttendeeSerializer(TestCase):
             comment='I do not know him',
             optional=True,
             additional_guests=2,
-            response_status=ResponseStatus.NEEDS_ACTION
+            _response_status=ResponseStatus.NEEDS_ACTION
         )
 
         attendee_json = AttendeeSerializer.to_json(attendee)

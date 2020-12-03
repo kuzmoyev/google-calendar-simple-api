@@ -3,29 +3,44 @@ from unittest import TestCase
 from gcsa.attachment import Attachment
 from gcsa.serializers.attachment_serializer import AttachmentSerializer
 
-DOC_URL = 'https://docs.google.com/document/d/1uDvwcxOsXkzl2Bod0YIfrIQ5MqfBhnc1jusYdH1xCZo/edit?usp=sharing'
+DOC_URL = 'https://bit.ly/3lZo0Cc'
 
 
 class TestAttachment(TestCase):
 
     def test_create(self):
-        attachment = Attachment('My doc',
-                                file_url=DOC_URL,
-                                mime_type="application/vnd.google-apps.document")
+        attachment = Attachment(
+            file_url=DOC_URL,
+            title='My doc',
+            mime_type="application/vnd.google-apps.document"
+        )
         self.assertEqual(attachment.title, 'My doc')
 
         with self.assertRaises(ValueError):
-            Attachment('My doc',
-                       file_url=DOC_URL,
-                       mime_type="application/vnd.google-apps.something")
+            Attachment(
+                file_url=DOC_URL,
+                title='My doc',
+                mime_type="application/vnd.google-apps.something"
+            )
+
+    def test_repr_str(self):
+        attachment = Attachment(
+            file_url=DOC_URL,
+            title='My doc',
+            mime_type="application/vnd.google-apps.document"
+        )
+        self.assertEqual(attachment.__repr__(), "<Attachment 'My doc' - 'https://bit.ly/3lZo0Cc'>")
+        self.assertEqual(attachment.__str__(), "'My doc' - 'https://bit.ly/3lZo0Cc'")
 
 
 class TestAttachmentSerializer(TestCase):
 
     def test_to_json(self):
-        attachment = Attachment('My doc',
-                                file_url=DOC_URL,
-                                mime_type="application/vnd.google-apps.document")
+        attachment = Attachment(
+            file_url=DOC_URL,
+            title='My doc',
+            mime_type="application/vnd.google-apps.document"
+        )
         attachment_json = {
             'title': 'My doc',
             'fileUrl': DOC_URL,
@@ -33,11 +48,13 @@ class TestAttachmentSerializer(TestCase):
         }
         self.assertDictEqual(AttachmentSerializer.to_json(attachment), attachment_json)
 
-        attachment = Attachment('My doc2',
-                                file_url=DOC_URL,
-                                mime_type="application/vnd.google-apps.drawing",
-                                icon_link="https://some_link.com",
-                                file_id='abc123')
+        attachment = Attachment(
+            file_url=DOC_URL,
+            title='My doc2',
+            mime_type="application/vnd.google-apps.drawing",
+            _icon_link="https://some_link.com",
+            _file_id='abc123'
+        )
         attachment_json = {
             'title': 'My doc2',
             'fileUrl': DOC_URL,

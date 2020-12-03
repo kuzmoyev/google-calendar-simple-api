@@ -9,7 +9,7 @@ class ReminderSerializer(BaseSerializer):
         super().__init__(reminder)
 
     @staticmethod
-    def _to_json(reminder):
+    def _to_json(reminder: Reminder):
         return {
             'method': reminder.method,
             'minutes': reminder.minutes_before_start

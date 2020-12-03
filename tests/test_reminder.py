@@ -15,6 +15,11 @@ class TestReminder(TestCase):
         self.assertEqual(reminder.method, 'popup')
         self.assertEqual(reminder.minutes_before_start, 51)
 
+    def test_repr_str(self):
+        reminder = EmailReminder(34)
+        self.assertEqual(reminder.__repr__(), "<EmailReminder - minutes_before_start:34>")
+        self.assertEqual(reminder.__str__(), "EmailReminder - minutes_before_start:34")
+
 
 class TestReminderSerializer(TestCase):
     def test_to_json(self):
