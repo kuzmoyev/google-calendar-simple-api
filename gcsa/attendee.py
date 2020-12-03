@@ -20,26 +20,26 @@ class Attendee:
                  optional=None,
                  is_resource=None,
                  additional_guests=None,
-                 response_status=None):
+                 _response_status=None):
         """Represents attendee of the event.
 
         :param email:
-                the attendee's email address, if available.
+                The attendee's email address, if available.
         :param display_name:
-                the attendee's name, if available
+                The attendee's name, if available
         :param comment:
-                the attendee's response comment
+                The attendee's response comment
         :param optional:
-                whether this is an optional attendee. The default is False.
+                Whether this is an optional attendee. The default is False.
         :param is_resource:
-                whether the attendee is a resource.
+                Whether the attendee is a resource.
                 Can only be set when the attendee is added to the event
                 for the first time. Subsequent modifications are ignored.
                 The default is False.
         :param additional_guests:
-                number of additional guests. The default is 0.
-        :param response_status:
-                the attendee's response status. See :py:class:`~gcsa.attendee.ResponseStatus`
+                Number of additional guests. The default is 0.
+        :param _response_status:
+                The attendee's response status. See :py:class:`~gcsa.attendee.ResponseStatus`
         """
         self.email = email
         self.display_name = display_name
@@ -47,14 +47,22 @@ class Attendee:
         self.optional = optional
         self.is_resource = is_resource
         self.additional_guests = additional_guests
-        self.response_status = response_status
+        self.response_status = _response_status
 
     def __eq__(self, other):
-        return isinstance(other, Attendee) \
-               and self.email == other.email \
-               and self.display_name == other.display_name \
-               and self.comment == other.comment \
-               and self.optional == other.optional \
-               and self.is_resource == other.is_resource \
-               and self.additional_guests == other.additional_guests \
-               and self.response_status == other.response_status
+        return (
+                isinstance(other, Attendee)
+                and self.email == other.email
+                and self.display_name == other.display_name
+                and self.comment == other.comment
+                and self.optional == other.optional
+                and self.is_resource == other.is_resource
+                and self.additional_guests == other.additional_guests
+                and self.response_status == other.response_status
+        )
+
+    def __str__(self):
+        return "'{}' - response: '{}'".format(self.email, self.response_status)
+
+    def __repr__(self):
+        return '<Attendee {}>'.format(self.__str__())

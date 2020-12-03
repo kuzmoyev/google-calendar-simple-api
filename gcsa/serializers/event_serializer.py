@@ -8,8 +8,9 @@ from gcsa.event import Event
 from .attachment_serializer import AttachmentSerializer
 from .attendee_serializer import AttendeeSerializer
 from .base_serializer import BaseSerializer
-from .gadget_serializer import GadgetSerializer
+from .conference_serializer import ConferenceSolutionSerializer, ConferenceSolutionCreateRequestSerializer
 from .reminder_serializer import ReminderSerializer
+from ..conference import ConferenceSolution, ConferenceSolutionCreateRequest
 
 
 class EventSerializer(BaseSerializer):
@@ -19,21 +20,23 @@ class EventSerializer(BaseSerializer):
         super().__init__(event)
 
     @classmethod
-    def _to_json(cls, event):
+    def _to_json(cls, event: Event):
         data = {
-            "summary": event.summary,
-            "description": event.description,
-            "location": event.location,
-            "recurrence": event.recurrence,
-            "colorId": event.color_id,
-            "visibility": event.visibility,
-            "attendees": [AttendeeSerializer.to_json(a) for a in event.attendees],
-            "gadget": GadgetSerializer.to_json(event.gadget) if event.gadget else None,
-            "reminders": {
-                "useDefault": event.default_reminders,
-                "overrides": [ReminderSerializer.to_json(r) for r in event.reminders]
+            'summary': event.summary,
+            'description': event.description,
+            'location': event.location,
+            'recurrence': event.recurrence,
+            'colorId': event.color_id,
+            'visibility': event.visibility,
+            'attendees': [AttendeeSerializer.to_json(a) for a in event.attendees],
+            'guestsCanInviteOthers': event.guests_can_invite_others,
+            'guestsCanModify': event.guests_can_modify,
+            'guestsCanSeeOtherGuests': event.guests_can_see_other_guests,
+            'reminders': {
+                'useDefault': event.default_reminders,
+                'overrides': [ReminderSerializer.to_json(r) for r in event.reminders]
             },
-            "attachments": [AttachmentSerializer.to_json(a) for a in event.attachments],
+            'attachments': [AttachmentSerializer.to_json(a) for a in event.attachments],
             **event.other
         }
 
@@ -52,24 +55,30 @@ class EventSerializer(BaseSerializer):
 
         if event.default_reminders:
             data['reminders'] = {
-                "useDefault": True
+                'useDefault': True
             }
         else:
             data['reminders'] = {
-                "useDefault": False
+                'useDefault': False
             }
             if event.reminders:
-                data['reminders']["overrides"] = [ReminderSerializer.to_json(r) for r in event.reminders]
+                data['reminders']['overrides'] = [ReminderSerializer.to_json(r) for r in event.reminders]
 
-        # Removes all None keys.
-        data = {k: v for k, v in data.items() if v is not None}
+        if event.conference_solution is not None:
+            if isinstance(event.conference_solution, ConferenceSolution):
+                data['conferenceData'] = ConferenceSolutionSerializer.to_json(event.conference_solution)
+            elif isinstance(event.conference_solution, ConferenceSolutionCreateRequest):
+                data['conferenceData'] = ConferenceSolutionCreateRequestSerializer.to_json(event.conference_solution)
+
+        data = EventSerializer._remove_empty_values(data)
 
         return data
 
     @staticmethod
     def _to_object(json_event):
-        start = None
         timezone = None
+
+        start = None
         start_data = json_event.pop('start', None)
         if start_data is not None:
             if 'date' in start_data:
@@ -86,17 +95,32 @@ class EventSerializer(BaseSerializer):
             else:
                 end = EventSerializer._get_datetime_from_string(end_data['dateTime'])
 
+        updated = json_event.pop('updated', None)
+        if updated:
+            updated = EventSerializer._get_datetime_from_string(updated)
+
+        created = json_event.pop('created', None)
+        if created:
+            created = EventSerializer._get_datetime_from_string(created)
+
         attendees_json = json_event.pop('attendees', [])
         attendees = [AttendeeSerializer.to_object(a) for a in attendees_json]
-
-        gadget_json = json_event.pop('gadget', None)
-        gadget = GadgetSerializer.to_object(gadget_json) if gadget_json else None
 
         reminders_json = json_event.pop('reminders', {})
         reminders = [ReminderSerializer.to_object(r) for r in reminders_json.get('overrides', [])]
 
         attachments_json = json_event.pop('attachments', [])
         attachments = [AttachmentSerializer.to_object(a) for a in attachments_json]
+
+        conference_data = json_event.pop('conferenceData', None)
+        if conference_data is not None:
+            create_request = conference_data.get('createRequest', {})
+            if create_request is None or create_request.get('status', {}).get('statusCode', None) in (None, 'success'):
+                conference_solution = ConferenceSolutionSerializer.to_object(conference_data)
+            else:
+                conference_solution = ConferenceSolutionCreateRequestSerializer.to_object(conference_data)
+        else:
+            conference_solution = None
 
         return Event(
             json_event.pop('summary'),
@@ -110,10 +134,16 @@ class EventSerializer(BaseSerializer):
             color=json_event.pop('colorId', None),
             visibility=json_event.pop('visibility', None),
             attendees=attendees,
-            gadget=gadget,
             attachments=attachments,
             reminders=reminders,
+            conference_solution=conference_solution,
             default_reminders=reminders_json.pop('useDefault', False),
+            guests_can_invite_others=json_event.pop('guestsCanInviteOthers', True),
+            guests_can_modify=json_event.pop('guestsCanModify', False),
+            guests_can_see_other_guests=json_event.pop('guestsCanSeeOtherGuests', True),
+            _created=created,
+            _updated=updated,
+            _recurring_event_id=json_event.pop('recurringEventId', None),
             **json_event
         )
 

@@ -6,7 +6,7 @@ import sys
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '0.4.0'
+VERSION = '1.0.0'
 
 
 class UploadCommand(Command):
@@ -87,12 +87,14 @@ setup(
         "google-auth-httplib2>=0.0.4",
         "google-auth-oauthlib>=0.4,<0.5",
         "python-dateutil>=2.7",
-        "beautiful_date>=1.0.1",
+        "beautiful_date>=2.0.0",
     ],
     tests_require=[
         "pytest>=5.4",
         "pytest-cov>=2.10",
-        "flake8>3.8.3"
+        "flake8>3.8.3",
+        "pep8-naming>=0.11.1",
+        "pyfakefs>=4.3.1,<5.0",
     ],
     classifiers=[
         'License :: OSI Approved :: MIT License',
@@ -103,6 +105,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     cmdclass={
         'upload': UploadCommand,

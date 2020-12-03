@@ -1,5 +1,10 @@
+import re
 from abc import ABC, abstractmethod
 import json
+
+
+def _type_to_snake_case(type_):
+    return re.sub(r'(?<!^)(?=[A-Z])', '_', type_.__name__).lower()
 
 
 class BaseSerializer(ABC):
@@ -7,20 +12,22 @@ class BaseSerializer(ABC):
 
     def __init__(self, obj):
         if isinstance(obj, self.type_):
-            self.data = self.to_json(obj)
-        elif isinstance(obj, str):
-            self.data = json.loads(obj)
-        elif isinstance(obj, dict):
-            self.data = obj
+            self.obj = obj
+        elif isinstance(obj, (str, dict)):
+            self.obj = self.to_object(obj)
         else:
             raise TypeError('The "{}" object must be {}, str or dict, not {!r}.'
-                            .format(self.type_.__name__.lower(), self.type_.__name__, obj.__class__.__name__))
+                            .format(_type_to_snake_case(self.type_), self.type_.__name__, obj.__class__.__name__))
 
     def get_object(self):
-        return self.to_object(self.data)
+        return self.obj
 
     def get_json(self):
-        return self.data
+        return self.to_json(self.obj)
+
+    @staticmethod
+    def _remove_empty_values(data):
+        return {k: v for k, v in data.items() if v is not None}
 
     @classmethod
     def to_json(cls, obj):
@@ -55,7 +62,7 @@ class BaseSerializer(ABC):
     @classmethod
     def assure_type(cls, obj):
         if not isinstance(obj, cls.type_):
-            raise TypeError('The event object must be {}, not {!r}.'.format(cls.type_, obj.__class__.__name__))
+            raise TypeError('The object must be {}, not {!r}.'.format(cls.type_, obj.__class__.__name__))
 
     def __init_subclass__(cls, **kwargs):
         """Checks that "type_" is defined and that name of the argument in subclasses __init__ method is the name of
@@ -63,6 +70,6 @@ class BaseSerializer(ABC):
         """
         if cls.type_ is None:
             raise AssertionError('Subclass of BaseSerializer has to define class "type_" that is being serialized.')
-        if cls.__init__.__code__.co_varnames != ('self', cls.type_.__name__.lower()):
+        if cls.__init__.__code__.co_varnames != ('self', _type_to_snake_case(cls.type_)):
             raise AssertionError('Argument of the __init__ method has to have a name "{}".'
-                                 .format(cls.type_.__name__.lower()))
+                                 .format(_type_to_snake_case(cls.type_)))

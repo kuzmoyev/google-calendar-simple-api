@@ -25,7 +25,7 @@ copyright = '2019, Yevhen Kuzmovych'
 author = 'Yevhen Kuzmovych'
 
 # The short X.Y version
-version = '0.4.0'
+version = '1.0.0'
 # The full version, including alpha/beta/rc tags
 release = ''
 
@@ -176,3 +176,9 @@ epub_exclude_files = ['search.html']
 intersphinx_mapping = {'https://docs.python.org/': None}
 
 autoclass_content = 'both'
+
+autodoc_member_order = 'bysource'
+
+html_theme_options = {
+    'analytics_id': 'G-PT0TPQSZ56',
+}
