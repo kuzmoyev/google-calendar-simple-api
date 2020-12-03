@@ -58,7 +58,7 @@ Contents
 
    getting_started
    authentication
-   event
+   events
    attendees
    attachments
    conference
