@@ -143,7 +143,7 @@ class GoogleCalendar:
 
     def clear(self):
         """Deletes all the events in the calendar"""
-        self.service.calendars().clear(self.calendar).execute()
+        self.service.calendars().clear(calendarId=self.calendar).execute()
 
     def add_event(
             self,
