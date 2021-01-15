@@ -123,7 +123,7 @@ class EventSerializer(BaseSerializer):
             conference_solution = None
 
         return Event(
-            json_event.pop('summary'),
+            json_event.pop('summary', None),
             start=start,
             end=end,
             timezone=timezone,
