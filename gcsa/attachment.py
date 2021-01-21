@@ -40,8 +40,7 @@ class Attachment:
         .. _`available MIME types`: https://developers.google.com/drive/api/v3/mime-types
         """
 
-        if mime_type and mime_type not in Attachment._SUPPORTED_MIME_TYPES:
-            raise ValueError("Mime type {} is not supported.".format(mime_type))
+        self.unsupported_mime_type = mime_type not in Attachment._SUPPORTED_MIME_TYPES
 
         self.file_url = file_url
         self.title = title
