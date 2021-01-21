@@ -16,12 +16,12 @@ class TestAttachment(TestCase):
         )
         self.assertEqual(attachment.title, 'My doc')
 
-        with self.assertRaises(ValueError):
-            Attachment(
+        attachment = Attachment(
                 file_url=DOC_URL,
                 title='My doc',
                 mime_type="application/vnd.google-apps.something"
             )
+        self.assertTrue(attachment.unsupported_mime_type)
 
     def test_repr_str(self):
         attachment = Attachment(
