@@ -66,6 +66,11 @@ class TestEvent(TestCase):
         event = Event('Lunch', start, timezone=TEST_TIMEZONE)
         self.assertEqual(event.end, start + 1 * hours)
 
+    def test_init_no_start_or_end(self):
+        event = Event('Good day', start=None, timezone=TEST_TIMEZONE)
+        self.assertIsNone(event.start)
+        self.assertIsNone(event.end)
+
     def test_init_different_date_types(self):
         with self.assertRaises(TypeError):
             Event('Good day', start=(1 / Jan / 2019), end=(2 / Jan / 2019)[5:55], timezone=TEST_TIMEZONE)
