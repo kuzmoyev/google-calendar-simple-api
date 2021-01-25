@@ -122,6 +122,8 @@ class Event:
             self.end = start + timedelta(hours=1)
         elif isinstance(start, date):
             self.end = start + timedelta(days=1)
+        else:
+            self.end = end
 
         if isinstance(self.start, datetime) and isinstance(self.end, datetime):
             self.start = insure_localisation(self.start, timezone)
