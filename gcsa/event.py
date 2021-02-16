@@ -198,7 +198,7 @@ class Event:
 
     def add_reminder(self, reminder):
         """Adds reminder to an event. See :py:mod:`~gcsa.reminders`"""
-        if len(self.reminders) > 4:
+        if len(self.reminders) > 5:
             raise ValueError('The maximum number of override reminders is 5.')
         self.reminders.append(reminder)
 
