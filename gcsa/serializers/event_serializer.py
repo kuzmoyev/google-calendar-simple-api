@@ -131,7 +131,7 @@ class EventSerializer(BaseSerializer):
             description=json_event.pop('description', None),
             location=json_event.pop('location', None),
             recurrence=json_event.pop('recurrence', None),
-            color=json_event.pop('colorId', None),
+            color_id=json_event.pop('colorId', None),
             visibility=json_event.pop('visibility', None),
             attendees=attendees,
             attachments=attachments,

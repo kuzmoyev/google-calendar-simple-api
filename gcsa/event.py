@@ -35,7 +35,7 @@ class Event:
                  description=None,
                  location=None,
                  recurrence=None,
-                 color=None,
+                 color_id=None,
                  visibility=Visibility.DEFAULT,
                  attendees=None,
                  attachments=None,
@@ -73,7 +73,7 @@ class Event:
                 Geographic location of the event as free-form text.
         :param recurrence:
                 RRULE/RDATE/EXRULE/EXDATE string or list of such strings. See :py:mod:`~gcsa.recurrence`
-        :param color:
+        :param color_id:
                 Color id referring to an entry from colors endpoint (list_event_colors)
         :param visibility:
                 Visibility of the event. Default is default visibility for events on the calendar.
@@ -156,7 +156,7 @@ class Event:
         self.description = description
         self.location = location
         self.recurrence = assure_list(recurrence)
-        self.color_id = color
+        self.color_id = color_id
         self.visibility = visibility
         self.attendees = attendees
         self.attachments = assure_list(attachments)
