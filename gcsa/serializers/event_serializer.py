@@ -9,6 +9,7 @@ from .attachment_serializer import AttachmentSerializer
 from .attendee_serializer import AttendeeSerializer
 from .base_serializer import BaseSerializer
 from .conference_serializer import ConferenceSolutionSerializer, ConferenceSolutionCreateRequestSerializer
+from .person_serializer import PersonSerializer
 from .reminder_serializer import ReminderSerializer
 from ..conference import ConferenceSolution, ConferenceSolutionCreateRequest
 
@@ -123,6 +124,18 @@ class EventSerializer(BaseSerializer):
         else:
             conference_solution = None
 
+        creator_data = json_event.pop('creator', None)
+        if creator_data is not None:
+            creator = PersonSerializer.to_object(creator_data)
+        else:
+            creator = None
+
+        organizer_data = json_event.pop('organizer', None)
+        if organizer_data is not None:
+            organizer = PersonSerializer.to_object(organizer_data)
+        else:
+            organizer = None
+
         return Event(
             json_event.pop('summary', None),
             start=start,
@@ -143,6 +156,8 @@ class EventSerializer(BaseSerializer):
             guests_can_modify=json_event.pop('guestsCanModify', False),
             guests_can_see_other_guests=json_event.pop('guestsCanSeeOtherGuests', True),
             transparency=json_event.pop('transparency', None),
+            _creator=creator,
+            _organizer=organizer,
             _created=created,
             _updated=updated,
             _recurring_event_id=json_event.pop('recurringEventId', None),
