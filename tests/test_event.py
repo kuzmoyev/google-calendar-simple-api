@@ -66,6 +66,11 @@ class TestEvent(TestCase):
         event = Event('Lunch', start, timezone=TEST_TIMEZONE)
         self.assertEqual(event.end, start + 1 * hours)
 
+    def test_init_no_start_or_end(self):
+        event = Event('Good day', start=None, timezone=TEST_TIMEZONE)
+        self.assertIsNone(event.start)
+        self.assertIsNone(event.end)
+
     def test_init_different_date_types(self):
         with self.assertRaises(TypeError):
             Event('Good day', start=(1 / Jan / 2019), end=(2 / Jan / 2019)[5:55], timezone=TEST_TIMEZONE)
@@ -155,7 +160,7 @@ class TestEvent(TestCase):
             description='Everyday breakfast',
             location='Home',
             recurrence=Recurrence.rule(freq=DAILY),
-            color='#254433',
+            color_id=1,
             visibility=Visibility.PRIVATE,
             attendees='mail@gmail.com',
             attachments=Attachment(title='My doc', **attachments_dp),
@@ -178,8 +183,8 @@ class TestEvent(TestCase):
         self.assertNotEqual(Event(**dp, recurrence=Recurrence.rule(freq=DAILY)),
                             Event(**dp, recurrence=Recurrence.rule(freq=WEEKLY)))
 
-        self.assertNotEqual(Event(**dp, color='#254433'),
-                            Event(**dp, color='#ffffff'))
+        self.assertNotEqual(Event(**dp, color_id=1),
+                            Event(**dp, color_id=2))
 
         self.assertNotEqual(Event(**dp, visibility=Visibility.PRIVATE),
                             Event(**dp, visibility=Visibility.PUBLIC))
@@ -561,6 +566,19 @@ class TestEventSerializer(TestCase):
             'guestsCanInviteOthers': False,
             'guestsCanModify': True,
             'guestsCanSeeOtherGuests': False,
+            'transparency': 'transparent',
+            'creator': {
+                'id': '123123',
+                'email': 'creator@gmail.com',
+                'displayName': 'Creator',
+                'self': True
+            },
+            'organizer': {
+                'id': '456456',
+                'email': 'organizer@gmail.com',
+                'displayName': 'Organizer',
+                'self': False
+            }
         }
 
         serializer = EventSerializer(event_json)
@@ -589,7 +607,44 @@ class TestEventSerializer(TestCase):
         self.assertFalse(event.guests_can_invite_others)
         self.assertTrue(event.guests_can_modify)
         self.assertFalse(event.guests_can_see_other_guests)
+        self.assertEqual(event.transparency, 'transparent')
+        self.assertEqual(event.creator.email, 'creator@gmail.com')
+        self.assertEqual(event.organizer.email, 'organizer@gmail.com')
 
+        event_json_str = """{
+            "summary": "Good day",
+            "description": "Very good day indeed",
+            "location": "Prague",
+            "start": {"date": "2020-07-20"},
+            "end": {"date": "2020-07-22"}
+        }"""
+
+        event = EventSerializer.to_object(event_json_str)
+
+        self.assertEqual(event.summary, 'Good day')
+        self.assertEqual(event.description, 'Very good day indeed')
+        self.assertEqual(event.location, 'Prague')
+        self.assertEqual(event.start, 20 / Jul / 2020)
+        self.assertEqual(event.end, 22 / Jul / 2020)
+
+    def test_to_object_recurring_event(self):
+        event_json_str = {
+            "id": 'recurring_event_id_20201107T070000Z',
+            "summary": "Good day",
+            "description": "Very good day indeed",
+            "location": "Prague",
+            "start": {"date": "2020-07-20"},
+            "end": {"date": "2020-07-22"},
+            "recurringEventId": 'recurring_event_id'
+        }
+
+        event = EventSerializer.to_object(event_json_str)
+
+        self.assertEqual(event.id, 'recurring_event_id_20201107T070000Z')
+        self.assertTrue(event.is_recurring_instance)
+        self.assertEqual(event.recurring_event_id, 'recurring_event_id')
+
+    def test_to_object_conference_data(self):
         event_json = {
             'summary': 'Good day',
             'description': 'Very good day indeed',
@@ -656,35 +711,3 @@ class TestEventSerializer(TestCase):
         self.assertIsInstance(event.conference_solution, ConferenceSolution)
         self.assertEqual(event.conference_solution.solution_type, 'hangoutsMeet')
         self.assertEqual(event.conference_solution.entry_points[0].uri, 'https://video.com')
-
-        event_json_str = """{
-            "summary": "Good day",
-            "description": "Very good day indeed",
-            "location": "Prague",
-            "start": {"date": "2020-07-20"},
-            "end": {"date": "2020-07-22"}
-        }"""
-
-        event = EventSerializer.to_object(event_json_str)
-
-        self.assertEqual(event.summary, 'Good day')
-        self.assertEqual(event.description, 'Very good day indeed')
-        self.assertEqual(event.location, 'Prague')
-        self.assertEqual(event.start, 20 / Jul / 2020)
-        self.assertEqual(event.end, 22 / Jul / 2020)
-
-        event_json_str = {
-            "id": 'recurring_event_id_20201107T070000Z',
-            "summary": "Good day",
-            "description": "Very good day indeed",
-            "location": "Prague",
-            "start": {"date": "2020-07-20"},
-            "end": {"date": "2020-07-22"},
-            "recurringEventId": 'recurring_event_id'
-        }
-
-        event = EventSerializer.to_object(event_json_str)
-
-        self.assertEqual(event.id, 'recurring_event_id_20201107T070000Z')
-        self.assertTrue(event.is_recurring_instance)
-        self.assertEqual(event.recurring_event_id, 'recurring_event_id')

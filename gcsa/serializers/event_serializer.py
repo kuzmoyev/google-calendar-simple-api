@@ -9,6 +9,7 @@ from .attachment_serializer import AttachmentSerializer
 from .attendee_serializer import AttendeeSerializer
 from .base_serializer import BaseSerializer
 from .conference_serializer import ConferenceSolutionSerializer, ConferenceSolutionCreateRequestSerializer
+from .person_serializer import PersonSerializer
 from .reminder_serializer import ReminderSerializer
 from ..conference import ConferenceSolution, ConferenceSolutionCreateRequest
 
@@ -32,6 +33,7 @@ class EventSerializer(BaseSerializer):
             'guestsCanInviteOthers': event.guests_can_invite_others,
             'guestsCanModify': event.guests_can_modify,
             'guestsCanSeeOtherGuests': event.guests_can_see_other_guests,
+            'transparency': event.transparency,
             'reminders': {
                 'useDefault': event.default_reminders,
                 'overrides': [ReminderSerializer.to_json(r) for r in event.reminders]
@@ -122,8 +124,20 @@ class EventSerializer(BaseSerializer):
         else:
             conference_solution = None
 
+        creator_data = json_event.pop('creator', None)
+        if creator_data is not None:
+            creator = PersonSerializer.to_object(creator_data)
+        else:
+            creator = None
+
+        organizer_data = json_event.pop('organizer', None)
+        if organizer_data is not None:
+            organizer = PersonSerializer.to_object(organizer_data)
+        else:
+            organizer = None
+
         return Event(
-            json_event.pop('summary'),
+            json_event.pop('summary', None),
             start=start,
             end=end,
             timezone=timezone,
@@ -131,7 +145,7 @@ class EventSerializer(BaseSerializer):
             description=json_event.pop('description', None),
             location=json_event.pop('location', None),
             recurrence=json_event.pop('recurrence', None),
-            color=json_event.pop('colorId', None),
+            color_id=json_event.pop('colorId', None),
             visibility=json_event.pop('visibility', None),
             attendees=attendees,
             attachments=attachments,
@@ -141,6 +155,9 @@ class EventSerializer(BaseSerializer):
             guests_can_invite_others=json_event.pop('guestsCanInviteOthers', True),
             guests_can_modify=json_event.pop('guestsCanModify', False),
             guests_can_see_other_guests=json_event.pop('guestsCanSeeOtherGuests', True),
+            transparency=json_event.pop('transparency', None),
+            _creator=creator,
+            _organizer=organizer,
             _created=created,
             _updated=updated,
             _recurring_event_id=json_event.pop('recurringEventId', None),
