@@ -51,6 +51,12 @@ class GoogleCalendar:
 
         :param calendar:
                 Users email address or name/id of the calendar. Default: primary calendar of the user
+
+                If user's email or "primary" is specified, then primary calendar of the user is used.
+                You don't need to specify this parameter in this case as it is a default behaviour.
+
+                To use a different calendar you need to specify its id.
+                Go to calendar's `settings and sharing` -> `Integrate calendar` -> `Calendar ID`.
         :param credentials:
                 Credentials with token and refresh token.
                 If specified, ``credentials_path``, ``token_path``, and ``save_token`` are ignored.
