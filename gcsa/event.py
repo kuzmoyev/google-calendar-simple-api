@@ -125,6 +125,7 @@ class Event:
                 this instance belongs. Read-only.
         :param other:
                 Other fields that should be included in request json. Will be included as they are.
+                See more in https://developers.google.com/calendar/v3/reference/events
         """
 
         def assure_list(obj):
