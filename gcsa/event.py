@@ -23,6 +23,19 @@ class Visibility:
     PRIVATE = "private"
 
 
+class Transparency:
+    """ Possible values of the event transparency.
+
+    * OPAQUE - Default value. The event does block time on the calendar.
+               This is equivalent to setting 'Show me as' to 'Busy' in the Calendar UI.
+    * TRANSPARENT - The event does not block time on the calendar.
+                    This is equivalent to setting 'Show me as' to 'Available' in the Calendar UI.
+    """
+
+    OPAQUE = 'opaque'
+    TRANSPARENT = 'transparent'
+
+
 @total_ordering
 class Event:
     def __init__(self,
@@ -47,6 +60,7 @@ class Event:
                  guests_can_invite_others=True,
                  guests_can_modify=False,
                  guests_can_see_other_guests=True,
+                 transparency=None,
                  _created=None,
                  _updated=None,
                  _creator=None,
@@ -100,6 +114,8 @@ class Event:
                 Whether attendees other than the organizer can modify the event.
         :param guests_can_see_other_guests:
                 Whether attendees other than the organizer can see who the event's attendees are.
+        :param transparency:
+                Whether the event blocks time on the calendar. See :py:class:`~gcsa.event.Transparency`
         :param _created:
                 Creation time of the event. Read-only.
         :param _updated:
@@ -167,6 +183,7 @@ class Event:
         self.guests_can_invite_others = guests_can_invite_others
         self.guests_can_modify = guests_can_modify
         self.guests_can_see_other_guests = guests_can_see_other_guests
+        self.transparency = transparency
 
         self.other = other
 

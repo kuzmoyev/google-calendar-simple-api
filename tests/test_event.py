@@ -566,6 +566,7 @@ class TestEventSerializer(TestCase):
             'guestsCanInviteOthers': False,
             'guestsCanModify': True,
             'guestsCanSeeOtherGuests': False,
+            'transparency': 'transparent'
         }
 
         serializer = EventSerializer(event_json)
@@ -594,6 +595,7 @@ class TestEventSerializer(TestCase):
         self.assertFalse(event.guests_can_invite_others)
         self.assertTrue(event.guests_can_modify)
         self.assertFalse(event.guests_can_see_other_guests)
+        self.assertEqual(event.transparency, 'transparent')
 
         event_json = {
             'summary': 'Good day',

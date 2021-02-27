@@ -32,6 +32,7 @@ class EventSerializer(BaseSerializer):
             'guestsCanInviteOthers': event.guests_can_invite_others,
             'guestsCanModify': event.guests_can_modify,
             'guestsCanSeeOtherGuests': event.guests_can_see_other_guests,
+            'transparency': event.transparency,
             'reminders': {
                 'useDefault': event.default_reminders,
                 'overrides': [ReminderSerializer.to_json(r) for r in event.reminders]
@@ -141,6 +142,7 @@ class EventSerializer(BaseSerializer):
             guests_can_invite_others=json_event.pop('guestsCanInviteOthers', True),
             guests_can_modify=json_event.pop('guestsCanModify', False),
             guests_can_see_other_guests=json_event.pop('guestsCanSeeOtherGuests', True),
+            transparency=json_event.pop('transparency', None),
             _created=created,
             _updated=updated,
             _recurring_event_id=json_event.pop('recurringEventId', None),
