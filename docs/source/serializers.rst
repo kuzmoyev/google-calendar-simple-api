@@ -123,6 +123,53 @@ To object
     <Attachment 'My file' - 'https://bit.ly/3lZo0Cc'>
 
 
+
+Person serializer
+~~~~~~~~~~~~~~~~~
+
+To json
+-------
+
+.. code-block:: python
+
+    from gcsa.person import Person
+    from gcsa.serializers.person_serializer import PersonSerializer
+
+    person = Person(
+        'john@gmail.com',
+        display_name='BFF',
+    )
+
+    PersonSerializer.to_json(person)
+
+.. code-block:: javascript
+
+    {
+        'email': 'john@gmail.com'
+        'displayName': 'BFF',
+    }
+
+
+To object
+---------
+
+
+.. code-block:: python
+
+    person_json = {
+        'email': 'john@gmail.com',
+        'displayName': 'BFF',
+        'id': '123123',
+        'self': True
+    }
+
+    PersonSerializer.to_object(person_json)
+
+.. code-block::
+
+    <Person 'john@gmail.com' - 'BFF'>
+
+
 Attendees serializer
 ~~~~~~~~~~~~~~~~~~~~
 

@@ -23,6 +23,19 @@ class Visibility:
     PRIVATE = "private"
 
 
+class Transparency:
+    """ Possible values of the event transparency.
+
+    * OPAQUE - Default value. The event does block time on the calendar.
+               This is equivalent to setting 'Show me as' to 'Busy' in the Calendar UI.
+    * TRANSPARENT - The event does not block time on the calendar.
+                    This is equivalent to setting 'Show me as' to 'Available' in the Calendar UI.
+    """
+
+    OPAQUE = 'opaque'
+    TRANSPARENT = 'transparent'
+
+
 @total_ordering
 class Event:
     def __init__(self,
@@ -35,7 +48,7 @@ class Event:
                  description=None,
                  location=None,
                  recurrence=None,
-                 color=None,
+                 color_id=None,
                  visibility=Visibility.DEFAULT,
                  attendees=None,
                  attachments=None,
@@ -47,9 +60,11 @@ class Event:
                  guests_can_invite_others=True,
                  guests_can_modify=False,
                  guests_can_see_other_guests=True,
+                 transparency=None,
+                 _creator=None,
+                 _organizer=None,
                  _created=None,
                  _updated=None,
-                 _creator=None,
                  _recurring_event_id=None,
                  **other):
         """
@@ -73,7 +88,7 @@ class Event:
                 Geographic location of the event as free-form text.
         :param recurrence:
                 RRULE/RDATE/EXRULE/EXDATE string or list of such strings. See :py:mod:`~gcsa.recurrence`
-        :param color:
+        :param color_id:
                 Color id referring to an entry from colors endpoint (list_event_colors)
         :param visibility:
                 Visibility of the event. Default is default visibility for events on the calendar.
@@ -100,6 +115,16 @@ class Event:
                 Whether attendees other than the organizer can modify the event.
         :param guests_can_see_other_guests:
                 Whether attendees other than the organizer can see who the event's attendees are.
+        :param transparency:
+                Whether the event blocks time on the calendar. See :py:class:`~gcsa.event.Transparency`
+        :param _creator:
+                The creator of the event. See :py:class:`~gcsa.person.Person`
+        :param _organizer:
+                The organizer of the event. See :py:class:`~gcsa.person.Person`.
+                If the organizer is also an attendee, this is indicated with a separate entry in attendees with
+                the organizer field set to True.
+                To change the organizer, use the move operation
+                see :py:meth:`~gcsa.google_calendar.GoogleCalendar.move_event`
         :param _created:
                 Creation time of the event. Read-only.
         :param _updated:
@@ -109,6 +134,7 @@ class Event:
                 this instance belongs. Read-only.
         :param other:
                 Other fields that should be included in request json. Will be included as they are.
+                See more in https://developers.google.com/calendar/v3/reference/events
         """
 
         def assure_list(obj):
@@ -116,7 +142,7 @@ class Event:
 
         self.timezone = timezone
         self.start = start
-        if end:
+        if end or start is None:
             self.end = end
         elif isinstance(start, datetime):
             self.end = start + timedelta(hours=1)
@@ -156,7 +182,7 @@ class Event:
         self.description = description
         self.location = location
         self.recurrence = assure_list(recurrence)
-        self.color_id = color
+        self.color_id = color_id
         self.visibility = visibility
         self.attendees = attendees
         self.attachments = assure_list(attachments)
@@ -167,6 +193,9 @@ class Event:
         self.guests_can_invite_others = guests_can_invite_others
         self.guests_can_modify = guests_can_modify
         self.guests_can_see_other_guests = guests_can_see_other_guests
+        self.transparency = transparency
+        self.creator = _creator
+        self.organizer = _organizer
 
         self.other = other
 
