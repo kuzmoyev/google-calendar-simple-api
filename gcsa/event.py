@@ -61,9 +61,10 @@ class Event:
                  guests_can_modify=False,
                  guests_can_see_other_guests=True,
                  transparency=None,
+                 _creator=None,
+                 _organizer=None,
                  _created=None,
                  _updated=None,
-                 _creator=None,
                  _recurring_event_id=None,
                  **other):
         """
@@ -116,6 +117,14 @@ class Event:
                 Whether attendees other than the organizer can see who the event's attendees are.
         :param transparency:
                 Whether the event blocks time on the calendar. See :py:class:`~gcsa.event.Transparency`
+        :param _creator:
+                The creator of the event. See :py:class:`~gcsa.person.Person`
+        :param _organizer:
+                The organizer of the event. See :py:class:`~gcsa.person.Person`.
+                If the organizer is also an attendee, this is indicated with a separate entry in attendees with
+                the organizer field set to True.
+                To change the organizer, use the move operation
+                see :py:meth:`~gcsa.google_calendar.GoogleCalendar.move_event`
         :param _created:
                 Creation time of the event. Read-only.
         :param _updated:
@@ -185,6 +194,8 @@ class Event:
         self.guests_can_modify = guests_can_modify
         self.guests_can_see_other_guests = guests_can_see_other_guests
         self.transparency = transparency
+        self.creator = _creator
+        self.organizer = _organizer
 
         self.other = other
 

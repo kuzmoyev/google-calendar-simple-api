@@ -7,6 +7,7 @@ Code documentation
 
    google_calendar
    event
+   person
    attendees
    attachment
    conference
