@@ -68,3 +68,37 @@ If you store/receive/generate the token in a different way, you can pass loaded 
     gc = GoogleCalendar(credentials=token)
 
 It will be refreshed using ``refresh_token`` during initialization of ``GoogleCalendar`` if needed.
+
+
+Browser authentication timeout
+------------------------------
+
+If you'd like to avoid you script hanging in case user closes the browser without finishing authentication flow,
+you can use the following solution with the help of Pebble_.
+
+First install `Pebble` with ``pip install pebble``.
+
+.. code-block:: python
+
+    from gcsa.google_calendar import GoogleCalendar
+    from concurrent.futures import TimeoutError
+    from pebble import concurrent
+
+
+    @concurrent.process(timeout=60)
+    def create_process():
+        return GoogleCalendar()
+
+
+    if __name__ == '__main__':
+        try:
+            process = create_process()
+            gc = process.result()
+        except TimeoutError:
+            print("User hasn't authenticated in 60 seconds"
+
+Thanks to Teraskull_ for the idea and the example.
+
+.. _Pebble: https://pypi.org/project/Pebble/
+.. _Teraskull: https://github.com/Teraskull
+
