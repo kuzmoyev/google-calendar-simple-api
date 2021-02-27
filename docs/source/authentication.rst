@@ -73,10 +73,10 @@ It will be refreshed using ``refresh_token`` during initialization of ``GoogleCa
 Browser authentication timeout
 ------------------------------
 
-If you'd like to avoid you script hanging in case user closes the browser without finishing authentication flow,
+If you'd like to avoid your script hanging in case user closes the browser without finishing authentication flow,
 you can use the following solution with the help of Pebble_.
 
-First install `Pebble` with ``pip install pebble``.
+First, install `Pebble` with ``pip install pebble``.
 
 .. code-block:: python
 
@@ -95,7 +95,7 @@ First install `Pebble` with ``pip install pebble``.
             process = create_process()
             gc = process.result()
         except TimeoutError:
-            print("User hasn't authenticated in 60 seconds"
+            print("User hasn't authenticated in 60 seconds")
 
 Thanks to Teraskull_ for the idea and the example.
 
