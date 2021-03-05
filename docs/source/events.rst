@@ -121,6 +121,14 @@ Update event
     calendar.update_event(event)
 
 
+Import event
+~~~~~~~~~~~~
+
+.. code-block:: python
+
+    calendar.import_event(event)
+
+
 Move event to another calendar
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
