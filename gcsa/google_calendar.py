@@ -212,6 +212,29 @@ class GoogleCalendar:
         ).execute()
         return EventSerializer.to_object(event_json)
 
+    def import_event(self, event, **kwargs):
+        """Imports an event in the calendar
+
+        This operation is used to add a private copy of an existing event to a calendar.
+
+        :param event:
+                Event object.
+        :param kwargs:
+                Additional API parameters.
+                See https://developers.google.com/calendar/v3/reference/events/import#optional-parameters
+
+        :return:
+                Created event object with id.
+        """
+        body = EventSerializer(event).get_json()
+        event_json = self.service.events().import_(
+            calendarId=self.calendar,
+            body=body,
+            conferenceDataVersion=1,
+            **kwargs
+        ).execute()
+        return EventSerializer.to_object(event_json)
+
     def update_event(
             self,
             event,
