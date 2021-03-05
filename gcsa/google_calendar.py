@@ -215,6 +215,8 @@ class GoogleCalendar:
     def import_event(self, event, **kwargs):
         """Imports an event in the calendar
 
+        This operation is used to add a private copy of an existing event to a calendar.
+
         :param event:
                 Event object.
         :param kwargs:
