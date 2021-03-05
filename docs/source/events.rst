@@ -128,6 +128,8 @@ Import event
 
     calendar.import_event(event)
 
+This operation is used to add a private copy of an existing event to a calendar.
+
 
 Move event to another calendar
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
