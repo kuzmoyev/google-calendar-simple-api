@@ -29,6 +29,7 @@ Now you need to get your API credentials:
 
     1. Go to `Calendar API Quickstart`_
     2. Click ``ENABLE THE GOOGLE CALENDAR API``
+        - If you are prompted to create a new project enter it's name, client type and hit ``CREATE``
     3. Click ``DOWNLOAD CLIENT CONFIGURATION``
     4. Put downloaded ``credentials.json`` file into ``~/.credentials/`` directory
 
