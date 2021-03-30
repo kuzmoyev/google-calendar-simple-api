@@ -33,7 +33,7 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycodestyle==2.6.0
 pyflakes==2.2.0
-Pygments==2.6.1
+Pygments==2.7.4
 pyparsing==2.4.7
 pytest==5.4.3
 pytest-cov==2.10.0
