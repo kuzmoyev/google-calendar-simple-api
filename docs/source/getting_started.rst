@@ -27,11 +27,20 @@ Credentials
 
 Now you need to get your API credentials:
 
-    1. Go to `Calendar API Quickstart`_
-    2. Click ``ENABLE THE GOOGLE CALENDAR API``
-        - If you are prompted to create a new project enter its name, client type and hit ``CREATE``
-    3. Click ``DOWNLOAD CLIENT CONFIGURATION``
+
+    1. `Create a new Google Cloud Platform (GCP) project`_
+
+    .. note::  You will need to enable the "Google Calendar API" for your project.
+
+    2. `Configure the OAuth consent screen`_
+    3. `Create a OAuth client ID credential`_ and download the ``credentials.json`` file
     4. Put downloaded ``credentials.json`` file into ``~/.credentials/`` directory
+
+
+.. _`Create a new Google Cloud Platform (GCP) project`: https://developers.google.com/workspace/guides/create-project
+.. _`Configure the OAuth consent screen`: https://developers.google.com/workspace/guides/create-credentials#configure_the_oauth_consent_screen
+.. _`Create a OAuth client ID credential`: https://developers.google.com/workspace/guides/create-credentials#create_a_oauth_client_id_credential
+
 
 See more options in :ref:`authentication`.
 
@@ -88,6 +97,5 @@ example beautiful_date_ library (*because it's beautiful... just like you*).
     for event in calendar:
         print(event)
 
-.. _`Calendar API Quickstart`: https://developers.google.com/calendar/quickstart/python#step_1_turn_on_the
 .. _datetime: https://docs.python.org/3/library/datetime.html
 .. _beautiful_date: https://github.com/kuzmoyev/beautiful-date
