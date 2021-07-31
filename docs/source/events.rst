@@ -98,6 +98,18 @@ Create event
                   start=start,
                   end=end)
 
+or to create an all-day event, use a `date` object:
+
+.. code-block:: python
+
+    from beautiful_date import Aug, days
+
+    start = 1/Aug/2021
+    end = start + 7 * days
+    event = Event('Vacation',
+                  start=start,
+                  end=end)
+
 
 For ``date``/``datetime`` objects you can use Pythons datetime_ module or as in the
 example beautiful_date_ library (*because it's beautiful... just like you*).
