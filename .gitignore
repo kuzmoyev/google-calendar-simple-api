@@ -12,3 +12,4 @@ gcsa.egg-info
 
 example.py
 coverage.xml
+.DS_Store
