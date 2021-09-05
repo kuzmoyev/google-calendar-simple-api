@@ -1,7 +1,7 @@
 from datetime import date, datetime
 import pickle
 import os.path
-from typing import List, Union, Callable
+from typing import List, Union, Callable, Generator, Iterator
 
 from beautiful_date import BeautifulDate
 from dateutil.relativedelta import relativedelta
@@ -371,7 +371,7 @@ class GoogleCalendar:
             single_events=False,
             query=None,
             **kwargs
-    ):
+    ) -> Generator[gcsa.event.Event, None, None]:
         """ Lists events
 
         :param time_min:
@@ -476,7 +476,7 @@ class GoogleCalendar:
         """List allowed event colors for the calendar."""
         return self.service.colors().get().execute()['event']
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[gcsa.event.Event]:
         return iter(self.get_events())
 
     def __getitem__(self, r):
