@@ -27,6 +27,7 @@ class EventSerializer(BaseSerializer):
             'description': event.description,
             'location': event.location,
             'recurrence': event.recurrence,
+            'id': event.event_id,
             'colorId': event.color_id,
             'visibility': event.visibility,
             'attendees': [AttendeeSerializer.to_json(a) for a in event.attendees],
