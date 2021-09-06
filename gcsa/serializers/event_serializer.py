@@ -23,6 +23,7 @@ class EventSerializer(BaseSerializer):
     @classmethod
     def _to_json(cls, event: Event):
         data = {
+            'id': event.event_id,
             'summary': event.summary,
             'description': event.description,
             'location': event.location,
