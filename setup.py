@@ -54,26 +54,6 @@ class UploadCommand(Command):
         sys.exit()
 
 
-class Doctest(Command):
-    description = 'Run doctests with Sphinx'
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        from sphinx.application import Sphinx
-        sph = Sphinx('./docs/source',  # source directory
-                     './docs/source',  # directory containing conf.py
-                     './docs/build',  # output directory
-                     './docs/build/doctrees',  # doctree directory
-                     'doctest')  # finally, specify the doctest builder
-        sph.build()
-
-
 with open('README.rst') as f:
     long_description = ''.join(f.readlines())
 
@@ -108,9 +88,21 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
     ],
+    extras_require={
+        'dev': [
+            'setuptools',
+            'pytest',
+            'pytest-pep8',
+            'pytest-cov',
+            'pyfakefs',
+            'sphinx',
+            'sphinx_rtd_theme',
+            'flake8',
+            'twine'
+        ]
+    },
     cmdclass={
         'upload': UploadCommand,
         'build_sphinx': BuildDoc,
-        'doctest': Doctest
     }
 )
