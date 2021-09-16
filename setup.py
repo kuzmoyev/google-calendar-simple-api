@@ -77,6 +77,20 @@ setup(
         "python-dateutil>=2.7",
         "beautiful_date>=2.0.0",
     ],
+    extras_require={
+        'dev': [
+            'setuptools',
+            'pytest',
+            'pytest-pep8',
+            'pytest-cov',
+            'pyfakefs',
+            'sphinx',
+            'sphinx_rtd_theme',
+            'flake8',
+            'twine',
+            'tox'
+        ]
+    },
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
@@ -88,19 +102,6 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
     ],
-    extras_require={
-        'dev': [
-            'setuptools',
-            'pytest',
-            'pytest-pep8',
-            'pytest-cov',
-            'pyfakefs',
-            'sphinx',
-            'sphinx_rtd_theme',
-            'flake8',
-            'twine'
-        ]
-    },
     cmdclass={
         'upload': UploadCommand,
         'build_sphinx': BuildDoc,
