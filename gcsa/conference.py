@@ -161,7 +161,7 @@ class EntryPoint:
                 The password to access the conference. The maximum length is 128 characters.
         """
 
-        if entry_point_type not in self.ENTRY_POINT_TYPES:
+        if entry_point_type and entry_point_type not in self.ENTRY_POINT_TYPES:
             raise ValueError('"entry_point" must be one of {}. {} was provided.'.format(
                 ', '.join(self.ENTRY_POINT_TYPES),
                 entry_point_type
