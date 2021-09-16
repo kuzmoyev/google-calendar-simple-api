@@ -7,18 +7,15 @@ on:
   pull_request:
 
 jobs:
-  build:
+  run:
 
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [ 3.6, 3.7, 3.8, 3.9 ]
         include:
-          - tox-env: pytest
           - python-version: 3.9
-            tox-env: flake8
-          - python-version: 3.9
-            tox-env: sphinx
+            note: with-style-and-docs-checks
 
     steps:
       - uses: actions/checkout@v2
@@ -31,6 +28,16 @@ jobs:
         run: |
           pip install tox tox-gh-actions
 
-      - name: Running ${{ matrix.tox-env }}
+      - name: Running tests
         run: |
-          tox -e ${{ matrix.tox-env }}
+          tox -e pytest
+
+      - name: Code style check
+        if: matrix.python-version == 3.9
+        run: |
+          tox -e flake8
+
+      - name: Test docs build
+        if: matrix.python-version == 3.9
+        run: |
+          tox -e sphinx
