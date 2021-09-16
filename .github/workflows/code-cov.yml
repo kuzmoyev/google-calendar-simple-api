@@ -15,13 +15,13 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: Install tox
+      - name: Install dependencies
         run: |
-          pip install tox tox-gh-actions
+          pip install -r requirements.txt
 
       - name: Generate code coverage
         run: |
-          tox -e code-cov
+          pytest --cov-report xml --cov=gcsa tests
 
       - name: Post to GitHub
         uses: 5monkeys/cobertura-action@master
