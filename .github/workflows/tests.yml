@@ -7,12 +7,15 @@ on:
   pull_request:
 
 jobs:
-  build:
+  run:
 
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8, 3.9]
+        python-version: [ 3.6, 3.7, 3.8, 3.9 ]
+        include:
+          - python-version: 3.9
+            note: with-style-and-docs-checks
 
     steps:
       - uses: actions/checkout@v2
@@ -21,18 +24,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+      - name: Install tox
+        run: pip install tox tox-gh-actions
 
-      - name: Code style check
-        run: |
-          flake8 gcsa tests
-
-      - name: Run tests
-        run: |
-          pytest
-
-      - name: Test docs build
-        run: |
-          sphinx-build -W docs/source docs/build
+      - name: Running tests
+        run: tox

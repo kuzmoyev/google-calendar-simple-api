@@ -1,8 +1,16 @@
+#!/usr/bin/env python3
+
 from setuptools import setup, find_packages, Command
-from sphinx.setup_command import BuildDoc
 from shutil import rmtree
 import os
 import sys
+
+try:
+    from sphinx.setup_command import BuildDoc
+except ImportError:
+    class BuildDoc(Command):
+        def run(self):
+            raise
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -46,26 +54,6 @@ class UploadCommand(Command):
         sys.exit()
 
 
-class Doctest(Command):
-    description = 'Run doctests with Sphinx'
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        from sphinx.application import Sphinx
-        sph = Sphinx('./docs/source',  # source directory
-                     './docs/source',  # directory containing conf.py
-                     './docs/build',  # output directory
-                     './docs/build/doctrees',  # doctree directory
-                     'doctest')  # finally, specify the doctest builder
-        sph.build()
-
-
 with open('README.rst') as f:
     long_description = ''.join(f.readlines())
 
@@ -89,13 +77,6 @@ setup(
         "python-dateutil>=2.7",
         "beautiful_date>=2.0.0",
     ],
-    tests_require=[
-        "pytest>=5.4",
-        "pytest-cov>=2.10",
-        "flake8>3.8.3",
-        "pep8-naming>=0.11.1",
-        "pyfakefs>=4.3.1,<5.0",
-    ],
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
@@ -107,9 +88,21 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
     ],
+    extras_require={
+        'dev': [
+            'setuptools',
+            'pytest',
+            'pytest-pep8',
+            'pytest-cov',
+            'pyfakefs',
+            'sphinx',
+            'sphinx_rtd_theme',
+            'flake8',
+            'twine'
+        ]
+    },
     cmdclass={
         'upload': UploadCommand,
         'build_sphinx': BuildDoc,
-        'doctest': Doctest
     }
 )
