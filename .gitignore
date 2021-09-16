@@ -12,5 +12,6 @@ gcsa.egg-info
 
 example.py
 coverage.xml
+.coverage
 .DS_Store
 .tox
