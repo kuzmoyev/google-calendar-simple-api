@@ -1,8 +1,16 @@
+#!/usr/bin/env python3
+
 from setuptools import setup, find_packages, Command
-from sphinx.setup_command import BuildDoc
 from shutil import rmtree
 import os
 import sys
+
+try:
+    from sphinx.setup_command import BuildDoc
+except ImportError:
+    class BuildDoc(Command):
+        def run(self):
+            raise
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -88,13 +96,6 @@ setup(
         "google-auth-oauthlib>=0.4,<0.5",
         "python-dateutil>=2.7",
         "beautiful_date>=2.0.0",
-    ],
-    tests_require=[
-        "pytest>=5.4",
-        "pytest-cov>=2.10",
-        "flake8>3.8.3",
-        "pep8-naming>=0.11.1",
-        "pyfakefs>=4.3.1,<5.0",
     ],
     classifiers=[
         'License :: OSI Approved :: MIT License',
