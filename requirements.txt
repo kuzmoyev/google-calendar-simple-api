@@ -2,7 +2,6 @@ alabaster==0.7.12
 attrs==19.3.0
 Babel==2.8.0
 beautiful-date==2.0.0
-bleach==4.1.0
 cachetools==4.1.1
 certifi==2020.6.20
 chardet==3.0.4
@@ -20,7 +19,6 @@ googleapis-common-protos==1.52.0
 httplib2==0.19.0
 idna==2.10
 imagesize==1.2.0
-importlib-metadata==4.8.1
 Jinja2==2.11.3
 keyring==23.2.1
 MarkupSafe==1.1.1
