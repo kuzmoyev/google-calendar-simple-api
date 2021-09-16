@@ -30,14 +30,4 @@ jobs:
 
       - name: Running tests
         run: |
-          tox -e pytest
-
-      - name: Code style check
-        if: matrix.python-version == 3.9
-        run: |
-          tox -e flake8
-
-      - name: Test docs build
-        if: matrix.python-version == 3.9
-        run: |
-          tox -e sphinx
+          tox

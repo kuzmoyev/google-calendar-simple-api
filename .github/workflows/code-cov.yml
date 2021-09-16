@@ -13,15 +13,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: 3.9
 
-      - name: Install dependencies
+      - name: Install tox
         run: |
-          pip install -r requirements.txt
+          pip install tox tox-gh-actions
 
       - name: Generate code coverage
         run: |
-          pytest --cov-report xml --cov=gcsa tests
+          tox -e code-cov
 
       - name: Post to GitHub
         uses: 5monkeys/cobertura-action@master
