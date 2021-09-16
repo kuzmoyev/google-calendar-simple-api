@@ -84,8 +84,8 @@ setup(
             'pytest-pep8',
             'pytest-cov',
             'pyfakefs',
-            'sphinx',
-            'sphinx_rtd_theme',
+            'sphinx<2',
+            'sphinx-rtd-theme<0.5',
             'flake8',
             'twine',
             'tox'

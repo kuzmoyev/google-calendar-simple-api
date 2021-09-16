@@ -73,7 +73,7 @@ To object
 
     EventSerializer.to_object(event_json)
 
-.. code-block::
+.. code-block:: python
 
     <Event 2020-11-22 18:00:00+01:00 - Meeting>
 
@@ -118,7 +118,7 @@ To object
 
     AttachmentSerializer.to_object(attachment_json)
 
-.. code-block::
+.. code-block:: python
 
     <Attachment 'My file' - 'https://bit.ly/3lZo0Cc'>
 
@@ -165,7 +165,7 @@ To object
 
     PersonSerializer.to_object(person_json)
 
-.. code-block::
+.. code-block:: python
 
     <Person 'john@gmail.com' - 'BFF'>
 
@@ -212,7 +212,7 @@ To object
 
     AttendeeSerializer.to_object(attendee_json)
 
-.. code-block::
+.. code-block:: python
 
     <Attendee 'john@gmail.com' - response: 'needsAction'>
 
@@ -259,7 +259,7 @@ To object
 
     EntryPointSerializer.to_object(entry_point_json)
 
-.. code-block::
+.. code-block:: python
 
     <EntryPoint video - 'https://meet.google.com/aaa-bbbb-ccc'>
 
@@ -324,7 +324,7 @@ To object
 
     ConferenceSolutionSerializer.to_object(conference_solution_json)
 
-.. code-block::
+.. code-block:: python
 
     <ConferenceSolution hangoutsMeet - [<EntryPoint video - 'https://meet.google.com/aaa-bbbb-ccc'>]>
 
@@ -378,7 +378,7 @@ To object
 
     ConferenceSolutionCreateRequestSerializer.to_object(conference_solution_create_request_json)
 
-.. code-block::
+.. code-block:: python
 
     <ConferenceSolutionCreateRequest hangoutsMeet - status:'pending'>
 
@@ -431,7 +431,7 @@ To object
 
     ReminderSerializer.to_object(reminder_json)
 
-.. code-block::
+.. code-block:: python
 
     <EmailReminder - minutes_before_start:30>
 
@@ -444,7 +444,7 @@ To object
 
     ReminderSerializer.to_object(reminder_json)
 
-.. code-block::
+.. code-block:: python
 
     <PopupReminder - minutes_before_start:30>
 
