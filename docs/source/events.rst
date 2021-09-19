@@ -91,6 +91,7 @@ Create event
 .. code-block:: python
 
     from beautiful_date import Apr, hours
+    from gcsa.event import Event
 
     start = (22/Apr/2019)[12:00]
     end = start + 2 * hours
