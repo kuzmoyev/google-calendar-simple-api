@@ -301,7 +301,7 @@ class GoogleCalendar:
 
     def delete_event(
             self,
-            event,
+            event: Union[Event, str],
             send_updates=SendUpdatesMode.NONE,
             **kwargs
     ):
@@ -316,11 +316,18 @@ class GoogleCalendar:
                 Additional API parameters.
                 See https://developers.google.com/calendar/v3/reference/events/delete#optional-parameters
         """
-        if event.id is None:
-            raise ValueError("Event has to have event_id to be deleted.")
+        if isinstance(event, Event):
+            if event.id is None:
+                raise ValueError("Event has to have event_id to be deleted.")
+            event_id = event.id
+        elif isinstance(event, str):
+            event_id = event
+        else:
+            raise TypeError('"event" object must me Event or str, not {!r}'.format(event.__class__.__name__))
+
         self.service.events().delete(
             calendarId=self.calendar,
-            eventId=event.id,
+            eventId=event_id,
             sendUpdates=send_updates,
             **kwargs
         ).execute()
