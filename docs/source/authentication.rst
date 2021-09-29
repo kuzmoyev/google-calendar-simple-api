@@ -70,6 +70,18 @@ If you store/receive/generate the token in a different way, you can pass loaded 
 It will be refreshed using ``refresh_token`` during initialization of ``GoogleCalendar`` if needed.
 
 
+Multiple calendars
+------------------
+To authenticate multiple Google Calendars you should specify different `token_path` for each of them. Otherwise,
+`gcsa` would overwrite default token file location:
+
+.. code-block:: python
+
+    gc_primary = GoogleCalendar(token_path='path/to/tokens/token_primary.pickle')
+    gc_secondary = GoogleCalendar(calendar='f7c1gf7av3g6f2dave17gan4b8@group.calendar.google.com',
+                                  token_path='path/to/tokens/token_secondary.pickle')
+
+
 Browser authentication timeout
 ------------------------------
 
