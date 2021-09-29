@@ -160,9 +160,13 @@ Delete event
     calendar.delete_event(event)
 
 
-
 Event has to have ``event_id`` to be updated, moved or deleted. Events that you get from
 :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_events` method already have their ids.
+You can also delete the event by providing its id.
+
+.. code-block:: python
+
+    calendar.delete_event('<event_id>')
 
 
 Clear calendar
