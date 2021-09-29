@@ -14,7 +14,7 @@ except ImportError:
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '1.2.1'
+VERSION = '1.3.0'
 
 
 class UploadCommand(Command):

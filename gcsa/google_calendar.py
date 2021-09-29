@@ -157,7 +157,7 @@ class GoogleCalendar:
             event,
             send_updates=SendUpdatesMode.NONE,
             **kwargs
-    ):
+    ) -> Event:
         """Creates event in the calendar
 
         :param event:
@@ -187,7 +187,7 @@ class GoogleCalendar:
             event_string,
             send_updates=SendUpdatesMode.NONE,
             **kwargs
-    ):
+    ) -> Event:
         """Creates event in the calendar by string description.
 
         Example:
@@ -213,7 +213,7 @@ class GoogleCalendar:
         ).execute()
         return EventSerializer.to_object(event_json)
 
-    def import_event(self, event, **kwargs):
+    def import_event(self, event, **kwargs) -> Event:
         """Imports an event in the calendar
 
         This operation is used to add a private copy of an existing event to a calendar.
@@ -241,7 +241,7 @@ class GoogleCalendar:
             event,
             send_updates=SendUpdatesMode.NONE,
             **kwargs
-    ):
+    ) -> Event:
         """Updates existing event in the calendar
 
         :param event:
@@ -273,7 +273,7 @@ class GoogleCalendar:
             destination_calendar_id,
             send_updates=SendUpdatesMode.NONE,
             **kwargs
-    ):
+    ) -> Event:
         """Moves existing event from calendar to another calendar
 
         :param event:
@@ -301,7 +301,7 @@ class GoogleCalendar:
 
     def delete_event(
             self,
-            event,
+            event: Union[Event, str],
             send_updates=SendUpdatesMode.NONE,
             **kwargs
     ):
@@ -316,11 +316,18 @@ class GoogleCalendar:
                 Additional API parameters.
                 See https://developers.google.com/calendar/v3/reference/events/delete#optional-parameters
         """
-        if event.id is None:
-            raise ValueError("Event has to have event_id to be deleted.")
+        if isinstance(event, Event):
+            if event.id is None:
+                raise ValueError("Event has to have event_id to be deleted.")
+            event_id = event.id
+        elif isinstance(event, str):
+            event_id = event
+        else:
+            raise TypeError('"event" object must me Event or str, not {!r}'.format(event.__class__.__name__))
+
         self.service.events().delete(
             calendarId=self.calendar,
-            eventId=event.id,
+            eventId=event_id,
             sendUpdates=send_updates,
             **kwargs
         ).execute()
@@ -332,7 +339,7 @@ class GoogleCalendar:
             time_max: Union[date, datetime, BeautifulDate],
             timezone: str,
             **kwargs
-    ):
+    ) -> Iterable[Event]:
         """Lists paginated events received from request_method."""
 
         time_min = time_min or datetime.now()
@@ -453,7 +460,7 @@ class GoogleCalendar:
             }
         )
 
-    def get_event(self, event_id, **kwargs):
+    def get_event(self, event_id, **kwargs) -> Event:
         """ Returns the event with the corresponding event_id.
 
         :param event_id:
