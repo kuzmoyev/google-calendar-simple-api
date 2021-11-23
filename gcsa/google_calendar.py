@@ -44,7 +44,8 @@ class GoogleCalendar:
             save_token: bool = True,
             read_only: bool = False,
             authentication_flow_host='localhost',
-            authentication_flow_port=8080
+            authentication_flow_port=8080,
+            console=False
     ):
         """Represents Google Calendar of the user.
 
@@ -77,6 +78,8 @@ class GoogleCalendar:
                 Host to receive response during authentication flow
         :param authentication_flow_port:
                 Port to receive response during authentication flow
+        :param console:
+                Use authentication flow for devices with no JS support
         """
 
         if credentials:
@@ -94,7 +97,8 @@ class GoogleCalendar:
                 scopes,
                 save_token,
                 authentication_flow_host,
-                authentication_flow_port
+                authentication_flow_port,
+                console
             )
 
         self.calendar = calendar
@@ -114,7 +118,8 @@ class GoogleCalendar:
             scopes: List[str],
             save_token: bool,
             host: str,
-            port: int
+            port: int,
+            console: bool
     ) -> Credentials:
         credentials = None
 
@@ -128,7 +133,10 @@ class GoogleCalendar:
             else:
                 credentials_path = os.path.join(credentials_dir, credentials_file)
                 flow = InstalledAppFlow.from_client_secrets_file(credentials_path, scopes)
-                credentials = flow.run_local_server(host=host, port=port)
+                if not console:
+                    credentials = flow.run_local_server(host=host, port=port)
+                else:
+                    credentials = flow.run_console()
 
             if save_token:
                 with open(token_path, 'wb') as token_file:
