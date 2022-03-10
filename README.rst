@@ -14,7 +14,7 @@ Google Calendar Simple API
     :alt: Tests
 
 .. image:: https://badgen.net/badge/icon/discord?icon=discord&label
-    :target: https://discord.gg/kVXG4Gra
+    :target: https://discord.gg/mRAegbwYKS
     :alt: Discord
 
 
