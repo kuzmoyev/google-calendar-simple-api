@@ -4,11 +4,12 @@ Welcome and thank you for considering contributing to *Google Calendar Simple AP
 
 Before contributing to this repository, please first discuss the change you wish to make via 
 [Issue](https://github.com/kuzmoyev/google-calendar-simple-api/issues), 
-[GitHub Discussion](https://github.com/kuzmoyev/google-calendar-simple-api/discussions), or [Discord](https://discord.gg/mRAegbwYKS).
+[GitHub Discussion](https://github.com/kuzmoyev/google-calendar-simple-api/discussions), or [Discord](https://discord.gg/mRAegbwYKS). Don’t hesitate to ask!
+Issue submissions, discussions, suggestions are as welcomed contributions as pull requests.
 
 ## Steps to contribute changes
 
-1. Fork the repository
+1. [Fork](https://github.com/kuzmoyev/google-calendar-simple-api/fork) the repository
 2. Clone it with `git clone git@github.com:{your_username}/google-calendar-simple-api.git`
 3. Install dependencies if needed with `pip install -e .` (or `pip install -e ".[dev]"` if you want to run tests, compile documentation, etc.). 
 Use [virtualenv](https://virtualenv.pypa.io/en/latest/) to avoid polluting your global python
@@ -26,7 +27,6 @@ Use [virtualenv](https://virtualenv.pypa.io/en/latest/) to avoid polluting your 
 ## While contributing
 
 * Follow the [Code of conduct](https://github.com/kuzmoyev/google-calendar-simple-api/blob/master/.github/CODE_OF_CONDUCT.md)
-* Follow the code style of the projects (that includes [pep8](https://peps.python.org/pep-0008/))
-* If needed (use your best judgement):
-    * Add documentation of your changes to code and/or to [read-the-docs](https://github.com/kuzmoyev/google-calendar-simple-api/tree/master/docs/source)
-    * Add [tests](https://github.com/kuzmoyev/google-calendar-simple-api/tree/master/tests)
+* Follow the [pep8](https://peps.python.org/pep-0008/) and the code style of the project (use your best judgement)
+* Add documentation of your changes to code and/or to [read-the-docs](https://github.com/kuzmoyev/google-calendar-simple-api/tree/master/docs/source) if needed (use your best judgement)
+* Add [tests](https://github.com/kuzmoyev/google-calendar-simple-api/tree/master/tests) if needed (use your best judgement)
