@@ -64,7 +64,8 @@ with open('README.rst') as f:
 setup(
     name='gcsa',
     version=VERSION,
-    keywords='google calendar simple api recurrence',
+    keywords='python conference calendar hangouts python-library event conferences google-calendar pip recurrence '
+             'google-calendar-api attendee gcsa',
     description='Simple API for Google Calendar management',
     long_description=long_description,
     author='Yevhen Kuzmovych',
@@ -108,6 +109,12 @@ setup(
     ],
     cmdclass={
         'upload': UploadCommand,
-        'build_sphinx': BuildDoc,
-    }
+        'docs': BuildDoc,
+    },
+    command_options={
+        'docs': {
+            'version': ('setup.py', VERSION),
+            'build_dir': ('setup.py', 'docs/build')
+        }
+    },
 )
