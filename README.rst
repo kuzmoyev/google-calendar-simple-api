@@ -19,7 +19,7 @@ Google Calendar Simple API
 
 
 `Google Calendar Simple API` or `gcsa` is a library that simplifies event management in Google Calendars.
-It is a Pythonic object oriented adapter for the `official API`_.
+It is a Pythonic object oriented adapter for the official API. See the full `documentation`_.
 
 Installation
 ------------
@@ -28,16 +28,7 @@ Installation
 
     pip install gcsa
 
-from sources:
-
-.. code-block:: bash
-
-    git clone git@github.com:kuzmoyev/google-calendar-simple-api.git
-    cd google-calendar-simple-api
-    python setup.py install
-
-
-See `Getting started page`_ for more details.
+See `Getting started page`_ for more details and installation options.
 
 Example usage
 -------------
@@ -95,7 +86,6 @@ References
 Template for `setup.py` was taken from `kennethreitz/setup.py`_
 
 
-.. _`official API`: https://developers.google.com/calendar
 .. _documentation: https://google-calendar-simple-api.readthedocs.io/en/latest/?badge=latest
 .. _`Getting started page`: https://google-calendar-simple-api.readthedocs.io/en/latest/getting_started.html
 .. _beautiful_date: https://github.com/beautiful-everything/beautiful-date
