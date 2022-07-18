@@ -16,9 +16,9 @@ Use [virtualenv](https://virtualenv.pypa.io/en/latest/) to avoid polluting your 
 4. Make and commit the changes. Add `closes #{issue_number}` to commit message if applies
 5. Run the tests with `tox` (these will be run on pull request):
     * `tox` - all the tests
-    * `tox pytest` - unit tests
-    * `tox flake8` - style check
-    * `tox sphinx` - docs compilation test
+    * `tox -e pytest` - unit tests
+    * `tox -e flake8` - style check
+    * `tox -e sphinx` - docs compilation test
 6. Push
 7. Create pull request
     * towards `dev` branch if the changes require a new GCSA version (i.e. changes in [gcsa](https://github.com/kuzmoyev/google-calendar-simple-api/tree/master/gcsa) module)
