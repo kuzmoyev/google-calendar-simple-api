@@ -65,6 +65,7 @@ Contents
    reminders
    recurrence
    serializers
+   why_gcsa
    code/code
 
 Indices and tables
