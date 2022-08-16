@@ -49,3 +49,7 @@ If you'd like to try this yourself, here's the code you need:
 
 
 Needles to say, I can't do 50 push-ups.
+
+Let me know in Discord_ if you've tried it.
+
+.. _Discord: https://discord.gg/mRAegbwYKS
