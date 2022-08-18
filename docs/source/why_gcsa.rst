@@ -36,7 +36,7 @@ If you'd like to try this yourself, here's the code you need:
     # starting next Monday (of course)
     # +1 days for the case that today is Monday
     start = D.today()[9:00] + 1 * days + MO
-    end = start + len(push_ups) * days
+    end = start + len(PUSH_UPS_COUNT) * days
 
     for day, push_ups in zip(drange(start, end), PUSH_UPS_COUNT):
         e = Event(
