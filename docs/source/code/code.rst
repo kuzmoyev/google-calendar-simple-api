@@ -6,6 +6,7 @@ Code documentation
    :caption: Contents:
 
    google_calendar
+   calendar
    event
    person
    attendees
