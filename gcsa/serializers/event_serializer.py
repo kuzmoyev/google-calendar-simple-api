@@ -5,9 +5,9 @@ from datetime import date, datetime
 from tzlocal import get_localzone
 
 from gcsa.event import Event
+from .base_serializer import BaseSerializer
 from .attachment_serializer import AttachmentSerializer
 from .attendee_serializer import AttendeeSerializer
-from .base_serializer import BaseSerializer
 from .conference_serializer import ConferenceSolutionSerializer, ConferenceSolutionCreateRequestSerializer
 from .person_serializer import PersonSerializer
 from .reminder_serializer import ReminderSerializer
