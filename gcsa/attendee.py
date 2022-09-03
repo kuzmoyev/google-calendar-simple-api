@@ -1,4 +1,4 @@
-from gcsa.person import Person
+from .person import Person
 
 
 class ResponseStatus:

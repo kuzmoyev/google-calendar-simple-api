@@ -3,16 +3,15 @@ import pickle
 import os.path
 from typing import List, Union, Callable, Iterable, Iterator
 
-from gcsa.event import Event
 from beautiful_date import BeautifulDate
 from dateutil.relativedelta import relativedelta
 from googleapiclient import discovery
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
 from tzlocal import get_localzone
 
-from google.oauth2.credentials import Credentials
-
+from .event import Event
 from .serializers.event_serializer import EventSerializer
 from .util.date_time_util import insure_localisation
 
@@ -511,3 +510,5 @@ class GoogleCalendar:
                              ' and order_by is None or one of "startTime" or "updated" strings.')
 
         return self.get_events(time_min, time_max, order_by=order_by, single_events=(order_by == "startTime"))
+
+# TODO: colorRgbFormat
