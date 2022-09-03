@@ -54,9 +54,9 @@ class _BaseConferenceSolution:
 
                 * "pending": the conference create request is still being processed.
                 * "failure": the conference create request failed, there are no entry points.
-                * | "success": the conference create request succeeded, the entry points are populated.
-                  | In this case `ConferenceSolution` with created entry points
-                    is stored in the event's `conference_data`. And `ConferenceSolutionCreateRequest` is omitted.
+                * "success": the conference create request succeeded, the entry points are populated.
+                  In this case `ConferenceSolution` with created entry points
+                  is stored in the event's `conference_data`. And `ConferenceSolutionCreateRequest` is omitted.
 
                 Create requests are asynchronous. Check ``status`` field of event's ``conference_solution`` to find it's
                 status. If the status is ``"success"``, ``conference_solution`` will contain a
@@ -118,25 +118,25 @@ class EntryPoint:
 
                 Possible values are:
 
-                * | VIDEO - joining a conference over HTTP.
-                  | A conference can have zero or one `VIDEO` entry point.
-                * | PHONE - joining a conference by dialing a phone number.
-                  | A conference can have zero or more `PHONE` entry points.
-                * | SIP - joining a conference over SIP.
-                  | A conference can have zero or one `SIP` entry point.
-                * | MORE - further conference joining instructions, for example additional phone numbers.
-                  | A conference can have zero or one `MORE` entry point.
-                  | A conference with only a `MORE` entry point is not a valid conference.
+                * VIDEO - joining a conference over HTTP.
+                  A conference can have zero or one `VIDEO` entry point.
+                * PHONE - joining a conference by dialing a phone number.
+                  A conference can have zero or more `PHONE` entry points.
+                * SIP - joining a conference over SIP.
+                  A conference can have zero or one `SIP` entry point.
+                * MORE - further conference joining instructions, for example additional phone numbers.
+                  A conference can have zero or one `MORE` entry point.
+                  A conference with only a `MORE` entry point is not a valid conference.
 
         :param uri:
                 The URI of the entry point. The maximum length is 1300 characters.
                 Format:
 
-                * | for `VIDEO`, http: or https: schema is required.
-                * | for `PHONE`, tel: schema is required.
-                  | The URI should include the entire dial sequence (e.g., tel:+12345678900,,,123456789;1234).
-                * | for `SIP`, sip: schema is required, e.g., sip:12345678@myprovider.com.
-                * | for `MORE`, http: or https: schema is required.
+                * for `VIDEO`, http: or https: schema is required.
+                * for `PHONE`, tel: schema is required.
+                  The URI should include the entire dial sequence (e.g., tel:+12345678900,,,123456789;1234).
+                * for `SIP`, sip: schema is required, e.g., sip:12345678@myprovider.com.
+                * for `MORE`, http: or https: schema is required.
 
         :param label:
                 The label for the URI.
@@ -367,9 +367,9 @@ class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
 
                 * "pending": the conference create request is still being processed.
                 * "failure": the conference create request failed, there are no entry points.
-                * | "success": the conference create request succeeded, the entry points are populated.
-                  | In this case `ConferenceSolution` with created entry points
-                    is stored in the event's `conference_data`. And `ConferenceSolutionCreateRequest` is omitted.
+                * "success": the conference create request succeeded, the entry points are populated.
+                  In this case `ConferenceSolution` with created entry points
+                  is stored in the event's `conference_data`. And `ConferenceSolutionCreateRequest` is omitted.
         :param conference_id:
                 The ID of the conference. Optional.
                 Can be used by developers to keep track of conferences, should not be displayed to users.
