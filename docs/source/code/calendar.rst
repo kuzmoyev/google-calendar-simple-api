@@ -6,6 +6,11 @@ Calendar
     :members:
     :undoc-members:
 
+
+.. autoclass:: gcsa.calendar.CalendarListEntry
+    :members:
+    :undoc-members:
+
 .. autoclass:: gcsa.calendar.NotificationType
     :members:
     :undoc-members:
