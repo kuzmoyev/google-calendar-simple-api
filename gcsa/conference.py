@@ -20,10 +20,10 @@ class _BaseConferenceSolution:
 
     def __init__(
             self,
-            conference_id=None,
-            signature=None,
-            notes=None,
-            _status='success'
+            conference_id: str = None,
+            signature: str = None,
+            notes: str = None,
+            _status: str = 'success'
     ):
         """
         :param conference_id:
@@ -98,14 +98,14 @@ class EntryPoint:
 
     def __init__(
             self,
-            entry_point_type,
-            uri=None,
-            label=None,
-            pin=None,
-            access_code=None,
-            meeting_code=None,
-            passcode=None,
-            password=None
+            entry_point_type: str,
+            uri: str = None,
+            label: str = None,
+            pin: str = None,
+            access_code: str = None,
+            meeting_code: str = None,
+            passcode: str = None,
+            password: str = None
     ):
         """
         When creating new conference data, populate only the subset of `meeting_code`, `access_code`, `passcode`,
@@ -217,13 +217,13 @@ class ConferenceSolution(_BaseConferenceSolution):
 
     def __init__(
             self,
-            entry_points,
-            solution_type=None,
-            name=None,
-            icon_uri=None,
-            conference_id=None,
-            signature=None,
-            notes=None
+            entry_points: str,
+            solution_type: str = None,
+            name: str = None,
+            icon_uri: str = None,
+            conference_id: str = None,
+            signature: str = None,
+            notes: str = None
     ):
         """
         :param entry_points:
@@ -336,12 +336,12 @@ class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
 
     def __init__(
             self,
-            solution_type=None,
-            request_id=None,
-            _status=None,
-            conference_id=None,
-            signature=None,
-            notes=None
+            solution_type: str = None,
+            request_id: str = None,
+            _status: str = None,
+            conference_id: str = None,
+            signature: str = None,
+            notes: str = None
     ):
         """
         :param solution_type:

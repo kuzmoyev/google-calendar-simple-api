@@ -39,14 +39,16 @@ class AccessRoles:
 
 
 class Calendar:
-    def __init__(self,
-                 summary: str,
-                 *,
-                 calendar_id: str = None,
-                 description: str = None,
-                 location: str = None,
-                 timezone: str = str(get_localzone()),
-                 allowed_conference_solution_types: List[str] = None):
+    def __init__(
+            self,
+            summary: str,
+            *,
+            calendar_id: str = None,
+            description: str = None,
+            location: str = None,
+            timezone: str = str(get_localzone()),
+            allowed_conference_solution_types: List[str] = None
+    ):
         """
         :param summary:
                 Title of the calendar.
@@ -76,25 +78,27 @@ class Calendar:
 
 
 class CalendarListEntry(Calendar):
-    def __init__(self,
-                 calendar_id: str,
-                 *,
-                 summary_override: str = None,
-                 color_id: str = None,
-                 background_color: str = None,
-                 foreground_color: str = None,
-                 hidden: bool = False,
-                 selected: bool = False,
-                 default_reminders: List[Reminder] = None,
-                 notification_types: List[str] = None,
-                 _summary: str = None,
-                 _description: str = None,
-                 _location: str = None,
-                 _timezone: str = None,
-                 _allowed_conference_solution_types: List[str] = None,
-                 _access_role: str = None,
-                 _primary: bool = False,
-                 _deleted: bool = False):
+    def __init__(
+            self,
+            calendar_id: str,
+            *,
+            summary_override: str = None,
+            color_id: str = None,
+            background_color: str = None,
+            foreground_color: str = None,
+            hidden: bool = False,
+            selected: bool = False,
+            default_reminders: List[Reminder] = None,
+            notification_types: List[str] = None,
+            _summary: str = None,
+            _description: str = None,
+            _location: str = None,
+            _timezone: str = None,
+            _allowed_conference_solution_types: List[str] = None,
+            _access_role: str = None,
+            _primary: bool = False,
+            _deleted: bool = False
+    ):
         """
         :param calendar_id:
                 Identifier of the calendar.
@@ -132,7 +136,7 @@ class CalendarListEntry(Calendar):
                 See :py:class:`~gcsa.conference.SolutionType`
         :param _access_role:
                 The effective access role that the authenticated user has on the calendar. Read-only.
-                See :py:class:`~gcsa:calendar:AccessRoles`
+                See :py:class:`~gcsa.calendar.AccessRoles`
         :param _primary:
                 Whether the calendar is the primary calendar of the authenticated user. Read-only.
         :param _deleted:

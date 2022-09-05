@@ -6,6 +6,9 @@ from .reminder_serializer import ReminderSerializer
 class CalendarSerializer(BaseSerializer):
     type_ = Calendar
 
+    def __init__(self, calendar: Calendar):
+        super().__init__(calendar)
+
     @staticmethod
     def _to_json(calendar: Calendar):
         data = {
@@ -29,17 +32,20 @@ class CalendarSerializer(BaseSerializer):
         conference_properties = json_calendar.pop('conferenceProperties', {})
         allowed_conference_solution_types = conference_properties.pop('allowedConferenceSolutionTypes')
         return Calendar(
-            summary=json_calendar.pop('summery'),
+            summary=json_calendar.pop('summary'),
             calendar_id=json_calendar.pop('id'),
-            description=json_calendar.pop('description'),
-            location=json_calendar.pop('location'),
-            timezone=json_calendar.pop('timezone'),
+            description=json_calendar.pop('description', None),
+            location=json_calendar.pop('location', None),
+            timezone=json_calendar.pop('timezone', None),
             allowed_conference_solution_types=allowed_conference_solution_types
         )
 
 
 class CalendarListEntrySerializer(BaseSerializer):
     type_ = CalendarListEntry
+
+    def __init__(self, calendar_list_entry: CalendarListEntry):
+        super().__init__(calendar_list_entry)
 
     @staticmethod
     def _to_json(calendar: CalendarListEntry):
@@ -74,29 +80,30 @@ class CalendarListEntrySerializer(BaseSerializer):
     @staticmethod
     def _to_object(json_calendar):
         conference_properties = json_calendar.pop('conferenceProperties', {})
-        allowed_conference_solution_types = conference_properties.pop('allowedConferenceSolutionTypes')
+        allowed_conference_solution_types = conference_properties.pop('allowedConferenceSolutionTypes', None)
 
         reminders_json = json_calendar.pop('defaultReminders', [])
         default_reminders = [ReminderSerializer.to_object(r) for r in reminders_json] if reminders_json else None
 
-        notifications = json_calendar.pop('notificationSettings', {}).pop('notifications')
+        notifications = json_calendar.pop('notificationSettings', {}).pop('notifications', None)
         notification_types = [n['type'] for n in notifications] if notifications else None
+
         return CalendarListEntry(
             calendar_id=json_calendar.pop('id'),
-            summary_override=json_calendar.pop('summaryOverride'),
-            color_id=json_calendar.pop('colorId'),
-            background_color=json_calendar.pop('backgroundColor'),
-            foreground_color=json_calendar.pop('foregroundColor'),
-            hidden=json_calendar.pop('hidden'),
-            selected=json_calendar.pop('selected'),
+            summary_override=json_calendar.pop('summaryOverride', None),
+            color_id=json_calendar.pop('colorId', None),
+            background_color=json_calendar.pop('backgroundColor', None),
+            foreground_color=json_calendar.pop('foregroundColor', None),
+            hidden=json_calendar.pop('hidden', False),
+            selected=json_calendar.pop('selected', False),
             default_reminders=default_reminders,
             notification_types=notification_types,
-            _summary=json_calendar.pop('summery'),
-            _description=json_calendar.pop('description'),
-            _location=json_calendar.pop('location'),
-            _timezone=json_calendar.pop('timezone'),
+            _summary=json_calendar.pop('summary', None),
+            _description=json_calendar.pop('description', None),
+            _location=json_calendar.pop('location', None),
+            _timezone=json_calendar.pop('timeZone', None),
             _allowed_conference_solution_types=allowed_conference_solution_types,
-            _access_role=json_calendar.pop('accessRole'),
+            _access_role=json_calendar.pop('accessRole', None),
             _primary=json_calendar.pop('primary', False),
             _deleted=json_calendar.pop('deleted', False)
         )

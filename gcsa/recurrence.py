@@ -471,7 +471,7 @@ class Recurrence:
         .. _`RRULE format`: https://tools.ietf.org/html/rfc5545#section-3.8.5
         """
 
-        def assure_iterable(it):
+        def ensure_iterable(it):
             return it if isinstance(it, (list, tuple, set)) else [it] if it is not None else []
 
         def check_all_type(it, type_, name):
@@ -510,31 +510,31 @@ class Recurrence:
         if count is not None and until is not None:
             raise ValueError('"count" and "until" may not appear in one recurrence rule.')
 
-        by_second = assure_iterable(by_second)
+        by_second = ensure_iterable(by_second)
         check_all_type_and_range(by_second, int, (0, 60), "by_second")
 
-        by_minute = assure_iterable(by_minute)
+        by_minute = ensure_iterable(by_minute)
         check_all_type_and_range(by_minute, int, (0, 59), "by_minute")
 
-        by_hour = assure_iterable(by_hour)
+        by_hour = ensure_iterable(by_hour)
         check_all_type_and_range(by_hour, int, (0, 23), "by_hour")
 
-        by_week_day = assure_iterable(by_week_day)
+        by_week_day = ensure_iterable(by_week_day)
         check_all_type(by_week_day, _DayOfTheWeek, "by_week_day")
 
-        by_month_day = assure_iterable(by_month_day)
+        by_month_day = ensure_iterable(by_month_day)
         check_all_type_and_range(by_month_day, int, (-31, 31), "by_month_day", nonzero=True)
 
-        by_year_day = assure_iterable(by_year_day)
+        by_year_day = ensure_iterable(by_year_day)
         check_all_type_and_range(by_year_day, int, (-366, 366), "by_year_day", nonzero=True)
 
-        by_week = assure_iterable(by_week)
+        by_week = ensure_iterable(by_week)
         check_all_type_and_range(by_week, int, (-53, 53), "by_week", nonzero=True)
 
-        by_month = assure_iterable(by_month)
+        by_month = ensure_iterable(by_month)
         check_all_type_and_range(by_month, int, (1, 12), "by_month")
 
-        by_set_pos = assure_iterable(by_set_pos)
+        by_set_pos = ensure_iterable(by_set_pos)
         check_all_type_and_range(by_set_pos, int, (-366, 366), "by_set_pos", nonzero=True)
         if by_set_pos and all(not v for v in (by_second, by_minute, by_hour,
                                               by_week_day, by_month_day, by_year_day,

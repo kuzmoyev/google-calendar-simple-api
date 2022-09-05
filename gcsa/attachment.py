@@ -18,7 +18,14 @@ class Attachment:
         "application/vnd.google-apps.drive-sdk"  # 3rd party shortcut
     }
 
-    def __init__(self, file_url, title=None, mime_type=None, _icon_link=None, _file_id=None):
+    def __init__(
+            self,
+            file_url: str,
+            title: str = None,
+            mime_type: str = None,
+            _icon_link: str = None,
+            _file_id: str = None
+    ):
         """File attachment for the event.
 
         Currently only Google Drive attachments are supported.
