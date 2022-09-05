@@ -1,9 +1,11 @@
 class Person:
-    def __init__(self,
-                 email=None,
-                 display_name=None,
-                 _id=None,
-                 _is_self=None):
+    def __init__(
+            self,
+            email: str = None,
+            display_name: str = None,
+            _id: str = None,
+            _is_self: bool = None
+    ):
         """Represents organizer's, creator's, or primary attendee's fields.
         For attendees see more in :py:class:`~gcsa.attendee.Attendee`.
 

@@ -1,5 +1,9 @@
 class Reminder:
-    def __init__(self, method, minutes_before_start):
+    def __init__(
+            self,
+            method: str,
+            minutes_before_start: int
+    ):
         """Represents base reminder object
 
         :param method:
@@ -25,7 +29,10 @@ class Reminder:
 
 
 class EmailReminder(Reminder):
-    def __init__(self, minutes_before_start=60):
+    def __init__(
+            self,
+            minutes_before_start: int = 60
+    ):
         """Represents email reminder object
 
         :param minutes_before_start:
@@ -35,7 +42,10 @@ class EmailReminder(Reminder):
 
 
 class PopupReminder(Reminder):
-    def __init__(self, minutes_before_start=30):
+    def __init__(
+            self,
+            minutes_before_start: int = 30
+    ):
         """Represents popup reminder object
 
         :param minutes_before_start:

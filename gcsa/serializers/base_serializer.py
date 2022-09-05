@@ -31,7 +31,7 @@ class BaseSerializer(ABC):
 
     @classmethod
     def to_json(cls, obj):
-        cls.assure_type(obj)
+        cls.ensure_type(obj)
         return cls._to_json(obj)
 
     @staticmethod
@@ -41,7 +41,7 @@ class BaseSerializer(ABC):
 
     @classmethod
     def to_object(cls, json_):
-        json_ = cls.assure_dict(json_)
+        json_ = cls.ensure_dict(json_)
         return cls._to_object(json_)
 
     @staticmethod
@@ -50,7 +50,7 @@ class BaseSerializer(ABC):
         pass
 
     @staticmethod
-    def assure_dict(json_):
+    def ensure_dict(json_):
         if not isinstance(json_, (str, dict)):
             raise TypeError('The json object must be str or dict, not {!r}'.format(json_.__class__.__name__))
 
@@ -60,13 +60,13 @@ class BaseSerializer(ABC):
             return json_
 
     @classmethod
-    def assure_type(cls, obj):
+    def ensure_type(cls, obj):
         if not isinstance(obj, cls.type_):
             raise TypeError('The object must be {}, not {!r}.'.format(cls.type_, obj.__class__.__name__))
 
     def __init_subclass__(cls, **kwargs):
         """Checks that "type_" is defined and that name of the argument in subclasses __init__ method is the name of
-        the "type_" in lowercase. It assures that error in __init__ function of BaseSerializer has a correct message.
+        the "type_" in lowercase. It ensures that error in __init__ function of BaseSerializer has a correct message.
         """
         if cls.type_ is None:
             raise AssertionError('Subclass of BaseSerializer has to define class "type_" that is being serialized.')
