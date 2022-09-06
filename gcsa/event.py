@@ -54,7 +54,7 @@ class Event:
             recurrence: Union[str, List[str]] = None,
             color_id: str = None,
             visibility: str = Visibility.DEFAULT,
-            attendees: Union[Attendee, List[Attendee]] = None,
+            attendees: Union[Attendee, str, List[Attendee], List[str]] = None,
             attachments: Union[Attachment, List[Attachment]] = None,
             conference_solution: Union[ConferenceSolution, ConferenceSolutionCreateRequest] = None,
             reminders: Union[Reminder, List[Reminder]] = None,

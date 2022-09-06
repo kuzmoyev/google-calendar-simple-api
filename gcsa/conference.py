@@ -1,3 +1,4 @@
+from typing import Union, List
 from uuid import uuid4
 
 
@@ -217,7 +218,7 @@ class ConferenceSolution(_BaseConferenceSolution):
 
     def __init__(
             self,
-            entry_points: str,
+            entry_points: Union[EntryPoint, List[EntryPoint]],
             solution_type: str = None,
             name: str = None,
             icon_uri: str = None,
