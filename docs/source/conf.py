@@ -176,6 +176,7 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 autoclass_content = 'both'
 
 autodoc_member_order = 'bysource'
+autodoc_typehints = "description"
 
 html_theme_options = {
     'analytics_id': 'G-PT0TPQSZ56',
@@ -184,5 +185,3 @@ html_theme_options = {
 html_css_files = [
     'css/custom.css',
 ]
-
-autodoc_typehints = "description"
