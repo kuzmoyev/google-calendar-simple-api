@@ -76,6 +76,20 @@ class Calendar:
     def id(self):
         return self.calendar_id
 
+    def __str__(self):
+        return '{} - {}'.format(self.summary, self.description)
+
+    def __repr__(self):
+        return '<Calendar {}>'.format(self.__str__())
+
+    def __eq__(self, other):
+        if not isinstance(other, Calendar):
+            return NotImplemented
+        elif self is other:
+            return True
+        else:
+            return super().__eq__(other)
+
 
 class CalendarListEntry(Calendar):
     def __init__(
@@ -161,3 +175,17 @@ class CalendarListEntry(Calendar):
         self.access_role = _access_role
         self.primary = _primary
         self.deleted = _deleted
+
+    def __str__(self):
+        return '{} - ({})'.format(self.summary_override, self.summary)
+
+    def __repr__(self):
+        return '<CalendarListEntry {}>'.format(self.__str__())
+
+    def __eq__(self, other):
+        if not isinstance(other, CalendarListEntry):
+            return NotImplemented
+        elif self is other:
+            return True
+        else:
+            return super().__eq__(other)
