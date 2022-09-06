@@ -160,7 +160,7 @@ class TestEvent(TestCase):
             description='Everyday breakfast',
             location='Home',
             recurrence=Recurrence.rule(freq=DAILY),
-            color_id=1,
+            color_id='1',
             visibility=Visibility.PRIVATE,
             attendees='mail@gmail.com',
             attachments=Attachment(title='My doc', **attachments_dp),
@@ -183,8 +183,8 @@ class TestEvent(TestCase):
         self.assertNotEqual(Event(**dp, recurrence=Recurrence.rule(freq=DAILY)),
                             Event(**dp, recurrence=Recurrence.rule(freq=WEEKLY)))
 
-        self.assertNotEqual(Event(**dp, color_id=1),
-                            Event(**dp, color_id=2))
+        self.assertNotEqual(Event(**dp, color_id='1'),
+                            Event(**dp, color_id='2'))
 
         self.assertNotEqual(Event(**dp, visibility=Visibility.PRIVATE),
                             Event(**dp, visibility=Visibility.PUBLIC))
