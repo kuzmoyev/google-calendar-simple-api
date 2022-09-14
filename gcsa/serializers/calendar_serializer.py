@@ -6,7 +6,7 @@ from .reminder_serializer import ReminderSerializer
 class CalendarSerializer(BaseSerializer):
     type_ = Calendar
 
-    def __init__(self, calendar: Calendar):
+    def __init__(self, calendar):
         super().__init__(calendar)
 
     @staticmethod
@@ -29,14 +29,14 @@ class CalendarSerializer(BaseSerializer):
 
     @staticmethod
     def _to_object(json_calendar):
-        conference_properties = json_calendar.pop('conferenceProperties', {})
-        allowed_conference_solution_types = conference_properties.pop('allowedConferenceSolutionTypes')
+        conference_properties = json_calendar.get('conferenceProperties', {})
+        allowed_conference_solution_types = conference_properties.get('allowedConferenceSolutionTypes')
         return Calendar(
-            summary=json_calendar.pop('summary'),
-            calendar_id=json_calendar.pop('id'),
-            description=json_calendar.pop('description', None),
-            location=json_calendar.pop('location', None),
-            timezone=json_calendar.pop('timezone', None),
+            summary=json_calendar.get('summary'),
+            calendar_id=json_calendar.get('id'),
+            description=json_calendar.get('description'),
+            location=json_calendar.get('location'),
+            timezone=json_calendar.get('timeZone'),
             allowed_conference_solution_types=allowed_conference_solution_types
         )
 
@@ -44,7 +44,7 @@ class CalendarSerializer(BaseSerializer):
 class CalendarListEntrySerializer(BaseSerializer):
     type_ = CalendarListEntry
 
-    def __init__(self, calendar_list_entry: CalendarListEntry):
+    def __init__(self, calendar_list_entry):
         super().__init__(calendar_list_entry)
 
     @staticmethod
