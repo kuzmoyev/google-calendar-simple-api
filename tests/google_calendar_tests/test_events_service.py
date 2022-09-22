@@ -2,7 +2,7 @@ from beautiful_date import D, days, years, hours
 
 from gcsa.event import Event
 from gcsa.util.date_time_util import ensure_localisation
-from tests.google_calendar_tests.test_case_with_mocked_service import TestCaseWithMockedService
+from tests.mock_services.util import TestCaseWithMockedService
 
 
 class TestEventsService(TestCaseWithMockedService):
