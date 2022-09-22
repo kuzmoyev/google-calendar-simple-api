@@ -4,7 +4,7 @@ import pytz
 from tzlocal import get_localzone
 
 
-def insure_localisation(dt, timezone=str(get_localzone())):
+def ensure_localisation(dt, timezone=str(get_localzone())):
     """Insures localisation with provided timezone on "datetime" object.
 
     Does nothing to object of type "date"."""

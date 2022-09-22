@@ -8,7 +8,7 @@ from tzlocal import get_localzone
 from gcsa._services.base_service import BaseService
 from gcsa.event import Event
 from gcsa.serializers.event_serializer import EventSerializer
-from gcsa.util.date_time_util import insure_localisation
+from gcsa.util.date_time_util import ensure_localisation
 
 
 class SendUpdatesMode:
@@ -47,8 +47,8 @@ class EventsService(BaseService):
         if not isinstance(time_max, datetime):
             time_max = datetime.combine(time_max, datetime.max.time())
 
-        time_min = insure_localisation(time_min, timezone).isoformat()
-        time_max = insure_localisation(time_max, timezone).isoformat()
+        time_min = ensure_localisation(time_min, timezone).isoformat()
+        time_max = ensure_localisation(time_max, timezone).isoformat()
 
         yield from self._list_paginated(
             request_method,
@@ -423,7 +423,7 @@ class EventsService(BaseService):
         elif isinstance(event, str):
             event_id = event
         else:
-            raise TypeError('"event" object must me Event or str, not {!r}'.format(event.__class__.__name__))
+            raise TypeError('"event" object must be Event or str, not {!r}'.format(event.__class__.__name__))
 
         self.service.events().delete(
             calendarId=calendar_id,

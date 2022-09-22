@@ -10,7 +10,7 @@ from .attendee import Attendee
 from .conference import ConferenceSolution, ConferenceSolutionCreateRequest
 from .person import Person
 from .reminders import PopupReminder, EmailReminder, Reminder
-from .util.date_time_util import insure_localisation
+from .util.date_time_util import ensure_localisation
 
 
 class Visibility:
@@ -156,8 +156,8 @@ class Event:
             self.end = start + timedelta(days=1)
 
         if isinstance(self.start, datetime) and isinstance(self.end, datetime):
-            self.start = insure_localisation(self.start, timezone)
-            self.end = insure_localisation(self.end, timezone)
+            self.start = ensure_localisation(self.start, timezone)
+            self.end = ensure_localisation(self.end, timezone)
         elif isinstance(self.start, datetime) or isinstance(self.end, datetime):
             raise TypeError('Start and end must either both be date or both be datetime.')
 
@@ -278,7 +278,7 @@ class Event:
     def __lt__(self, other):
         def insure_datetime(d, timezone):
             if type(d) == date:
-                return insure_localisation(datetime(year=d.year, month=d.month, day=d.day), timezone)
+                return ensure_localisation(datetime(year=d.year, month=d.month, day=d.day), timezone)
             else:
                 return d
 

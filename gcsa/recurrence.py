@@ -2,7 +2,7 @@ from datetime import datetime, date
 
 from tzlocal import get_localzone
 
-from .util.date_time_util import insure_localisation
+from .util.date_time_util import ensure_localisation
 
 
 class Duration:
@@ -343,7 +343,7 @@ class Recurrence:
             if not isinstance(dt, (date, datetime)):
                 msg = 'The dts object(s) must be date or datetime, not {!r}.'.format(dt.__class__.__name__)
                 raise TypeError(msg)
-            localized_datetimes.append(insure_localisation(dt, timezone))
+            localized_datetimes.append(ensure_localisation(dt, timezone))
 
         return 'TZID={}:{}'.format(timezone, ','.join(d.strftime('%Y%m%dT%H%M%S') for d in localized_datetimes))
 
@@ -392,9 +392,9 @@ class Recurrence:
                 msg = 'The start object(s) must be a date or datetime, not {!r}.'.format(end.__class__.__name__)
                 raise TypeError(msg)
 
-            start = insure_localisation(start, timezone)
+            start = ensure_localisation(start, timezone)
             if isinstance(end, (date, datetime)):
-                end = insure_localisation(end, timezone)
+                end = ensure_localisation(end, timezone)
                 pstr = '{}/{}'.format(start.strftime('%Y%m%dT%H%M%SZ'), end.strftime('%Y%m%dT%H%M%SZ'))
             elif isinstance(end, Duration):
                 pstr = '{}/{}'.format(start.strftime('%Y%m%dT%H%M%SZ'), end)

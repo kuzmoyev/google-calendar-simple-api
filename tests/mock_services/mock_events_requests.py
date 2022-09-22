@@ -6,19 +6,38 @@ from beautiful_date import D, days, years, hours
 from gcsa.attendee import Attendee
 from gcsa.event import Event
 from gcsa.serializers.event_serializer import EventSerializer
-from gcsa.util.date_time_util import insure_localisation
+from gcsa.util.date_time_util import ensure_localisation
 
 
+# noinspection PyPep8Naming
 class MockEventsRequests:
     """Emulates GoogleCalendar.service.events()"""
 
     EVENTS_PER_PAGE = 3
 
-    @executable
-    def instances(self, **kwargs):
-        event_id = kwargs.pop('eventId')
+    def __init__(self):
+        self.test_events = [
+            Event(
+                'test{}'.format(i),
+                start=ensure_localisation(D.today()[:] + i * days + i * hours),
+                event_id=f'event_id_{str(i)}',
+                _updated=ensure_localisation(D.today()[:] + (i + 1) * days + i * hours),
+                attendees=[
+                    Attendee(email='{}@gmail.com'.format(attendee_name.lower()), display_name=attendee_name)
+                ] if attendee_name else None
+            )
+            for i, attendee_name in zip(range(1, 10), ['John', 'Josh'] + [''] * 8)
+        ]
 
-        if event_id == 'event_id_1':
+    @property
+    def test_events_by_id(self):
+        return {e.id: e for e in self.test_events}
+
+    @executable
+    def instances(self, eventId, **_):
+        """Emulates GoogleCalendar.service.events().instances().execute()"""
+
+        if eventId == 'event_id_1':
             recurring_instances = [
                 Event(
                     'Recurring event 1',
@@ -29,7 +48,7 @@ class MockEventsRequests:
 
                 ) for i in range(1, 10)
             ]
-        elif event_id == 'event_id_2':
+        elif eventId == 'event_id_2':
             recurring_instances = [
                 Event(
                     'Recurring event 2',
@@ -42,7 +61,7 @@ class MockEventsRequests:
             ]
         else:
             # shouldn't get here in tests
-            raise ValueError
+            raise ValueError(f'Event with id {eventId} does not exist')
 
         return {
             'items': recurring_instances,
@@ -50,33 +69,19 @@ class MockEventsRequests:
         }
 
     @executable
-    def list(self, **kwargs):
+    def list(self, timeMin, timeMax, orderBy, singleEvents, pageToken, q, **_):
         """Emulates GoogleCalendar.service.events().list().execute()"""
 
-        time_min = dateutil.parser.parse(kwargs['timeMin'])
-        time_max = dateutil.parser.parse(kwargs['timeMax'])
-        order_by = kwargs['orderBy']
-        single_events = kwargs['singleEvents']
-        page_token = kwargs['pageToken'] or 0  # page number in this case
-        q = kwargs['q']
+        time_min = dateutil.parser.parse(timeMin)
+        time_max = dateutil.parser.parse(timeMax)
+        page_token = pageToken or 0  # page number in this case
 
-        test_events = [
-            Event(
-                'test{}'.format(i),
-                start=insure_localisation(D.today()[:] + i * days + i * hours),
-                event_id='1',
-                _updated=insure_localisation(D.today()[:] + (i + 1) * days + i * hours),
-                attendees=[
-                    Attendee(email='{}@gmail.com'.format(attendee_name.lower()), display_name=attendee_name)
-                ] if attendee_name else None
-            )
-            for i, attendee_name in zip(range(1, 10), ['John', 'Josh'] + [''] * 8)
-        ]
+        test_events = self.test_events.copy()
 
         recurring_event = Event('Recurring event',
-                                start=insure_localisation(D.today()[:] + 2 * days),
+                                start=ensure_localisation(D.today()[:] + 2 * days),
                                 event_id='recurring_id',
-                                _updated=insure_localisation(D.today()[:] + 3 * days))
+                                _updated=ensure_localisation(D.today()[:] + 3 * days))
         recurring_instances = [
             Event(
                 recurring_event.summary,
@@ -88,16 +93,16 @@ class MockEventsRequests:
             ) for i in range(10)
         ]
 
-        if single_events:
+        if singleEvents:
             test_events.extend(recurring_instances)
         else:
             test_events.append(recurring_event)
 
         event_in_a_year = Event(
             'test42',
-            start=insure_localisation(D.today()[:] + 1 * years + 2 * days),
+            start=ensure_localisation(D.today()[:] + 1 * years + 2 * days),
             event_id='42',
-            _updated=insure_localisation(D.today()[:] + 1 * years + 3 * days),
+            _updated=ensure_localisation(D.today()[:] + 1 * years + 3 * days),
             attendees=[
                 Attendee(email='frank@gmail.com', display_name='Frank')
             ]
@@ -116,16 +121,16 @@ class MockEventsRequests:
             )
 
         def _sort_key(e):
-            if order_by is None:
+            if orderBy is None:
                 return e.id
-            if order_by == 'startTime':
+            if orderBy == 'startTime':
                 return e.start
-            if order_by == 'updated':
+            if orderBy == 'updated':
                 return e.updated
 
         filtered_events = list(filter(_filter, test_events))
         ordered_events = sorted(filtered_events, key=_sort_key)
-        serialized_events = list(map(self._serialize_event, ordered_events))
+        serialized_events = list(map(EventSerializer.to_json, ordered_events))
 
         current_page_events = ordered_events[page_token * self.EVENTS_PER_PAGE:(page_token + 1) * self.EVENTS_PER_PAGE]
         return {
@@ -133,8 +138,67 @@ class MockEventsRequests:
             'nextPageToken': page_token + 1 if (page_token + 1) * 3 < len(serialized_events) else None
         }
 
-    @staticmethod
-    def _serialize_event(e):
-        event_json = EventSerializer.to_json(e)
-        event_json['updated'] = e.updated.isoformat() + 'Z'
-        return event_json
+    @executable
+    def get(self, eventId, **_):
+        """Emulates GoogleCalendar.service.events().get().execute()"""
+        try:
+            return EventSerializer.to_json(self.test_events_by_id[eventId])
+        except KeyError:
+            # shouldn't get here in tests
+            raise ValueError(f'Event with id {eventId} does not exist')
+
+    @executable
+    def insert(self, body, **_):
+        """Emulates GoogleCalendar.service.events().insert().execute()"""
+        event = EventSerializer.to_object(body)
+
+        if event.id is None:
+            event.event_id = f'event_id_{len(self.test_events) + 1}'
+        else:
+            assert event.id not in self.test_events_by_id
+
+        self.test_events.append(event)
+        return EventSerializer.to_json(event)
+
+    @executable
+    def quickAdd(self, text, **_):
+        """Emulates GoogleCalendar.service.events().quickAdd().execute()"""
+        summary, start = text.split(' at ')
+        event = Event(
+            summary,
+            start=dateutil.parser.parse(start)
+        )
+
+        event.event_id = f'event_id_{len(self.test_events) + 1}'
+        self.test_events.append(event)
+        return EventSerializer.to_json(event)
+
+    @executable
+    def update(self, eventId, body, **_):
+        """Emulates GoogleCalendar.service.events().update().execute()"""
+        try:
+            event = self.test_events_by_id[eventId]
+        except KeyError:
+            # shouldn't get here in tests
+            raise ValueError(f'Event with id {eventId} does not exist')
+
+        updated_event = EventSerializer.to_object(body)
+        event.summary = updated_event.summary
+        event.start = updated_event.start
+
+        return EventSerializer.to_json(event)
+
+    @executable
+    def import_(self, body, **_):
+        """Emulates GoogleCalendar.service.events().import_().execute()"""
+        return self.insert(body).execute()
+
+    @executable
+    def move(self, eventId, destination, **_):
+        """Emulates GoogleCalendar.service.events().move().execute()"""
+        return self.get(eventId=eventId).execute()
+
+    @executable
+    def delete(self, eventId, **_):
+        """Emulates GoogleCalendar.service.events().delete().execute()"""
+        self.test_events = [e for e in self.test_events if e.id != eventId]
