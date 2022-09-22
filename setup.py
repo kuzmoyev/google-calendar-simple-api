@@ -92,6 +92,7 @@ setup(
             'sphinx',
             'sphinx-rtd-theme',
             'flake8',
+            'pep8-naming',
             'twine',
             'tox'
         ]

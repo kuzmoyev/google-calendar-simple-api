@@ -9,7 +9,6 @@ from gcsa.serializers.event_serializer import EventSerializer
 from gcsa.util.date_time_util import ensure_localisation
 
 
-# noinspection PyPep8Naming
 class MockEventsRequests:
     """Emulates GoogleCalendar.service.events()"""
 
