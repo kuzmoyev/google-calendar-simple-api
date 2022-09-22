@@ -175,17 +175,15 @@ class MockEventsRequests:
     @executable
     def update(self, eventId, body, **_):
         """Emulates GoogleCalendar.service.events().update().execute()"""
-        try:
-            event = self.test_events_by_id[eventId]
-        except KeyError:
-            # shouldn't get here in tests
-            raise ValueError(f'Event with id {eventId} does not exist')
 
         updated_event = EventSerializer.to_object(body)
-        event.summary = updated_event.summary
-        event.start = updated_event.start
+        for i in range(len(self.test_events)):
+            if eventId == self.test_events[i].id:
+                self.test_events[i] = updated_event
+                return EventSerializer.to_json(updated_event)
 
-        return EventSerializer.to_json(event)
+        # shouldn't get here in tests
+        raise ValueError(f'Event with id {eventId} does not exist')
 
     @executable
     def import_(self, body, **_):
