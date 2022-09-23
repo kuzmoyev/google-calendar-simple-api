@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import Iterable, Union
 
 from gcsa._services.base_service import BaseService
 from gcsa.calendar import CalendarListEntry, Calendar
@@ -61,7 +61,7 @@ class CalendarListService(BaseService):
         """Adds an existing calendar into the user's calendar list.
 
         :param calendar:
-                CalendarListEntry object.
+                `CalendarListEntry` object.
         :param color_rgb_format:
                 Whether to use the `foreground_color` and `background_color` fields to write the calendar colors (RGB).
                 If this feature is used, the index-based color_id field will be set to the best matching option
@@ -88,7 +88,7 @@ class CalendarListService(BaseService):
         """Updates an existing calendar on the user's calendar list.
 
         :param calendar:
-                Calendar object with set `calendar_id`
+                `Calendar` object with set `calendar_id`
         :param color_rgb_format:
                 Whether to use the `foreground_color` and `background_color` fields to write the calendar colors (RGB).
                 If this feature is used, the index-based color_id field will be set to the best matching option
@@ -110,21 +110,23 @@ class CalendarListService(BaseService):
 
     def delete_calendar_list_entry(
             self,
-            calendar: Calendar
+            calendar: Union[Calendar, CalendarListEntry, str]
     ):
         """Removes a calendar from the user's calendar list.
 
         :param calendar:
-                Calendar's ID or `Calendar` object with set `calendar_id`.
+                Calendar's ID or `Calendar`/`CalendarListEntry` object with the set `calendar_id`.
         """
         if isinstance(calendar, (Calendar, CalendarListEntry)):
             if calendar.id is None:
-                raise ValueError("Calendar has to have calendar_id to be deleted.")
+                raise ValueError("CalendarListEntry has to have calendar_id to be deleted.")
             calendar_id = calendar.id
         elif isinstance(calendar, str):
             calendar_id = calendar
         else:
             raise TypeError(
-                '"calendar" object must me Calendar or str, not {!r}'.format(calendar.__class__.__name__)
+                '"calendar" object must me Calendar, CalendarListEntry, or str, not {!r}'.format(
+                    calendar.__class__.__name__
+                )
             )
         self.service.calendarList().delete(calendarId=calendar_id).execute()

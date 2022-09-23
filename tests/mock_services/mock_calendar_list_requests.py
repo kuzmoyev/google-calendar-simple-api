@@ -61,7 +61,7 @@ class MockCalendarListRequests:
         return CalendarListEntrySerializer.to_json(calendar)
 
     @executable
-    def update(self, calendarId, body):
+    def update(self, calendarId, body, colorRgbFormat):
         """Emulates GoogleCalendar.service.calendars().insert().execute()"""
         calendar = CalendarListEntrySerializer.to_object(body)
         for i in range(len(self.test_calendars)):
@@ -76,8 +76,3 @@ class MockCalendarListRequests:
     def delete(self, calendarId):
         """Emulates GoogleCalendar.service.calendars().delete().execute()"""
         self.test_calendars = [c for c in self.test_calendars if c.id != calendarId]
-
-    @executable
-    def clear(self, calendarId):
-        """Emulates GoogleCalendar.service.calendars().clear().execute()"""
-        pass

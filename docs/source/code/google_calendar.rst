@@ -18,11 +18,11 @@ GoogleCalendar
             delete_calendar,
             clear_calendar,
             clear,
-            get_calendars_list,
-            get_calendars_list_entry,
-            add_calendars_list_entry,
-            update_calendars_list_entry,
-            delete_calendars_list_entry,
+            get_calendar_list,
+            get_calendar_list_entry,
+            add_calendar_list_entry,
+            update_calendar_list_entry,
+            delete_calendar_list_entry,
             list_event_colors,
             list_calendar_colors
         :undoc-members:
