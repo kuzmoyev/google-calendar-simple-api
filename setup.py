@@ -61,6 +61,23 @@ class UploadCommand(Command):
 with open('README.rst') as f:
     long_description = ''.join(f.readlines())
 
+DOCS_REQUIRES = [
+    'sphinx',
+    'sphinx-rtd-theme',
+]
+
+TEST_REQUIRES = [
+    'setuptools',
+    'pytest',
+    'pytest-pep8',
+    'pytest-cov',
+    'pyfakefs',
+    'flake8',
+    'pep8-naming',
+    'twine',
+    'tox'
+]
+
 setup(
     name='gcsa',
     version=VERSION,
@@ -85,18 +102,11 @@ setup(
     ],
     extras_require={
         'dev': [
-            'setuptools',
-            'pytest',
-            'pytest-pep8',
-            'pytest-cov',
-            'pyfakefs',
-            'sphinx',
-            'sphinx-rtd-theme',
-            'flake8',
-            'pep8-naming',
-            'twine',
-            'tox'
-        ]
+            *TEST_REQUIRES,
+            *DOCS_REQUIRES
+        ],
+        'tests': TEST_REQUIRES,
+        'docs': DOCS_REQUIRES
     },
     classifiers=[
         'License :: OSI Approved :: MIT License',
