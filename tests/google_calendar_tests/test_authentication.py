@@ -5,7 +5,7 @@ from unittest.mock import patch
 from pyfakefs.fake_filesystem_unittest import TestCase
 
 from gcsa.google_calendar import GoogleCalendar
-from tests.mock_services.util import MockToken
+from tests.google_calendar_tests.mock_services.util import MockToken
 
 
 class TestGoogleCalendarCredentials(TestCase):
