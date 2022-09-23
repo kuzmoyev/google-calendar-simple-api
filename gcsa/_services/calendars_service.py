@@ -1,3 +1,5 @@
+from typing import Union
+
 from gcsa._services.base_service import BaseService
 from gcsa.calendar import Calendar, CalendarListEntry
 from gcsa.serializers.calendar_serializer import CalendarSerializer
@@ -64,7 +66,7 @@ class CalendarsService(BaseService):
 
     def delete_calendar(
             self,
-            calendar: Calendar
+            calendar: Union[Calendar, str]
     ):
         """Deletes a secondary calendar.
 

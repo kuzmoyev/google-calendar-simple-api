@@ -6,7 +6,7 @@ Events
 Event in `gcsa` is represented by the class :py:class:`~gcsa.event.Event`. It stores all the needed information about
 the event including its summary, starting and ending dates/times, attachments, reminders, recurrence rules, etc.
 
-Current version of `gcsa` allows you to create a new events, retrieve, update, move and delete existing events.
+`gcsa` allows you to create a new events, retrieve, update, move and delete existing events.
 
 To do so, create a :py:class:`~gcsa.google_calendar.GoogleCalendar` instance (see :ref:`getting_started` to get your
 credentials):
@@ -99,7 +99,7 @@ Create event
                   start=start,
                   end=end)
 
-or to create an all-day event, use a `date` object:
+or to create an **all-day** event, use a `date` object:
 
 .. code-block:: python
 
@@ -160,7 +160,7 @@ Delete event
     calendar.delete_event(event)
 
 
-Event has to have ``event_id`` to be updated, moved or deleted. Events that you get from
+Event has to have ``event_id`` to be updated, moved, or deleted. Events that you get from
 :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_events` method already have their ids.
 You can also delete the event by providing its id.
 
