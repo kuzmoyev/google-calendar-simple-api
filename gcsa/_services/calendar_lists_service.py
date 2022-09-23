@@ -64,7 +64,7 @@ class CalendarListService(BaseService):
                 `CalendarListEntry` object.
         :param color_rgb_format:
                 Whether to use the `foreground_color` and `background_color` fields to write the calendar colors (RGB).
-                If this feature is used, the index-based color_id field will be set to the best matching option
+                If this feature is used, the index-based `color_id` field will be set to the best matching option
                 automatically. The default is True if `foreground_color` or `background_color` is set, False otherwise.
 
         :return:
