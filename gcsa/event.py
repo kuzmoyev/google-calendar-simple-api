@@ -2,7 +2,7 @@ from functools import total_ordering
 from typing import List, Union
 
 from beautiful_date import BeautifulDate
-from tzlocal import get_localzone
+from tzlocal import get_localzone_name
 from datetime import datetime, date, timedelta
 
 from .attachment import Attachment
@@ -47,7 +47,7 @@ class Event:
             start: Union[date, datetime, BeautifulDate],
             end: Union[date, datetime, BeautifulDate] = None,
             *,
-            timezone: str = str(get_localzone()),
+            timezone: str = get_localzone_name(),
             event_id: str = None,
             description: str = None,
             location: str = None,

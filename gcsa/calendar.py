@@ -1,6 +1,6 @@
 from typing import List
 
-from tzlocal import get_localzone
+from tzlocal import get_localzone_name
 
 from .reminders import Reminder
 
@@ -46,7 +46,7 @@ class Calendar:
             calendar_id: str = None,
             description: str = None,
             location: str = None,
-            timezone: str = str(get_localzone()),
+            timezone: str = get_localzone_name(),
             allowed_conference_solution_types: List[str] = None
     ):
         """
