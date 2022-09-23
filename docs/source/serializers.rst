@@ -7,7 +7,7 @@ under the hood. It is documented just so you know they exist and can be used if 
 
 .. note::
     Note that serializer's ``to_json`` methods ignore read-only fields of the objects.
-    Read only fields of the objects are ones that are passed to the parameters of their ``__init__`` with
+    Read-only fields of the objects are ones that are passed to the parameters of their ``__init__`` with
     underscores, e.g. ``Event(_updated=25/Nov/2020)``.
 
 Events serializer
@@ -449,6 +449,163 @@ To object
     <PopupReminder - minutes_before_start:30>
 
 
+
+Calendars serializer
+~~~~~~~~~~~~~~~~~~~~
+
+To json
+-------
+
+.. code-block:: python
+
+    from gcsa.calendar import Calendar, AccessRoles
+    from gcsa.serializers.calendar_serializer import CalendarSerializer
+
+    calendar = Calendar(
+        summary='Primary',
+        calendar_id='primary',
+        description='Description',
+        location='Location',
+        timezone='Timezone',
+        allowed_conference_solution_types=[
+            AccessRoles.FREE_BUSY_READER,
+            AccessRoles.READER,
+            AccessRoles.WRITER,
+            AccessRoles.OWNER,
+        ]
+    )
+
+    CalendarSerializer.to_json(calendar)
+
+.. code-block:: javascript
+
+    {
+        'id': 'primary',
+        'summary': 'Primary',
+        'description': 'Description',
+        'location': 'Location',
+        'timeZone': 'Timezone',
+        'conferenceProperties': {
+            'allowedConferenceSolutionTypes': [
+                'freeBusyReader',
+                'reader',
+                'writer',
+                'owner'
+            ]
+        }
+    }
+
+
+To object
+---------
+
+.. code-block:: python
+
+    calendar_json = {
+        'id': 'primary',
+        'summary': 'Primary',
+        'description': 'Description',
+        'location': 'Location',
+        'timeZone': 'Timezone',
+        'conferenceProperties': {
+            'allowedConferenceSolutionTypes': [
+                'freeBusyReader',
+                'reader',
+                'writer',
+                'owner'
+            ]
+        }
+    }
+    CalendarSerializer.to_object(calendar_json)
+
+.. code-block:: python
+
+    <Calendar Primary - Description>
+
+
+
+CalendarListEntry serializer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To json
+-------
+
+.. code-block:: python
+
+    from gcsa.calendar import CalendarListEntry, NotificationType
+    from gcsa.reminders import EmailReminder
+    from gcsa.serializers.calendar_serializer import CalendarListEntrySerializer
+
+    calendar_list_entry = CalendarListEntry(
+        calendar_id='<calendar_id>',
+        summary_override='Holidays in Czechia 2022',
+        color_id='2',
+        background_color='#123456',
+        foreground_color='#234567',
+        hidden=True,
+        selected=False,
+        default_reminders=[EmailReminder(minutes_before_start=15)],
+        notification_types=[
+            NotificationType.EVENT_CREATION,
+            NotificationType.EVENT_CHANGE
+        ]
+    )
+
+    CalendarListEntrySerializer.to_json(calendar_list_entry)
+
+.. code-block:: javascript
+
+    {
+        'id': '<calendar_id>',
+        'summaryOverride': 'Holidays in Czechia 2022',
+        'colorId': '2',
+        'backgroundColor': '#123456',
+        'foregroundColor': '#234567',
+        'hidden': True,
+        'selected': False,
+        'defaultReminders': [
+            {'method': 'email', 'minutes': 15}
+        ],
+        'notificationSettings': {
+            'notifications': [
+                {'type': 'eventCreation', 'method': 'email'},
+                {'type': 'eventChange', 'method': 'email'}
+            ]
+        }
+    }
+
+
+To object
+---------
+
+.. code-block:: python
+
+    calendar_list_entry_json = {
+        'id': '<calendar_id>',
+        'summary': 'Státní svátky v ČR',
+        'summaryOverride': 'Holidays in Czechia 2022',
+        'colorId': '2',
+        'backgroundColor': '#123456',
+        'foregroundColor': '#234567',
+        'hidden': True,
+        'selected': False,
+        'defaultReminders': [
+            {'method': 'email', 'minutes': 15}
+        ],
+        'notificationSettings': {
+            'notifications': [
+                {'type': 'eventCreation', 'method': 'email'},
+                {'type': 'eventChange', 'method': 'email'}
+            ]
+        }
+    }
+
+    CalendarListEntrySerializer.to_object(calendar_list_entry_json)
+
+
+.. code-block:: python
+
+    <CalendarListEntry Holidays in Czechia 2022 - (Státní svátky v ČR)>
 
 
 .. _`official API documentation`: https://developers.google.com/calendar
