@@ -2,7 +2,7 @@ import dateutil.parser
 
 from datetime import date, datetime
 
-from tzlocal import get_localzone
+from tzlocal import get_localzone_name
 
 from gcsa.event import Event
 from .base_serializer import BaseSerializer
@@ -88,7 +88,7 @@ class EventSerializer(BaseSerializer):
                 start = EventSerializer._get_datetime_from_string(start_data['date']).date()
             else:
                 start = EventSerializer._get_datetime_from_string(start_data['dateTime'])
-            timezone = start_data.get('timeZone', str(get_localzone()))
+            timezone = start_data.get('timeZone', get_localzone_name())
 
         end = None
         end_data = json_event.pop('end', None)

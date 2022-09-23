@@ -3,7 +3,7 @@ from typing import Union, Iterator, Iterable, Callable
 
 from beautiful_date import BeautifulDate
 from dateutil.relativedelta import relativedelta
-from tzlocal import get_localzone
+from tzlocal import get_localzone_name
 
 from gcsa._services.base_service import BaseService
 from gcsa.event import Event
@@ -64,7 +64,7 @@ class EventsService(BaseService):
             time_min: Union[date, datetime, BeautifulDate] = None,
             time_max: Union[date, datetime, BeautifulDate] = None,
             order_by: str = None,
-            timezone: str = str(get_localzone()),
+            timezone: str = get_localzone_name(),
             single_events: bool = False,
             query: str = None,
             calendar_id: str = None,
@@ -122,7 +122,7 @@ class EventsService(BaseService):
             recurring_event,
             time_min=None,
             time_max=None,
-            timezone=str(get_localzone()),
+            timezone=get_localzone_name(),
             calendar_id: str = None,
             **kwargs
     ) -> Iterable[Event]:

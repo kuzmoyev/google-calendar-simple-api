@@ -1,10 +1,10 @@
 from datetime import datetime, date
 
 import pytz
-from tzlocal import get_localzone
+from tzlocal import get_localzone_name
 
 
-def ensure_localisation(dt, timezone=str(get_localzone())):
+def ensure_localisation(dt, timezone=get_localzone_name()):
     """Insures localisation with provided timezone on "datetime" object.
 
     Does nothing to object of type "date"."""
