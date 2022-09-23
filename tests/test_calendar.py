@@ -30,6 +30,43 @@ class TestCalendar(TestCase):
         self.assertEqual(c.timezone, TEST_TIMEZONE)
         self.assertListEqual(c.allowed_conference_solution_types, TEST_ALLOWED_CONFERENCE_SOLUTION_TYPES)
 
+    def test_to_calendar_list_entry(self):
+        c = Calendar(
+            summary='Summary',
+            calendar_id='Calendar id',
+            description='Description',
+            location='Fiji',
+            timezone=TEST_TIMEZONE,
+            allowed_conference_solution_types=TEST_ALLOWED_CONFERENCE_SOLUTION_TYPES
+        )
+
+        cle = c.to_calendar_list_entry(
+            summary_override='Summary override',
+            color_id='1',
+            background_color='#123123',
+            foreground_color='#234234',
+            hidden=False,
+            selected=True,
+            default_reminders=[EmailReminder(60), PopupReminder(15)],
+            notification_types=TEST_NOTIFICATION_TYPES
+        )
+        self.assertIsInstance(cle, CalendarListEntry)
+
+        self.assertEqual(cle.summary_override, 'Summary override')
+        self.assertEqual(cle.color_id, '1')
+        self.assertEqual(cle.background_color, '#123123')
+        self.assertEqual(cle.foreground_color, '#234234')
+        self.assertFalse(cle.hidden)
+        self.assertTrue(cle.selected)
+        self.assertEqual(cle.default_reminders, [EmailReminder(60), PopupReminder(15)])
+        self.assertEqual(cle.notification_types, TEST_NOTIFICATION_TYPES)
+
+        c_without_id = Calendar(
+            summary='Summary',
+        )
+        with self.assertRaises(ValueError):
+            c_without_id.to_calendar_list_entry()
+
     def test_repr_str(self):
         c = Calendar(
             summary='Summary',

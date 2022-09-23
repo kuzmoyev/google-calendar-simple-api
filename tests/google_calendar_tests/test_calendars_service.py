@@ -6,6 +6,7 @@ class TestEventsService(TestCaseWithMockedService):
     def test_get_calendar(self):
         calendar = self.gc.get_calendar()
         self.assertEqual(calendar.id, 'primary')
+        self.assertIsInstance(calendar, Calendar)
 
         calendar = self.gc.get_calendar('1')
         self.assertEqual(calendar.id, '1')

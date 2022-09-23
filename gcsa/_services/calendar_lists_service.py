@@ -8,7 +8,7 @@ from gcsa.serializers.calendar_serializer import CalendarListEntrySerializer
 class CalendarListService(BaseService):
     """Calendar list management methods of the `GoogleCalendar`"""
 
-    def get_calendars_list(
+    def get_calendar_list(
             self,
             min_access_role: str = None,
             show_deleted: bool = False,
@@ -35,7 +35,7 @@ class CalendarListService(BaseService):
             showHidden=show_hidden,
         )
 
-    def get_calendars_list_entry(
+    def get_calendar_list_entry(
             self,
             calendar_id: str = None
     ) -> CalendarListEntry:
@@ -43,7 +43,7 @@ class CalendarListService(BaseService):
 
         :param calendar_id:
                 Calendar identifier. Default is `default_calendar` specified in `GoogleCalendar`
-                To retrieve calendar IDs call the :py:meth:`gcsa.google_calendar.GoogleCalendar.get_calendars_list`.
+                To retrieve calendar IDs call the :py:meth:`gcsa.google_calendar.GoogleCalendar.get_calendar_list`.
                 If you want to access the primary calendar of the currently logged-in user, use the "primary" keyword.
 
         :return:
@@ -53,7 +53,7 @@ class CalendarListService(BaseService):
         calendar_resource = self.service.calendarList().get(calendarId=calendar_id).execute()
         return CalendarListEntrySerializer.to_object(calendar_resource)
 
-    def add_calendars_list_entry(
+    def add_calendar_list_entry(
             self,
             calendar: CalendarListEntry,
             color_rgb_format: bool = None
@@ -80,7 +80,7 @@ class CalendarListService(BaseService):
         ).execute()
         return CalendarListEntrySerializer.to_object(calendar_json)
 
-    def update_calendars_list_entry(
+    def update_calendar_list_entry(
             self,
             calendar: CalendarListEntry,
             color_rgb_format: bool = None
@@ -108,7 +108,7 @@ class CalendarListService(BaseService):
         ).execute()
         return CalendarListEntrySerializer.to_object(calendar_json)
 
-    def delete_calendars_list_entry(
+    def delete_calendar_list_entry(
             self,
             calendar: Calendar
     ):
