@@ -6,8 +6,6 @@ from .util import executable
 class MockCalendarsRequests:
     """Emulates GoogleCalendar.service.calendars()"""
 
-    CALENDARS_PER_PAGE = 3
-
     def __init__(self):
         self.test_calendars = [
             Calendar(

@@ -73,7 +73,7 @@ class MockEventsRequests:
 
         time_min = dateutil.parser.parse(timeMin)
         time_max = dateutil.parser.parse(timeMax)
-        page_token = pageToken or 0  # page number in this case
+        page = pageToken or 0  # page number in this case
 
         test_events = self.test_events.copy()
 
@@ -131,10 +131,11 @@ class MockEventsRequests:
         ordered_events = sorted(filtered_events, key=_sort_key)
         serialized_events = list(map(EventSerializer.to_json, ordered_events))
 
-        current_page_events = ordered_events[page_token * self.EVENTS_PER_PAGE:(page_token + 1) * self.EVENTS_PER_PAGE]
+        current_page_events = ordered_events[page * self.EVENTS_PER_PAGE:(page + 1) * self.EVENTS_PER_PAGE]
+        next_page = page + 1 if (page + 1) * self.EVENTS_PER_PAGE < len(serialized_events) else None
         return {
             'items': current_page_events,
-            'nextPageToken': page_token + 1 if (page_token + 1) * 3 < len(serialized_events) else None
+            'nextPageToken': next_page
         }
 
     @executable

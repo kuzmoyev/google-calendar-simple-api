@@ -76,6 +76,66 @@ class Calendar:
     def id(self):
         return self.calendar_id
 
+    def to_calendar_list_entry(
+            self,
+            summary_override: str = None,
+            color_id: str = None,
+            background_color: str = None,
+            foreground_color: str = None,
+            hidden: bool = False,
+            selected: bool = False,
+            default_reminders: List[Reminder] = None,
+            notification_types: List[str] = None,
+    ) -> 'CalendarListEntry':
+        """Converts Calendar to CalendarListEntry that can be added to the calendar list.
+        Calendar has to have `calendar_id` set to be converted to CalendarListEntry
+
+        :param summary_override:
+                The summary that the authenticated user has set for this calendar.
+        :param color_id:
+                The color of the calendar. This is an ID referring to an entry in the calendar section of the colors'
+                definition (See :py:meth:`~gcsa.google_calendar.GoogleCalendar.list_calendar_colors`).
+                This property is superseded by the `background_color` and `foreground_color` properties
+                and can be ignored when using these properties.
+        :param background_color:
+                The main color of the calendar in the hexadecimal format "#0088aa".
+                This property supersedes the index-based color_id property.
+        :param foreground_color:
+                The foreground color of the calendar in the hexadecimal format "#ffffff".
+                This property supersedes the index-based color_id property.
+        :param hidden:
+                Whether the calendar has been hidden from the list.
+        :param selected:
+                Whether the calendar content shows up in the calendar UI. The default is False.
+        :param default_reminders:
+                The default reminders that the authenticated user has for this calendar. :py:mod:`~gcsa.reminders`
+        :param notification_types:
+                The list of notification types set for this calendar. :py:class:`~gcsa:calendar:NotificationType`
+
+        :return:
+                CalendarListEntry object that can be added to the calendar list.
+        """
+        if self.id is None:
+            raise ValueError('Calendar has to have `calendar_id` set to be converted to CalendarListEntry')
+
+        return CalendarListEntry(
+            _summary=self.summary,
+            calendar_id=self.calendar_id,
+            _description=self.description,
+            _location=self.location,
+            _timezone=self.timezone,
+            _allowed_conference_solution_types=self.allowed_conference_solution_types,
+
+            summary_override=summary_override,
+            color_id=color_id,
+            background_color=background_color,
+            foreground_color=foreground_color,
+            hidden=hidden,
+            selected=selected,
+            default_reminders=default_reminders,
+            notification_types=notification_types,
+        )
+
     def __str__(self):
         return '{} - {}'.format(self.summary, self.description)
 
