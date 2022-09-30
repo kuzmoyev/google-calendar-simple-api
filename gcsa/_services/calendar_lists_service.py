@@ -25,7 +25,7 @@ class CalendarListService(BaseService):
                 Whether to show hidden entries. The default is False.
 
         :return:
-                Iterable of `CalendarListEntry` objects.
+                Iterable of :py:class:`~gcsa.calendar.CalendarListEntry` objects.
         """
         yield from self._list_paginated(
             self.service.calendarList().list,
@@ -47,7 +47,7 @@ class CalendarListService(BaseService):
                 If you want to access the primary calendar of the currently logged-in user, use the "primary" keyword.
 
         :return:
-                The corresponding `CalendarListEntry` object.
+                The corresponding :py:class:`~gcsa.calendar.CalendarListEntry` object.
         """
         calendar_id = calendar_id or self.default_calendar
         calendar_resource = self.service.calendarList().get(calendarId=calendar_id).execute()
@@ -61,7 +61,7 @@ class CalendarListService(BaseService):
         """Adds an existing calendar into the user's calendar list.
 
         :param calendar:
-                `CalendarListEntry` object.
+                :py:class:`~gcsa.calendar.CalendarListEntry` object.
         :param color_rgb_format:
                 Whether to use the `foreground_color` and `background_color` fields to write the calendar colors (RGB).
                 If this feature is used, the index-based `color_id` field will be set to the best matching option
@@ -88,7 +88,7 @@ class CalendarListService(BaseService):
         """Updates an existing calendar on the user's calendar list.
 
         :param calendar:
-                `Calendar` object with set `calendar_id`
+                :py:class:`~gcsa.calendar.Calendar` object with set `calendar_id`
         :param color_rgb_format:
                 Whether to use the `foreground_color` and `background_color` fields to write the calendar colors (RGB).
                 If this feature is used, the index-based color_id field will be set to the best matching option
@@ -115,7 +115,8 @@ class CalendarListService(BaseService):
         """Removes a calendar from the user's calendar list.
 
         :param calendar:
-                Calendar's ID or `Calendar`/`CalendarListEntry` object with the set `calendar_id`.
+                Calendar's ID or :py:class:`~gcsa.calendar.Calendar`/:py:class:`~gcsa.calendar.CalendarListEntry` object
+                with the set `calendar_id`.
         """
         if isinstance(calendar, (Calendar, CalendarListEntry)):
             if calendar.id is None:

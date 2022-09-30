@@ -20,7 +20,7 @@ class CalendarsService(BaseService):
                 If you want to access the primary calendar of the currently logged-in user, use the "primary" keyword.
 
         :return:
-                The corresponding `Calendar` object.
+                The corresponding :py:class:`~gcsa.calendar.Calendar` object.
         """
         calendar_id = calendar_id or self.default_calendar
         calendar_resource = self.service.calendars().get(
@@ -73,7 +73,7 @@ class CalendarsService(BaseService):
         Use :py:meth:`gcsa.google_calendar.GoogleCalendar.clear_calendar` for clearing all events on primary calendars.
 
         :param calendar:
-                Calendar's ID or `Calendar` object with set `calendar_id`.
+                Calendar's ID or :py:class:`~gcsa.calendar.Calendar` object with set `calendar_id`.
         """
         if isinstance(calendar, (Calendar, CalendarListEntry)):
             if calendar.id is None:
