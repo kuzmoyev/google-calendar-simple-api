@@ -18,7 +18,7 @@ Google Calendar Simple API
     :alt: Discord
 
 
-`Google Calendar Simple API` or `gcsa` is a library that simplifies event management in Google Calendars.
+`Google Calendar Simple API` or `gcsa` is a library that simplifies event and calendar management in Google Calendars.
 It is a Pythonic object oriented adapter for the official API. See the full `documentation`_.
 
 Installation

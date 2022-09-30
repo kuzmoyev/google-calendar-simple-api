@@ -53,7 +53,8 @@ class Calendar:
         :param summary:
                 Title of the calendar.
         :param calendar_id:
-                Identifier of the calendar. To retrieve IDs call the TODO: :py:meth:`.calendar_list()` method.
+                Identifier of the calendar.
+                To retrieve calendar IDs call the :py:meth:`gcsa.google_calendar.GoogleCalendar.get_calendar_list`.
         :param description:
                 Description of the calendar.
         :param location:
@@ -87,8 +88,11 @@ class Calendar:
             default_reminders: List[Reminder] = None,
             notification_types: List[str] = None,
     ) -> 'CalendarListEntry':
-        """Converts Calendar to CalendarListEntry that can be added to the calendar list.
-        Calendar has to have `calendar_id` set to be converted to CalendarListEntry
+        """Converts :py:class:`~gcsa.calendar.Calendar` to :py:class:`~gcsa.calendar.CalendarListEntry`
+        that can be added to the calendar list.
+
+        :py:class:`~gcsa.calendar.Calendar` has to have `calendar_id` set
+        to be converted to :py:class:`~gcsa.calendar.CalendarListEntry`
 
         :param summary_override:
                 The summary that the authenticated user has set for this calendar.
@@ -113,7 +117,7 @@ class Calendar:
                 The list of notification types set for this calendar. :py:class:`~gcsa:calendar:NotificationType`
 
         :return:
-                CalendarListEntry object that can be added to the calendar list.
+                :py:class:`~gcsa.calendar.CalendarListEntry` object that can be added to the calendar list.
         """
         if self.id is None:
             raise ValueError('Calendar has to have `calendar_id` set to be converted to CalendarListEntry')

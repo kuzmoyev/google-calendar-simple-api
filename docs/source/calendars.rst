@@ -18,7 +18,7 @@ of the web UI). You can use it to add and remove existing calendars to/from the 
 and set the values of user-specific calendar properties, such as default reminders. Another example is foreground color,
 since different users can have different colors set for the same calendar.
 
-The **GoogleCalendar** is a service responsible for processing the API requests.
+The **GoogleCalendar** is a service responsible for processing API requests.
 
 Calendars
 ~~~~~~~~~
@@ -45,7 +45,7 @@ Get a calendar specified as a default in `GoogleCalendar()`
 
     calendar = gc.get_calendar()
 
-To get calendar other then the one specified as a default in `GoogleCalendar()`
+To get a calendar other than the one specified as a default in `GoogleCalendar()`
 
 .. code-block:: python
 
