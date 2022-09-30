@@ -66,6 +66,7 @@ Contents
    reminders
    recurrence
    serializers
+   settings
    why_gcsa
    code/code
 

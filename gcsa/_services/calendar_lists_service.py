@@ -43,7 +43,7 @@ class CalendarListService(BaseService):
 
         :param calendar_id:
                 Calendar identifier. Default is `default_calendar` specified in `GoogleCalendar`
-                To retrieve calendar IDs call the :py:meth:`gcsa.google_calendar.GoogleCalendar.get_calendar_list`.
+                To retrieve calendar IDs call the :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_calendar_list`.
                 If you want to access the primary calendar of the currently logged-in user, use the "primary" keyword.
 
         :return:

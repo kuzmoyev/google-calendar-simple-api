@@ -54,7 +54,7 @@ class Calendar:
                 Title of the calendar.
         :param calendar_id:
                 Identifier of the calendar.
-                To retrieve calendar IDs call the :py:meth:`gcsa.google_calendar.GoogleCalendar.get_calendar_list`.
+                To retrieve calendar IDs call the :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_calendar_list`.
         :param description:
                 Description of the calendar.
         :param location:
