@@ -12,7 +12,7 @@ credentials):
 
     from gcsa.google_calendar import GoogleCalendar
 
-    calendar = GoogleCalendar()
+    gc = GoogleCalendar()
 
 
 Following code will return a corresponding :py:class:`~gcsa.settings.Settings` object:
