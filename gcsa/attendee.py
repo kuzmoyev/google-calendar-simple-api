@@ -1,4 +1,4 @@
-from gcsa.person import Person
+from .person import Person
 
 
 class ResponseStatus:
@@ -16,16 +16,18 @@ class ResponseStatus:
 
 
 class Attendee(Person):
-    def __init__(self,
-                 email,
-                 display_name=None,
-                 comment=None,
-                 optional=None,
-                 is_resource=None,
-                 additional_guests=None,
-                 _id=None,
-                 _is_self=None,
-                 _response_status=None):
+    def __init__(
+            self,
+            email: str,
+            display_name: str = None,
+            comment: str = None,
+            optional: bool = None,
+            is_resource: bool = None,
+            additional_guests: int = None,
+            _id: str = None,
+            _is_self: bool = None,
+            _response_status: str = None
+    ):
         """Represents attendee of the event.
 
         :param email:

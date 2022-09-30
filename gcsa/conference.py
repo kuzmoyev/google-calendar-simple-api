@@ -1,3 +1,4 @@
+from typing import Union, List
 from uuid import uuid4
 
 
@@ -20,10 +21,10 @@ class _BaseConferenceSolution:
 
     def __init__(
             self,
-            conference_id=None,
-            signature=None,
-            notes=None,
-            _status='success'
+            conference_id: str = None,
+            signature: str = None,
+            notes: str = None,
+            _status: str = 'success'
     ):
         """
         :param conference_id:
@@ -54,9 +55,9 @@ class _BaseConferenceSolution:
 
                 * "pending": the conference create request is still being processed.
                 * "failure": the conference create request failed, there are no entry points.
-                * | "success": the conference create request succeeded, the entry points are populated.
-                  | In this case `ConferenceSolution` with created entry points
-                    is stored in the event's `conference_data`. And `ConferenceSolutionCreateRequest` is omitted.
+                * "success": the conference create request succeeded, the entry points are populated.
+                  In this case `ConferenceSolution` with created entry points
+                  is stored in the event's `conference_data`. And `ConferenceSolutionCreateRequest` is omitted.
 
                 Create requests are asynchronous. Check ``status`` field of event's ``conference_solution`` to find it's
                 status. If the status is ``"success"``, ``conference_solution`` will contain a
@@ -98,14 +99,14 @@ class EntryPoint:
 
     def __init__(
             self,
-            entry_point_type,
-            uri=None,
-            label=None,
-            pin=None,
-            access_code=None,
-            meeting_code=None,
-            passcode=None,
-            password=None
+            entry_point_type: str,
+            uri: str = None,
+            label: str = None,
+            pin: str = None,
+            access_code: str = None,
+            meeting_code: str = None,
+            passcode: str = None,
+            password: str = None
     ):
         """
         When creating new conference data, populate only the subset of `meeting_code`, `access_code`, `passcode`,
@@ -118,25 +119,25 @@ class EntryPoint:
 
                 Possible values are:
 
-                * | VIDEO - joining a conference over HTTP.
-                  | A conference can have zero or one `VIDEO` entry point.
-                * | PHONE - joining a conference by dialing a phone number.
-                  | A conference can have zero or more `PHONE` entry points.
-                * | SIP - joining a conference over SIP.
-                  | A conference can have zero or one `SIP` entry point.
-                * | MORE - further conference joining instructions, for example additional phone numbers.
-                  | A conference can have zero or one `MORE` entry point.
-                  | A conference with only a `MORE` entry point is not a valid conference.
+                * VIDEO - joining a conference over HTTP.
+                  A conference can have zero or one `VIDEO` entry point.
+                * PHONE - joining a conference by dialing a phone number.
+                  A conference can have zero or more `PHONE` entry points.
+                * SIP - joining a conference over SIP.
+                  A conference can have zero or one `SIP` entry point.
+                * MORE - further conference joining instructions, for example additional phone numbers.
+                  A conference can have zero or one `MORE` entry point.
+                  A conference with only a `MORE` entry point is not a valid conference.
 
         :param uri:
                 The URI of the entry point. The maximum length is 1300 characters.
                 Format:
 
-                * | for `VIDEO`, http: or https: schema is required.
-                * | for `PHONE`, tel: schema is required.
-                  | The URI should include the entire dial sequence (e.g., tel:+12345678900,,,123456789;1234).
-                * | for `SIP`, sip: schema is required, e.g., sip:12345678@myprovider.com.
-                * | for `MORE`, http: or https: schema is required.
+                * for `VIDEO`, http: or https: schema is required.
+                * for `PHONE`, tel: schema is required.
+                  The URI should include the entire dial sequence (e.g., tel:+12345678900,,,123456789;1234).
+                * for `SIP`, sip: schema is required, e.g., sip:12345678@myprovider.com.
+                * for `MORE`, http: or https: schema is required.
 
         :param label:
                 The label for the URI.
@@ -217,13 +218,13 @@ class ConferenceSolution(_BaseConferenceSolution):
 
     def __init__(
             self,
-            entry_points,
-            solution_type=None,
-            name=None,
-            icon_uri=None,
-            conference_id=None,
-            signature=None,
-            notes=None
+            entry_points: Union[EntryPoint, List[EntryPoint]],
+            solution_type: str = None,
+            name: str = None,
+            icon_uri: str = None,
+            conference_id: str = None,
+            signature: str = None,
+            notes: str = None
     ):
         """
         :param entry_points:
@@ -336,12 +337,12 @@ class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
 
     def __init__(
             self,
-            solution_type=None,
-            request_id=None,
-            _status=None,
-            conference_id=None,
-            signature=None,
-            notes=None
+            solution_type: str = None,
+            request_id: str = None,
+            _status: str = None,
+            conference_id: str = None,
+            signature: str = None,
+            notes: str = None
     ):
         """
         :param solution_type:
@@ -367,9 +368,9 @@ class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
 
                 * "pending": the conference create request is still being processed.
                 * "failure": the conference create request failed, there are no entry points.
-                * | "success": the conference create request succeeded, the entry points are populated.
-                  | In this case `ConferenceSolution` with created entry points
-                    is stored in the event's `conference_data`. And `ConferenceSolutionCreateRequest` is omitted.
+                * "success": the conference create request succeeded, the entry points are populated.
+                  In this case `ConferenceSolution` with created entry points
+                  is stored in the event's `conference_data`. And `ConferenceSolutionCreateRequest` is omitted.
         :param conference_id:
                 The ID of the conference. Optional.
                 Can be used by developers to keep track of conferences, should not be displayed to users.

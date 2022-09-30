@@ -1,5 +1,5 @@
 from gcsa.attendee import Attendee
-from gcsa.serializers.base_serializer import BaseSerializer
+from .base_serializer import BaseSerializer
 
 
 class AttendeeSerializer(BaseSerializer):

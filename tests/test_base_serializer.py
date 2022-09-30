@@ -4,7 +4,7 @@ from gcsa.serializers.base_serializer import BaseSerializer
 
 
 class TestBaseSerializer(TestCase):
-    def test_assure_dict(self):
+    def test_ensure_dict(self):
         json_str = """
         {
             "key": "value",
@@ -19,19 +19,13 @@ class TestBaseSerializer(TestCase):
 
         json_object = (1, 2, 3)  # non-json object
 
-        self.assertDictEqual(BaseSerializer.assure_dict(json_str), json_dict)
-        self.assertDictEqual(BaseSerializer.assure_dict(json_dict), json_dict)
+        self.assertDictEqual(BaseSerializer.ensure_dict(json_str), json_dict)
+        self.assertDictEqual(BaseSerializer.ensure_dict(json_dict), json_dict)
 
         with self.assertRaises(TypeError):
-            BaseSerializer.assure_dict(json_object)
+            BaseSerializer.ensure_dict(json_object)
 
     def test_subclass(self):
-        # __init_subclass__ was introduced in Python 3.6
-        # In older versions tests are not executed
-        import sys
-        if sys.version_info[1] < 6:
-            return
-
         class Apple:
             pass
 

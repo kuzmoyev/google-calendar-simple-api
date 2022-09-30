@@ -1,21 +1,24 @@
 from functools import total_ordering
+from typing import List, Union
 
 from beautiful_date import BeautifulDate
-from tzlocal import get_localzone
+from tzlocal import get_localzone_name
 from datetime import datetime, date, timedelta
 
 from .attachment import Attachment
 from .attendee import Attendee
-from .reminders import PopupReminder, EmailReminder
-from .util.date_time_util import insure_localisation
+from .conference import ConferenceSolution, ConferenceSolutionCreateRequest
+from .person import Person
+from .reminders import PopupReminder, EmailReminder, Reminder
+from .util.date_time_util import ensure_localisation
 
 
 class Visibility:
-    """ Possible values of the event visibility.
+    """Possible values of the event visibility.
 
-    * DEFAULT - Uses the default visibility for events on the calendar. This is the default value.
-    * PUBLIC - The event is public and event details are visible to all readers of the calendar.
-    * PRIVATE - The event is private and only event attendees may view event details.
+    * `DEFAULT` - Uses the default visibility for events on the calendar. This is the default value.
+    * `PUBLIC` - The event is public and event details are visible to all readers of the calendar.
+    * `PRIVATE` - The event is private and only event attendees may view event details.
     """
 
     DEFAULT = "default"
@@ -24,12 +27,12 @@ class Visibility:
 
 
 class Transparency:
-    """ Possible values of the event transparency.
+    """Possible values of the event transparency.
 
-    * OPAQUE - Default value. The event does block time on the calendar.
-               This is equivalent to setting 'Show me as' to 'Busy' in the Calendar UI.
-    * TRANSPARENT - The event does not block time on the calendar.
-                    This is equivalent to setting 'Show me as' to 'Available' in the Calendar UI.
+    * `OPAQUE` - Default value. The event does block time on the calendar.
+      This is equivalent to setting 'Show me as' to 'Busy' in the Calendar UI.
+    * `TRANSPARENT` - The event does not block time on the calendar.
+      This is equivalent to setting 'Show me as' to 'Available' in the Calendar UI.
     """
 
     OPAQUE = 'opaque'
@@ -38,35 +41,37 @@ class Transparency:
 
 @total_ordering
 class Event:
-    def __init__(self,
-                 summary,
-                 start,
-                 end=None,
-                 *,
-                 timezone=str(get_localzone()),
-                 event_id=None,
-                 description=None,
-                 location=None,
-                 recurrence=None,
-                 color_id=None,
-                 visibility=Visibility.DEFAULT,
-                 attendees=None,
-                 attachments=None,
-                 conference_solution=None,
-                 reminders=None,
-                 default_reminders=False,
-                 minutes_before_popup_reminder=None,
-                 minutes_before_email_reminder=None,
-                 guests_can_invite_others=True,
-                 guests_can_modify=False,
-                 guests_can_see_other_guests=True,
-                 transparency=None,
-                 _creator=None,
-                 _organizer=None,
-                 _created=None,
-                 _updated=None,
-                 _recurring_event_id=None,
-                 **other):
+    def __init__(
+            self,
+            summary: str,
+            start: Union[date, datetime, BeautifulDate],
+            end: Union[date, datetime, BeautifulDate] = None,
+            *,
+            timezone: str = get_localzone_name(),
+            event_id: str = None,
+            description: str = None,
+            location: str = None,
+            recurrence: Union[str, List[str]] = None,
+            color_id: str = None,
+            visibility: str = Visibility.DEFAULT,
+            attendees: Union[Attendee, str, List[Attendee], List[str]] = None,
+            attachments: Union[Attachment, List[Attachment]] = None,
+            conference_solution: Union[ConferenceSolution, ConferenceSolutionCreateRequest] = None,
+            reminders: Union[Reminder, List[Reminder]] = None,
+            default_reminders: bool = False,
+            minutes_before_popup_reminder: int = None,
+            minutes_before_email_reminder: int = None,
+            guests_can_invite_others: bool = True,
+            guests_can_modify: bool = False,
+            guests_can_see_other_guests: bool = True,
+            transparency: str = None,
+            _creator: Person = None,
+            _organizer: Person = None,
+            _created: datetime = None,
+            _updated: datetime = None,
+            _recurring_event_id: str = None,
+            **other
+    ):
         """
         :param summary:
                 Title of the event.
@@ -79,7 +84,7 @@ class Event:
                 Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
                 the computers local timezone is used if it is configured. UTC is used otherwise.
         :param event_id:
-                Opaque identifier of the event. By default is generated by the server. You can specify id as a
+                Opaque identifier of the event. By default, it is generated by the server. You can specify id as a
                 5-1024 long string of characters used in base32hex ([a-vA-V0-9]). The ID must be unique per
                 calendar.
         :param description:
@@ -89,7 +94,8 @@ class Event:
         :param recurrence:
                 RRULE/RDATE/EXRULE/EXDATE string or list of such strings. See :py:mod:`~gcsa.recurrence`
         :param color_id:
-                Color id referring to an entry from colors endpoint (list_event_colors)
+                Color id referring to an entry from colors endpoint.
+                See :py:meth:`~gcsa.google_calendar.GoogleCalendar.list_event_colors`
         :param visibility:
                 Visibility of the event. Default is default visibility for events on the calendar.
                 See :py:class:`~gcsa.event.Visibility`
@@ -137,7 +143,7 @@ class Event:
                 See more in https://developers.google.com/calendar/v3/reference/events
         """
 
-        def assure_list(obj):
+        def ensure_list(obj):
             return [] if obj is None else obj if isinstance(obj, list) else [obj]
 
         self.timezone = timezone
@@ -150,8 +156,8 @@ class Event:
             self.end = start + timedelta(days=1)
 
         if isinstance(self.start, datetime) and isinstance(self.end, datetime):
-            self.start = insure_localisation(self.start, timezone)
-            self.end = insure_localisation(self.end, timezone)
+            self.start = ensure_localisation(self.start, timezone)
+            self.end = ensure_localisation(self.end, timezone)
         elif isinstance(self.start, datetime) or isinstance(self.end, datetime):
             raise TypeError('Start and end must either both be date or both be datetime.')
 
@@ -168,8 +174,8 @@ class Event:
         self.created = _created
         self.updated = _updated
 
-        attendees = [self._ensure_attendee_from_email(a) for a in assure_list(attendees)]
-        reminders = assure_list(reminders)
+        attendees = [self._ensure_attendee_from_email(a) for a in ensure_list(attendees)]
+        reminders = ensure_list(reminders)
 
         if len(reminders) > 5:
             raise ValueError('The maximum number of override reminders is 5.')
@@ -181,11 +187,11 @@ class Event:
         self.summary = summary
         self.description = description
         self.location = location
-        self.recurrence = assure_list(recurrence)
+        self.recurrence = ensure_list(recurrence)
         self.color_id = color_id
         self.visibility = visibility
         self.attendees = attendees
-        self.attachments = assure_list(attachments)
+        self.attachments = ensure_list(attachments)
         self.conference_solution = conference_solution
         self.reminders = reminders
         self.default_reminders = default_reminders
@@ -208,31 +214,50 @@ class Event:
     def id(self):
         return self.event_id
 
-    def add_attendee(self, attendee):
+    def add_attendee(
+            self,
+            attendee: Union[str, Attendee]
+    ):
         """Adds attendee to an event. See :py:class:`~gcsa.attendee.Attendee`.
         Attendee may be given as email string or :py:class:`~gcsa.attendee.Attendee` object."""
         self.attendees.append(self._ensure_attendee_from_email(attendee))
 
-    def add_attachment(self, file_url, title=None, mime_type=None):
+    def add_attachment(
+            self,
+            file_url: str,
+            title: str = None,
+            mime_type: str = None
+    ):
         """Adds attachment to an event. See :py:class:`~gcsa.attachment.Attachment`"""
         self.attachments.append(Attachment(file_url=file_url, title=title, mime_type=mime_type))
 
-    def add_email_reminder(self, minutes_before_start=60):
+    def add_email_reminder(
+            self,
+            minutes_before_start: int = 60
+    ):
         """Adds email reminder to an event. See :py:class:`~gcsa.reminders.EmailReminder`"""
         self.add_reminder(EmailReminder(minutes_before_start))
 
-    def add_popup_reminder(self, minutes_before_start=30):
+    def add_popup_reminder(
+            self,
+            minutes_before_start: int = 30
+    ):
         """Adds popup reminder to an event. See :py:class:`~gcsa.reminders.PopupReminder`"""
         self.add_reminder(PopupReminder(minutes_before_start))
 
-    def add_reminder(self, reminder):
+    def add_reminder(
+            self,
+            reminder: Reminder
+    ):
         """Adds reminder to an event. See :py:mod:`~gcsa.reminders`"""
         if len(self.reminders) > 4:
             raise ValueError('The maximum number of override reminders is 5.')
         self.reminders.append(reminder)
 
     @staticmethod
-    def _ensure_attendee_from_email(attendee_or_email):
+    def _ensure_attendee_from_email(
+            attendee_or_email: Union[str, Attendee]
+    ):
         """If attendee_or_email is email string, returns created :py:class:`~gcsa.attendee.Attendee`
         object with the given email."""
         if isinstance(attendee_or_email, str):
@@ -253,7 +278,7 @@ class Event:
     def __lt__(self, other):
         def insure_datetime(d, timezone):
             if type(d) == date:
-                return insure_localisation(datetime(year=d.year, month=d.month, day=d.day), timezone)
+                return ensure_localisation(datetime(year=d.year, month=d.month, day=d.day), timezone)
             else:
                 return d
 
