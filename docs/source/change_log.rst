@@ -26,6 +26,9 @@ Backward compatibility
 
 v1.3.0
 ~~~~~~
+
+API
+---
 * Adds deletion of event by its id in ``GoogleCalendar.delete_event()``
 
 Core
@@ -39,6 +42,9 @@ Backward compatibility
 
 v1.2.1
 ~~~~~~
+
+API
+---
 * Adds ``Event.id`` in serialized event
 * Fixes conference's entry point without ``entry_point_type``
 
@@ -53,6 +59,9 @@ Backward compatibility
 
 v1.2.0
 ~~~~~~
+
+API
+---
 * Adds ``GoogleCalendar.import_event()`` method
 
 Core
@@ -66,6 +75,9 @@ Backward compatibility
 
 v1.1.0
 ~~~~~~
+
+API
+---
 * Fixes event creation without ``start`` and ``end``
 * Adds ``creator``, ``organizer`` and ``transparency`` fields to event
 
@@ -80,6 +92,9 @@ Backward compatibility
 
 v1.0.1
 ~~~~~~
+
+API
+---
 * Fixes ``GoogleCalendar.clear()`` method
 
 Core
@@ -93,6 +108,9 @@ Backward compatibility
 
 v1.0.0 and previous versions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+API
+---
 * Adds authentication management
 * Adds event management
 * Adds documentation in readthedocs.com
