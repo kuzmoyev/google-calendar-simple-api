@@ -88,5 +88,5 @@ Template for `setup.py` was taken from `kennethreitz/setup.py`_
 
 .. _documentation: https://google-calendar-simple-api.readthedocs.io/en/latest/?badge=latest
 .. _`Getting started page`: https://google-calendar-simple-api.readthedocs.io/en/latest/getting_started.html
-.. _beautiful_date: https://github.com/beautiful-everything/beautiful-date
+.. _beautiful_date: https://github.com/kuzmoyev/beautiful-date
 .. _`kennethreitz/setup.py`: https://github.com/kennethreitz/setup.py
