@@ -132,7 +132,8 @@ This returns the collection of calendars in the user's calendar list.
 
 .. code-block:: python
 
-    calendars = gc.get_calendar_list()
+    for calendar in gc.get_calendar_list():
+        print(calendar)
 
 you can include deleted and hidden entries and specify the minimal access role:
 
@@ -140,7 +141,7 @@ you can include deleted and hidden entries and specify the minimal access role:
 
     from gcsa.calendar import AccessRoles
 
-    calendars = gc.get_calendar_list(
+    gc.get_calendar_list(
         min_access_role=AccessRoles.READER
         show_deleted=True,
         show_hidden=True
