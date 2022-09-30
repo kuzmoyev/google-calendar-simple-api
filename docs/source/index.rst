@@ -68,6 +68,7 @@ Contents
    serializers
    settings
    why_gcsa
+   change_log
    code/code
 
 Indices and tables
