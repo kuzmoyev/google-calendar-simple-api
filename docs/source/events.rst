@@ -169,14 +169,5 @@ You can also delete the event by providing its id.
     calendar.delete_event('<event_id>')
 
 
-Clear calendar
-~~~~~~~~~~~~~~
-
-Remove all events from the calendar:
-
-.. code-block:: python
-
-    calendar.clear()
-
 .. _datetime: https://docs.python.org/3/library/datetime.html
 .. _beautiful_date: https://github.com/kuzmoyev/beautiful-date
