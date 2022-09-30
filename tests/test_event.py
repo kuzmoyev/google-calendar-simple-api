@@ -8,7 +8,7 @@ from gcsa.event import Event, Visibility
 from gcsa.recurrence import Recurrence, DAILY, SU, SA, MONDAY, WEEKLY
 from gcsa.reminders import PopupReminder, EmailReminder
 from gcsa.serializers.event_serializer import EventSerializer
-from gcsa.util.date_time_util import insure_localisation
+from gcsa.util.date_time_util import ensure_localisation
 
 TEST_TIMEZONE = 'Pacific/Fiji'
 
@@ -20,8 +20,8 @@ class TestEvent(TestCase):
             event_id='123',
             start=(1 / Feb / 2019)[9:00],
             end=(31 / Dec / 2019)[23:59],
-            _created=insure_localisation((20 / Nov / 2020)[16:19], TEST_TIMEZONE),
-            _updated=insure_localisation((25 / Nov / 2020)[16:19], TEST_TIMEZONE),
+            _created=ensure_localisation((20 / Nov / 2020)[16:19], TEST_TIMEZONE),
+            _updated=ensure_localisation((25 / Nov / 2020)[16:19], TEST_TIMEZONE),
             timezone=TEST_TIMEZONE,
             description='Everyday breakfast',
             location='Home',
@@ -43,10 +43,10 @@ class TestEvent(TestCase):
 
         self.assertEqual(event.summary, 'Breakfast')
         self.assertEqual(event.id, '123')
-        self.assertEqual(event.start, insure_localisation((1 / Feb / 2019)[9:00], TEST_TIMEZONE))
-        self.assertEqual(event.end, insure_localisation((31 / Dec / 2019)[23:59], TEST_TIMEZONE))
-        self.assertEqual(event.created, insure_localisation((20 / Nov / 2020)[16:19], TEST_TIMEZONE))
-        self.assertEqual(event.updated, insure_localisation((25 / Nov / 2020)[16:19], TEST_TIMEZONE))
+        self.assertEqual(event.start, ensure_localisation((1 / Feb / 2019)[9:00], TEST_TIMEZONE))
+        self.assertEqual(event.end, ensure_localisation((31 / Dec / 2019)[23:59], TEST_TIMEZONE))
+        self.assertEqual(event.created, ensure_localisation((20 / Nov / 2020)[16:19], TEST_TIMEZONE))
+        self.assertEqual(event.updated, ensure_localisation((25 / Nov / 2020)[16:19], TEST_TIMEZONE))
         self.assertEqual(event.description, 'Everyday breakfast')
         self.assertEqual(event.location, 'Home')
         self.assertEqual(len(event.recurrence), 3)
@@ -62,7 +62,7 @@ class TestEvent(TestCase):
         event = Event('Good day', start, timezone=TEST_TIMEZONE)
         self.assertEqual(event.end, start + 1 * days)
 
-        start = insure_localisation((1 / Jul / 2019)[12:00], TEST_TIMEZONE)
+        start = ensure_localisation((1 / Jul / 2019)[12:00], TEST_TIMEZONE)
         event = Event('Lunch', start, timezone=TEST_TIMEZONE)
         self.assertEqual(event.end, start + 1 * hours)
 
@@ -160,7 +160,7 @@ class TestEvent(TestCase):
             description='Everyday breakfast',
             location='Home',
             recurrence=Recurrence.rule(freq=DAILY),
-            color_id=1,
+            color_id='1',
             visibility=Visibility.PRIVATE,
             attendees='mail@gmail.com',
             attachments=Attachment(title='My doc', **attachments_dp),
@@ -183,8 +183,8 @@ class TestEvent(TestCase):
         self.assertNotEqual(Event(**dp, recurrence=Recurrence.rule(freq=DAILY)),
                             Event(**dp, recurrence=Recurrence.rule(freq=WEEKLY)))
 
-        self.assertNotEqual(Event(**dp, color_id=1),
-                            Event(**dp, color_id=2))
+        self.assertNotEqual(Event(**dp, color_id='1'),
+                            Event(**dp, color_id='2'))
 
         self.assertNotEqual(Event(**dp, visibility=Visibility.PRIVATE),
                             Event(**dp, visibility=Visibility.PUBLIC))
@@ -490,7 +490,7 @@ class TestEventSerializer(TestCase):
             'Good day',
             start=(1 / Jul / 2020)[11:22:33],
             timezone=TEST_TIMEZONE,
-            _updated=insure_localisation((25 / Nov / 2020)[11:22:33], timezone=TEST_TIMEZONE)
+            _updated=ensure_localisation((25 / Nov / 2020)[11:22:33], timezone=TEST_TIMEZONE)
         )
         expected_event_json = {
             'summary': 'Good day',
@@ -585,10 +585,10 @@ class TestEventSerializer(TestCase):
         event = serializer.get_object()
 
         self.assertEqual(event.summary, 'Good day')
-        self.assertEqual(event.start, insure_localisation((1 / Jan / 2019)[11:22:33], TEST_TIMEZONE))
-        self.assertEqual(event.end, insure_localisation((1 / Jan / 2019)[12:22:33], TEST_TIMEZONE))
-        self.assertEqual(event.updated, insure_localisation((25 / Nov / 2020)[14:53:46], 'UTC'))
-        self.assertEqual(event.created, insure_localisation((24 / Nov / 2020)[14:53:46], 'UTC'))
+        self.assertEqual(event.start, ensure_localisation((1 / Jan / 2019)[11:22:33], TEST_TIMEZONE))
+        self.assertEqual(event.end, ensure_localisation((1 / Jan / 2019)[12:22:33], TEST_TIMEZONE))
+        self.assertEqual(event.updated, ensure_localisation((25 / Nov / 2020)[14:53:46], 'UTC'))
+        self.assertEqual(event.created, ensure_localisation((24 / Nov / 2020)[14:53:46], 'UTC'))
         self.assertEqual(event.description, 'Very good day indeed')
         self.assertEqual(event.location, 'Prague')
         self.assertEqual(len(event.recurrence), 3)

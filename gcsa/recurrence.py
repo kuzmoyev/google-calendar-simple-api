@@ -1,8 +1,8 @@
 from datetime import datetime, date
 
-from tzlocal import get_localzone
+from tzlocal import get_localzone_name
 
-from .util.date_time_util import insure_localisation
+from .util.date_time_util import ensure_localisation
 
 
 class Duration:
@@ -244,7 +244,7 @@ class Recurrence:
         return 'RDATE;' + Recurrence._dates(ds)
 
     @staticmethod
-    def times(dts, timezone=str(get_localzone())):
+    def times(dts, timezone=get_localzone_name()):
         """Converts datetime(s) set to RDATE format.
 
         :param dts:
@@ -259,7 +259,7 @@ class Recurrence:
         return 'RDATE;' + Recurrence._times(dts, timezone)
 
     @staticmethod
-    def periods(ps, timezone=str(get_localzone())):
+    def periods(ps, timezone=get_localzone_name()):
         """Converts date period(s) to RDATE format.
 
         Period is defined as tuple of starting date/datetime and ending date/datetime or duration as Duration object:
@@ -289,7 +289,7 @@ class Recurrence:
         return 'EXDATE;' + Recurrence._dates(ds)
 
     @staticmethod
-    def exclude_times(dts, timezone=str(get_localzone())):
+    def exclude_times(dts, timezone=get_localzone_name()):
         """Converts datetime(s) set to EXDATE format.
 
         :param dts:
@@ -304,7 +304,7 @@ class Recurrence:
         return 'EXDATE;' + Recurrence._times(dts, timezone)
 
     @staticmethod
-    def exclude_periods(ps, timezone=str(get_localzone())):
+    def exclude_periods(ps, timezone=get_localzone_name()):
         """Converts date period(s) to EXDATE format.
 
         Period is defined as tuple of starting date/datetime and ending date/datetime or duration as Duration object:
@@ -322,7 +322,7 @@ class Recurrence:
         return 'EXDATE;' + Recurrence._periods(ps, timezone)
 
     @staticmethod
-    def _times(dts, timezone=str(get_localzone())):
+    def _times(dts, timezone=get_localzone_name()):
         """Converts datetime(s) set to RDATE format.
 
         :param dts:
@@ -343,7 +343,7 @@ class Recurrence:
             if not isinstance(dt, (date, datetime)):
                 msg = 'The dts object(s) must be date or datetime, not {!r}.'.format(dt.__class__.__name__)
                 raise TypeError(msg)
-            localized_datetimes.append(insure_localisation(dt, timezone))
+            localized_datetimes.append(ensure_localisation(dt, timezone))
 
         return 'TZID={}:{}'.format(timezone, ','.join(d.strftime('%Y%m%dT%H%M%S') for d in localized_datetimes))
 
@@ -368,7 +368,7 @@ class Recurrence:
         return 'VALUE=DATE:' + ','.join(d.strftime('%Y%m%d') for d in ds)
 
     @staticmethod
-    def _periods(ps, timezone=str(get_localzone())):
+    def _periods(ps, timezone=get_localzone_name()):
         """Converts date period(s) to RDATE format.
 
         Period is defined as tuple of starting date/datetime and ending date/datetime or duration as Duration object:
@@ -392,9 +392,9 @@ class Recurrence:
                 msg = 'The start object(s) must be a date or datetime, not {!r}.'.format(end.__class__.__name__)
                 raise TypeError(msg)
 
-            start = insure_localisation(start, timezone)
+            start = ensure_localisation(start, timezone)
             if isinstance(end, (date, datetime)):
-                end = insure_localisation(end, timezone)
+                end = ensure_localisation(end, timezone)
                 pstr = '{}/{}'.format(start.strftime('%Y%m%dT%H%M%SZ'), end.strftime('%Y%m%dT%H%M%SZ'))
             elif isinstance(end, Duration):
                 pstr = '{}/{}'.format(start.strftime('%Y%m%dT%H%M%SZ'), end)
@@ -471,7 +471,7 @@ class Recurrence:
         .. _`RRULE format`: https://tools.ietf.org/html/rfc5545#section-3.8.5
         """
 
-        def assure_iterable(it):
+        def ensure_iterable(it):
             return it if isinstance(it, (list, tuple, set)) else [it] if it is not None else []
 
         def check_all_type(it, type_, name):
@@ -510,31 +510,31 @@ class Recurrence:
         if count is not None and until is not None:
             raise ValueError('"count" and "until" may not appear in one recurrence rule.')
 
-        by_second = assure_iterable(by_second)
+        by_second = ensure_iterable(by_second)
         check_all_type_and_range(by_second, int, (0, 60), "by_second")
 
-        by_minute = assure_iterable(by_minute)
+        by_minute = ensure_iterable(by_minute)
         check_all_type_and_range(by_minute, int, (0, 59), "by_minute")
 
-        by_hour = assure_iterable(by_hour)
+        by_hour = ensure_iterable(by_hour)
         check_all_type_and_range(by_hour, int, (0, 23), "by_hour")
 
-        by_week_day = assure_iterable(by_week_day)
+        by_week_day = ensure_iterable(by_week_day)
         check_all_type(by_week_day, _DayOfTheWeek, "by_week_day")
 
-        by_month_day = assure_iterable(by_month_day)
+        by_month_day = ensure_iterable(by_month_day)
         check_all_type_and_range(by_month_day, int, (-31, 31), "by_month_day", nonzero=True)
 
-        by_year_day = assure_iterable(by_year_day)
+        by_year_day = ensure_iterable(by_year_day)
         check_all_type_and_range(by_year_day, int, (-366, 366), "by_year_day", nonzero=True)
 
-        by_week = assure_iterable(by_week)
+        by_week = ensure_iterable(by_week)
         check_all_type_and_range(by_week, int, (-53, 53), "by_week", nonzero=True)
 
-        by_month = assure_iterable(by_month)
+        by_month = ensure_iterable(by_month)
         check_all_type_and_range(by_month, int, (1, 12), "by_month")
 
-        by_set_pos = assure_iterable(by_set_pos)
+        by_set_pos = ensure_iterable(by_set_pos)
         check_all_type_and_range(by_set_pos, int, (-366, 366), "by_set_pos", nonzero=True)
         if by_set_pos and all(not v for v in (by_second, by_minute, by_hour,
                                               by_week_day, by_month_day, by_year_day,

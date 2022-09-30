@@ -14,7 +14,7 @@ except ImportError:
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '1.3.0'
+VERSION = '2.0.0'
 
 
 class UploadCommand(Command):
@@ -61,6 +61,23 @@ class UploadCommand(Command):
 with open('README.rst') as f:
     long_description = ''.join(f.readlines())
 
+DOCS_REQUIRES = [
+    'sphinx',
+    'sphinx-rtd-theme',
+]
+
+TEST_REQUIRES = [
+    'setuptools',
+    'pytest',
+    'pytest-pep8',
+    'pytest-cov',
+    'pyfakefs',
+    'flake8',
+    'pep8-naming',
+    'twine',
+    'tox'
+]
+
 setup(
     name='gcsa',
     version=VERSION,
@@ -75,26 +92,21 @@ setup(
     zip_safe=False,
     packages=find_packages(exclude=("tests", "tests.*")),
     install_requires=[
-        "tzlocal>=2,<3",
+        "tzlocal>=4,<5",
+        "pytz",
         "google-api-python-client>=1.8",
         "google-auth-httplib2>=0.0.4",
-        "google-auth-oauthlib>=0.4,<0.5",
+        "google-auth-oauthlib>=0.5,<1.0",
         "python-dateutil>=2.7",
         "beautiful_date>=2.0.0",
     ],
     extras_require={
         'dev': [
-            'setuptools',
-            'pytest',
-            'pytest-pep8',
-            'pytest-cov',
-            'pyfakefs',
-            'sphinx<2',
-            'sphinx-rtd-theme<0.5',
-            'flake8',
-            'twine',
-            'tox'
-        ]
+            *TEST_REQUIRES,
+            *DOCS_REQUIRES
+        ],
+        'tests': TEST_REQUIRES,
+        'docs': DOCS_REQUIRES
     },
     classifiers=[
         'License :: OSI Approved :: MIT License',
@@ -106,6 +118,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3.10',
     ],
     cmdclass={
         'upload': UploadCommand,

@@ -1,5 +1,5 @@
 from gcsa.person import Person
-from gcsa.serializers.base_serializer import BaseSerializer
+from .base_serializer import BaseSerializer
 
 
 class PersonSerializer(BaseSerializer):

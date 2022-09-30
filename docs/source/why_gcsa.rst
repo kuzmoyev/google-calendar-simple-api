@@ -23,7 +23,7 @@ If you'd like to try this yourself, here's the code you need:
     from gcsa.event import Event
     from beautiful_date import D, drange, days, MO
 
-    calendar = GoogleCalendar()
+    gc = GoogleCalendar()
 
     PUSH_UPS_COUNT = [
         5, 5, 0, 5, 10, 0, 10,
@@ -44,7 +44,7 @@ If you'd like to try this yourself, here's the code you need:
             start=day,
             minutes_before_popup_reminder=5
         )
-        calendar.add_event(e)
+        gc.add_event(e)
 
 
 

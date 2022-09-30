@@ -1,5 +1,5 @@
 from gcsa.conference import ConferenceSolutionCreateRequest, ConferenceSolution, EntryPoint
-from gcsa.serializers.base_serializer import BaseSerializer
+from .base_serializer import BaseSerializer
 
 
 class EntryPointSerializer(BaseSerializer):

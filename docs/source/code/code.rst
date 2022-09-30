@@ -2,10 +2,11 @@ Code documentation
 ==================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
 
    google_calendar
+   calendar
    event
    person
    attendees
@@ -13,3 +14,4 @@ Code documentation
    conference
    reminders
    recurrence
+   settings
