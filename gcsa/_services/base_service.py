@@ -21,7 +21,7 @@ class BaseService(AuthenticatedService):
     @staticmethod
     def _list_paginated(
             request_method: Callable,
-            serializer_cls: Type,
+            serializer_cls: Type = None,
             **kwargs
     ):
         page_token = None
@@ -31,7 +31,10 @@ class BaseService(AuthenticatedService):
                 pageToken=page_token
             ).execute()
             for item_json in response_json['items']:
-                yield serializer_cls(item_json).get_object()
+                if serializer_cls:
+                    yield serializer_cls(item_json).get_object()
+                else:
+                    yield item_json
             page_token = response_json.get('nextPageToken')
             if not page_token:
                 break

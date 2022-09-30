@@ -14,3 +14,4 @@ Code documentation
    conference
    reminders
    recurrence
+   settings

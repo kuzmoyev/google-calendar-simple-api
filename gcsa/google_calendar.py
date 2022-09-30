@@ -4,13 +4,15 @@ from ._services.events_service import EventsService, SendUpdatesMode  # noqa: F4
 from ._services.calendars_service import CalendarsService
 from ._services.calendar_lists_service import CalendarListService
 from ._services.colors_service import ColorsService
+from ._services.settings_service import SettingsService
 
 
 class GoogleCalendar(
     EventsService,
     CalendarsService,
     CalendarListService,
-    ColorsService
+    ColorsService,
+    SettingsService
 ):
     """Collection of all supported methods for events and calendars management."""
 

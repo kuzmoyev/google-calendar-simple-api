@@ -24,7 +24,8 @@ GoogleCalendar
             update_calendar_list_entry,
             delete_calendar_list_entry,
             list_event_colors,
-            list_calendar_colors
+            list_calendar_colors,
+            get_settings
         :undoc-members:
 
 .. autoclass:: gcsa.google_calendar.SendUpdatesMode
