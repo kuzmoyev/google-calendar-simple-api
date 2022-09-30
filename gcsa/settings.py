@@ -16,7 +16,7 @@ class Settings:
             show_declined_events: bool = True,
             timezone: str = 'Etc/GMT',
             use_keyboard_shortcuts: bool = True,
-            week_start: str = 0
+            week_start: int = 0
     ):
         """
             :param auto_add_hangouts:

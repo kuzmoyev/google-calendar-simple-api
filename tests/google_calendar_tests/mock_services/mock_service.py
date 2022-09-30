@@ -2,6 +2,7 @@ from .mock_calendar_list_requests import MockCalendarListRequests
 from .mock_calendars_requests import MockCalendarsRequests
 from .mock_colors_requests import MockColorsRequests
 from .mock_events_requests import MockEventsRequests
+from .mock_settings_requests import MockSettingsRequests
 
 
 class MockService:
@@ -12,6 +13,7 @@ class MockService:
         self._calendars = MockCalendarsRequests()
         self._calendar_list = MockCalendarListRequests()
         self._colors = MockColorsRequests()
+        self._settings = MockSettingsRequests()
 
     def events(self):
         return self._events
@@ -24,3 +26,6 @@ class MockService:
 
     def colors(self):
         return self._colors
+
+    def settings(self):
+        return self._settings

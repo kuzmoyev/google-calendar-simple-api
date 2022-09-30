@@ -10,6 +10,7 @@ class SettingsSerializer(BaseSerializer):
 
     @staticmethod
     def _to_json(settings: Settings):
+        """Isn't used as Settings are read-only"""
         return {
             'autoAddHangouts': settings.auto_add_hangouts,
             'dateFieldOrder': settings.date_field_order,
