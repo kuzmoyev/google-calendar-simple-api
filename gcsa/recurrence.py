@@ -131,8 +131,8 @@ class Recurrence:
                 Hour or list of hours of the day. Valid values are 0 to 23
         :param by_week_day:
                 Day or list of days of the week.
-                Possible values: :py:class:~SUNDAY, :py:class:~MONDAY, :py:class:~TUESDAY, :py:class:~WEDNESDAY,
-                :py:class:~THURSDAY ,:py:class:~FRIDAY, :py:class:~SATURDAY
+                Possible values: :py:obj:`~SUNDAY`, :py:obj:`~MONDAY`, :py:obj:`~TUESDAY`, :py:obj:`~WEDNESDAY`,
+                :py:obj:`~THURSDAY`, :py:obj:`~FRIDAY`, :py:obj:`~SATURDAY`
         :param by_month_day:
                 Day or list of days of the month. Valid values are 1 to 31 or -31 to -1.
                 For example, -10 represents the tenth to the last day of the month.
@@ -149,8 +149,8 @@ class Recurrence:
                 It can only be used in conjunction with another by_xxx parameter.
         :param week_start:
                 The day on which the workweek starts.
-                Possible values: :py:class:~SUNDAY, :py:class:~MONDAY, :py:class:~TUESDAY, :py:class:~WEDNESDAY,
-                :py:class:~THURSDAY ,:py:class:~FRIDAY, :py:class:~SATURDAY
+                Possible values: :py:obj:`~SUNDAY`, :py:obj:`~MONDAY`, :py:obj:`~TUESDAY`, :py:obj:`~WEDNESDAY`,
+                :py:obj:`~THURSDAY`, :py:obj:`~FRIDAY`, :py:obj:`~SATURDAY`
 
         :return:
                 String representing specified recurrence rule in `RRULE format`_.
@@ -199,8 +199,8 @@ class Recurrence:
                 Hour or list of hours of the day. Valid values are 0 to 23
         :param by_week_day:
                 Day or list of days of the week.
-                Possible values: :py:class:~SUNDAY, :py:class:~MONDAY, :py:class:~TUESDAY, :py:class:~WEDNESDAY,
-                :py:class:~THURSDAY ,:py:class:~FRIDAY, :py:class:~SATURDAY
+                Possible values: :py:obj:`~SUNDAY`, :py:obj:`~MONDAY`, :py:obj:`~TUESDAY`, :py:obj:`~WEDNESDAY`,
+                :py:obj:`~THURSDAY`, :py:obj:`~FRIDAY`, :py:obj:`~SATURDAY`
         :param by_month_day:
                 Day or list of days of the month. Valid values are 1 to 31 or -31 to -1.
                 For example, -10 represents the tenth to the last day of the month.
@@ -217,8 +217,8 @@ class Recurrence:
                 It can only be used in conjunction with another by_xxx parameter.
         :param week_start:
                 The day on which the workweek starts.
-                Possible values: :py:class:~SUNDAY, :py:class:~MONDAY, :py:class:~TUESDAY, :py:class:~WEDNESDAY,
-                :py:class:~THURSDAY ,:py:class:~FRIDAY, :py:class:~SATURDAY
+                Possible values: :py:obj:`~SUNDAY`, :py:obj:`~MONDAY`, :py:obj:`~TUESDAY`, :py:obj:`~WEDNESDAY`,
+                :py:obj:`~THURSDAY`, :py:obj:`~FRIDAY`, :py:obj:`~SATURDAY`
 
         :return:
                 String representing specified recurrence rule in `RRULE format`_.
@@ -441,8 +441,8 @@ class Recurrence:
                 Hour or list of hours of the day. Valid values are 0 to 23
         :param by_week_day:
                 Day or list of days of the week.
-                Possible values: :py:class:~SUNDAY, :py:class:~MONDAY, :py:class:~TUESDAY, :py:class:~WEDNESDAY,
-                :py:class:~THURSDAY ,:py:class:~FRIDAY, :py:class:~SATURDAY
+                Possible values: :py:obj:`~SUNDAY`, :py:obj:`~MONDAY`, :py:obj:`~TUESDAY`, :py:obj:`~WEDNESDAY`,
+                :py:obj:`~THURSDAY`, :py:obj:`~FRIDAY`, :py:obj:`~SATURDAY`
         :param by_month_day:
                 Day or list of days of the month. Valid values are 1 to 31 or -31 to -1.
                 For example, -10 represents the tenth to the last day of the month.
@@ -459,8 +459,8 @@ class Recurrence:
                 It can only be used in conjunction with another by_xxx parameter.
         :param week_start:
                 The day on which the workweek starts.
-                Possible values: :py:class:~SUNDAY, :py:class:~MONDAY, :py:class:~TUESDAY, :py:class:~WEDNESDAY,
-                :py:class:~THURSDAY ,:py:class:~FRIDAY, :py:class:~SATURDAY
+                Possible values: :py:obj:`~SUNDAY`, :py:obj:`~MONDAY`, :py:obj:`~TUESDAY`, :py:obj:`~WEDNESDAY`,
+                :py:obj:`~THURSDAY`, :py:obj:`~FRIDAY`, :py:obj:`~SATURDAY`
 
         :return:
                 String representing specified recurrence rule in `RRULE format`_.
