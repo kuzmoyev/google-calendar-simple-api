@@ -38,8 +38,8 @@ Now you need to get your API credentials:
 
 
 .. _`Create a new Google Cloud Platform (GCP) project`: https://developers.google.com/workspace/guides/create-project
-.. _`Configure the OAuth consent screen`: https://developers.google.com/workspace/guides/create-credentials#configure_the_oauth_consent_screen
-.. _`Create a OAuth client ID credential`: https://developers.google.com/workspace/guides/create-credentials#create_a_oauth_client_id_credential
+.. _`Configure the OAuth consent screen`: https://developers.google.com/workspace/guides/configure-oauth-consent
+.. _`Create a OAuth client ID credential`: https://developers.google.com/workspace/guides/create-credentials#oauth-client-id
 
 
 See more options in :ref:`authentication`.
