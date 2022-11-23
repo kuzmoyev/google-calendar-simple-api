@@ -4,6 +4,22 @@ Change log
 ==========
 
 
+v2.0.1
+~~~~~~
+
+API
+---
+* Fixes issue with unknown timezones
+
+Core
+----
+* Removes pytz dependency
+
+Backward compatibility
+----------------------
+* Full compatibility
+
+
 v2.0.0
 ~~~~~~
 
