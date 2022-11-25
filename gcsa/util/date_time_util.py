@@ -1,6 +1,5 @@
 from datetime import datetime, date
-
-import pytz
+from dateutil.tz import gettz
 from tzlocal import get_localzone_name
 
 
@@ -10,9 +9,9 @@ def ensure_localisation(dt, timezone=get_localzone_name()):
     Does nothing to object of type "date"."""
 
     if isinstance(dt, datetime):
-        tz = pytz.timezone(timezone)
         if dt.tzinfo is None:
-            dt = tz.localize(dt)
+            tz = gettz(timezone)
+            dt = dt.replace(tzinfo=tz)
         return dt
     elif isinstance(dt, date):
         return dt
