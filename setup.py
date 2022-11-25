@@ -14,7 +14,7 @@ except ImportError:
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '2.0.0'
+VERSION = '2.0.1'
 
 
 class UploadCommand(Command):
@@ -93,7 +93,6 @@ setup(
     packages=find_packages(exclude=("tests", "tests.*")),
     install_requires=[
         "tzlocal>=4,<5",
-        "pytz",
         "google-api-python-client>=1.8",
         "google-auth-httplib2>=0.0.4",
         "google-auth-oauthlib>=0.5,<1.0",
