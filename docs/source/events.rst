@@ -104,6 +104,7 @@ or to create an **all-day** event, use a `date` object:
 .. code-block:: python
 
     from beautiful_date import Aug, days
+    from gcsa.event import Event
 
     start = 1/Aug/2021
     end = start + 7 * days
