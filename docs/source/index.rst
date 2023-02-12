@@ -60,6 +60,7 @@ Contents
    authentication
    events
    calendars
+   colors
    attendees
    attachments
    conference
