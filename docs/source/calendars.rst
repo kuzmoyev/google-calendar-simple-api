@@ -61,7 +61,7 @@ Add a secondary calendar
 
     calendar = Calendar(
         'Travel calendar',
-        description = 'Calendar for travel related events'
+        description='Calendar for travel related events'
     )
     calendar = gc.add_calendar(calendar)
 

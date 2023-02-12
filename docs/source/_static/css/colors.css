@@ -1,0 +1,352 @@
+/* Event color */
+.lavender-classic {
+    background-color: #A4BDFC !important;
+    color: #000000
+}
+
+.lavender-modern {
+    background-color: #7986CB !important;
+    color: #FFFFFF
+}
+
+.sage-classic {
+    background-color: #7AE7BF !important;
+    color: #000000
+}
+
+.sage-modern {
+    background-color: #33B679 !important;
+    color: #FFFFFF
+}
+
+.grape-classic {
+    background-color: #DBADFF !important;
+    color: #000000
+}
+
+.grape-modern {
+    background-color: #8E24AA !important;
+    color: #FFFFFF
+}
+
+.flamingo-classic {
+    background-color: #FF887C !important;
+    color: #000000
+}
+
+.flamingo-modern {
+    background-color: #E67C73 !important;
+    color: #FFFFFF
+}
+
+.banana-classic {
+    background-color: #FBD75B !important;
+    color: #000000
+}
+
+.banana-modern {
+    background-color: #F6BF26 !important;
+    color: #FFFFFF
+}
+
+.tangerine-classic {
+    background-color: #FFB878 !important;
+    color: #000000
+}
+
+.tangerine-modern {
+    background-color: #F4511E !important;
+    color: #FFFFFF
+}
+
+.peacock-classic {
+    background-color: #46D6DB !important;
+    color: #000000
+}
+
+.peacock-modern {
+    background-color: #039BE5 !important;
+    color: #FFFFFF
+}
+
+.graphite-classic {
+    background-color: #E1E1E1 !important;
+    color: #000000
+}
+
+.graphite-modern {
+    background-color: #616161 !important;
+    color: #FFFFFF
+}
+
+.blueberry-classic {
+    background-color: #5484ED !important;
+    color: #000000
+}
+
+.blueberry-modern {
+    background-color: #3F51B5 !important;
+    color: #FFFFFF
+}
+
+.basil-classic {
+    background-color: #51B749 !important;
+    color: #000000
+}
+
+.basil-modern {
+    background-color: #0B8043 !important;
+    color: #FFFFFF
+}
+
+.tomato-classic {
+    background-color: #DC2127 !important;
+    color: #000000
+}
+
+.tomato-modern {
+    background-color: #D50000 !important;
+    color: #FFFFFF
+}
+
+
+/*Calendar colors*/
+.cocoa-classic {
+    background-color: #AC725E !important;
+    color: #000000
+}
+
+.cocoa-modern {
+    background-color: #795548 !important;
+    color: #FFFFFF
+}
+
+.flamingo-classic {
+    background-color: #D06B64 !important;
+    color: #000000
+}
+
+.flamingo-modern {
+    background-color: #E67C73 !important;
+    color: #FFFFFF
+}
+
+.tomato-classic {
+    background-color: #F83A22 !important;
+    color: #000000
+}
+
+.tomato-modern {
+    background-color: #D50000 !important;
+    color: #FFFFFF
+}
+
+.tangerine-classic {
+    background-color: #FA573C !important;
+    color: #000000
+}
+
+.tangerine-modern {
+    background-color: #F4511E !important;
+    color: #FFFFFF
+}
+
+.pumpkin-classic {
+    background-color: #FF7537 !important;
+    color: #000000
+}
+
+.pumpkin-modern {
+    background-color: #EF6C00 !important;
+    color: #FFFFFF
+}
+
+.mango-classic {
+    background-color: #FFAD46 !important;
+    color: #000000
+}
+
+.mango-modern {
+    background-color: #F09300 !important;
+    color: #FFFFFF
+}
+
+.eucalyptus-classic {
+    background-color: #42D692 !important;
+    color: #000000
+}
+
+.eucalyptus-modern {
+    background-color: #009688 !important;
+    color: #FFFFFF
+}
+
+.basil-classic {
+    background-color: #16A765 !important;
+    color: #000000
+}
+
+.basil-modern {
+    background-color: #0B8043 !important;
+    color: #FFFFFF
+}
+
+.pistachio-classic {
+    background-color: #7BD148 !important;
+    color: #000000
+}
+
+.pistachio-modern {
+    background-color: #7CB342 !important;
+    color: #FFFFFF
+}
+
+.avocado-classic {
+    background-color: #B3DC6C !important;
+    color: #000000
+}
+
+.avocado-modern {
+    background-color: #C0CA33 !important;
+    color: #FFFFFF
+}
+
+.citron-classic {
+    background-color: #FBE983 !important;
+    color: #000000
+}
+
+.citron-modern {
+    background-color: #E4C441 !important;
+    color: #FFFFFF
+}
+
+.banana-classic {
+    background-color: #FAD165 !important;
+    color: #000000
+}
+
+.banana-modern {
+    background-color: #F6BF26 !important;
+    color: #FFFFFF
+}
+
+.sage-classic {
+    background-color: #92E1C0 !important;
+    color: #000000
+}
+
+.sage-modern {
+    background-color: #33B679 !important;
+    color: #FFFFFF
+}
+
+.peacock-classic {
+    background-color: #9FE1E7 !important;
+    color: #000000
+}
+
+.peacock-modern {
+    background-color: #039BE5 !important;
+    color: #FFFFFF
+}
+
+.cobalt-classic {
+    background-color: #9FC6E7 !important;
+    color: #000000
+}
+
+.cobalt-modern {
+    background-color: #4285F4 !important;
+    color: #FFFFFF
+}
+
+.blueberry-classic {
+    background-color: #4986E7 !important;
+    color: #000000
+}
+
+.blueberry-modern {
+    background-color: #3F51B5 !important;
+    color: #FFFFFF
+}
+
+.lavender-classic {
+    background-color: #9A9CFF !important;
+    color: #000000
+}
+
+.lavender-modern {
+    background-color: #7986CB !important;
+    color: #FFFFFF
+}
+
+.wisteria-classic {
+    background-color: #B99AFF !important;
+    color: #000000
+}
+
+.wisteria-modern {
+    background-color: #B39DDB !important;
+    color: #FFFFFF
+}
+
+.graphite-classic {
+    background-color: #C2C2C2 !important;
+    color: #000000
+}
+
+.graphite-modern {
+    background-color: #616161 !important;
+    color: #FFFFFF
+}
+
+.birch-classic {
+    background-color: #CABDBF !important;
+    color: #000000
+}
+
+.birch-modern {
+    background-color: #A79B8E !important;
+    color: #FFFFFF
+}
+
+.radicchio-classic {
+    background-color: #CCA6AC !important;
+    color: #000000
+}
+
+.radicchio-modern {
+    background-color: #AD1457 !important;
+    color: #FFFFFF
+}
+
+.cherry-blossom-classic {
+    background-color: #F691B2 !important;
+    color: #000000
+}
+
+.cherry-blossom-modern {
+    background-color: #D81B60 !important;
+    color: #FFFFFF
+}
+
+.grape-classic {
+    background-color: #CD74E6 !important;
+    color: #000000
+}
+
+.grape-modern {
+    background-color: #8E24AA !important;
+    color: #FFFFFF
+}
+
+.amethyst-classic {
+    background-color: #A47AE2 !important;
+    color: #000000
+}
+
+.amethyst-modern {
+    background-color: #9E69AF !important;
+    color: #FFFFFF
+}
