@@ -214,6 +214,11 @@ class TestCalendarListEntry(TestCase):
         self.assertEqual(c.timezone, TEST_TIMEZONE)
         self.assertListEqual(c.allowed_conference_solution_types, TEST_ALLOWED_CONFERENCE_SOLUTION_TYPES)
 
+        c.color_id = '2'
+        self.assertEqual(c.color_id, '2')
+        self.assertIsNone(c.background_color)
+        self.assertIsNone(c.foreground_color)
+
     def test_repr_str(self):
         c = CalendarListEntry(
             calendar_id='Calendar id',
