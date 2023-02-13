@@ -57,7 +57,7 @@ class CalendarsService(BaseService):
         :return:
                 Updated calendar object
         """
-        calendar_id = self._get_calendar_id(calendar)
+        calendar_id = self._get_resource_id(calendar)
         body = CalendarSerializer.to_json(calendar)
         calendar_json = self.service.calendars().update(
             calendarId=calendar_id,
@@ -76,7 +76,7 @@ class CalendarsService(BaseService):
         :param calendar:
                 Calendar's ID or :py:class:`~gcsa.calendar.Calendar` object with set `calendar_id`.
         """
-        calendar_id = self._get_calendar_id(calendar)
+        calendar_id = self._get_resource_id(calendar)
         self.service.calendars().delete(calendarId=calendar_id).execute()
 
     def clear_calendar(self):
@@ -100,23 +100,3 @@ class CalendarsService(BaseService):
         to delete events from a secondary calendar.
         """
         self.clear_calendar()
-
-    @staticmethod
-    def _get_calendar_id(calendar: Union[Calendar, CalendarListEntry, str]):
-        """If `calendar` is `Calendar` or `CalendarListEntry` returns its id.
-        If `calendar` is string, returns `calendar` itself.
-
-        :raises:
-            ValueError: if `calendar` is `Calendar` or `CalendarListEntry` object that doesn't have id
-            TypeError: if `calendar` is neither `Calendar` or `CalendarListEntry` object nor `str`
-        """
-        if isinstance(calendar, (Calendar, CalendarListEntry)):
-            if calendar.id is None:
-                raise ValueError("Calendar has to have calendar_id to be deleted.")
-            return calendar.id
-        elif isinstance(calendar, str):
-            return calendar
-        else:
-            raise TypeError('"calendar" object must me Calendar, CalendarListEntry or str, not {!r}'.format(
-                calendar.__class__.__name__
-            ))

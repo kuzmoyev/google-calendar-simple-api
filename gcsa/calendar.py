@@ -2,6 +2,7 @@ from typing import List
 
 from tzlocal import get_localzone_name
 
+from ._resource import Resource
 from .reminders import Reminder
 
 
@@ -38,7 +39,7 @@ class AccessRoles:
     OWNER = "owner"
 
 
-class Calendar:
+class Calendar(Resource):
     def __init__(
             self,
             summary: str,

@@ -149,7 +149,7 @@ class EventsService(BaseService):
                 Iterable of event objects
         """
         calendar_id = calendar_id or self.default_calendar
-        event_id = self._get_event_id(recurring_event)
+        event_id = self._get_resource_id(recurring_event)
         yield from self._list_events(
             self.service.events().instances,
             time_min=time_min,
@@ -312,7 +312,7 @@ class EventsService(BaseService):
                 Updated event object.
         """
         calendar_id = calendar_id or self.default_calendar
-        event_id = self._get_event_id(event)
+        event_id = self._get_resource_id(event)
         body = EventSerializer.to_json(event)
         event_json = self.service.events().update(
             calendarId=calendar_id,
@@ -386,7 +386,7 @@ class EventsService(BaseService):
                 Moved event object.
         """
         source_calendar_id = source_calendar_id or self.default_calendar
-        event_id = self._get_event_id(event)
+        event_id = self._get_resource_id(event)
         moved_event_json = self.service.events().move(
             calendarId=source_calendar_id,
             eventId=event_id,
@@ -419,7 +419,7 @@ class EventsService(BaseService):
                 See https://developers.google.com/calendar/v3/reference/events/delete#optional-parameters
         """
         calendar_id = calendar_id or self.default_calendar
-        event_id = self._get_event_id(event)
+        event_id = self._get_resource_id(event)
 
         self.service.events().delete(
             calendarId=calendar_id,
@@ -427,20 +427,3 @@ class EventsService(BaseService):
             sendUpdates=send_updates,
             **kwargs
         ).execute()
-
-    @staticmethod
-    def _get_event_id(event: Union[Event, str]):
-        """If `event` is `Event` returns its id. If `event` is string, returns `event` itself.
-
-        :raises:
-            ValueError: if `event` is `Event` object that doesn't have id
-            TypeError: if `event` is neither `Event` object nor `str`
-        """
-        if isinstance(event, Event):
-            if event.id is None:
-                raise ValueError("Event has to have event_id to be deleted.")
-            return event.id
-        elif isinstance(event, str):
-            return event
-        else:
-            raise TypeError('"event" object must be Event or str, not {!r}'.format(event.__class__.__name__))

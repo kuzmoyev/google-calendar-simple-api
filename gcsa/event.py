@@ -5,6 +5,7 @@ from beautiful_date import BeautifulDate
 from tzlocal import get_localzone_name
 from datetime import datetime, date, timedelta
 
+from ._resource import Resource
 from .attachment import Attachment
 from .attendee import Attendee
 from .conference import ConferenceSolution, ConferenceSolutionCreateRequest
@@ -40,7 +41,7 @@ class Transparency:
 
 
 @total_ordering
-class Event:
+class Event(Resource):
     def __init__(
             self,
             summary: str,

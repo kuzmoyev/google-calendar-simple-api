@@ -97,7 +97,7 @@ class CalendarListService(BaseService):
         :return:
                 Updated calendar list entry object
         """
-        calendar_id = self._get_calendar_id(calendar)
+        calendar_id = self._get_resource_id(calendar)
         if color_rgb_format is None:
             color_rgb_format = calendar.foreground_color is not None or calendar.background_color is not None
 
@@ -119,25 +119,5 @@ class CalendarListService(BaseService):
                 Calendar's ID or :py:class:`~gcsa.calendar.Calendar`/:py:class:`~gcsa.calendar.CalendarListEntry` object
                 with the set `calendar_id`.
         """
-        calendar_id = self._get_calendar_id(calendar)
+        calendar_id = self._get_resource_id(calendar)
         self.service.calendarList().delete(calendarId=calendar_id).execute()
-
-    @staticmethod
-    def _get_calendar_id(calendar: Union[Calendar, CalendarListEntry, str]):
-        """If `calendar` is `Calendar` or `CalendarListEntry` returns its id.
-        If `calendar` is string, returns `calendar` itself.
-
-        :raises:
-            ValueError: if `calendar` is `Calendar` or `CalendarListEntry` object that doesn't have id
-            TypeError: if `calendar` is neither `Calendar` or `CalendarListEntry` object nor `str`
-        """
-        if isinstance(calendar, (Calendar, CalendarListEntry)):
-            if calendar.id is None:
-                raise ValueError("Calendar has to have calendar_id to be deleted.")
-            return calendar.id
-        elif isinstance(calendar, str):
-            return calendar
-        else:
-            raise TypeError('"calendar" object must me Calendar, CalendarListEntry or str, not {!r}'.format(
-                calendar.__class__.__name__
-            ))
