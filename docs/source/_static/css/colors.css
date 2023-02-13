@@ -1,352 +1,352 @@
 /* Event color */
-.lavender-classic {
+.lavender-classic-e {
     background-color: #A4BDFC !important;
     color: #000000
 }
 
-.lavender-modern {
+.lavender-modern-e {
     background-color: #7986CB !important;
     color: #FFFFFF
 }
 
-.sage-classic {
+.sage-classic-e {
     background-color: #7AE7BF !important;
     color: #000000
 }
 
-.sage-modern {
+.sage-modern-e {
     background-color: #33B679 !important;
     color: #FFFFFF
 }
 
-.grape-classic {
+.grape-classic-e {
     background-color: #DBADFF !important;
     color: #000000
 }
 
-.grape-modern {
+.grape-modern-e {
     background-color: #8E24AA !important;
     color: #FFFFFF
 }
 
-.flamingo-classic {
+.flamingo-classic-e {
     background-color: #FF887C !important;
     color: #000000
 }
 
-.flamingo-modern {
+.flamingo-modern-e {
     background-color: #E67C73 !important;
     color: #FFFFFF
 }
 
-.banana-classic {
+.banana-classic-e {
     background-color: #FBD75B !important;
     color: #000000
 }
 
-.banana-modern {
+.banana-modern-e {
     background-color: #F6BF26 !important;
     color: #FFFFFF
 }
 
-.tangerine-classic {
+.tangerine-classic-e {
     background-color: #FFB878 !important;
     color: #000000
 }
 
-.tangerine-modern {
+.tangerine-modern-e {
     background-color: #F4511E !important;
     color: #FFFFFF
 }
 
-.peacock-classic {
+.peacock-classic-e {
     background-color: #46D6DB !important;
     color: #000000
 }
 
-.peacock-modern {
+.peacock-modern-e {
     background-color: #039BE5 !important;
     color: #FFFFFF
 }
 
-.graphite-classic {
+.graphite-classic-e {
     background-color: #E1E1E1 !important;
     color: #000000
 }
 
-.graphite-modern {
+.graphite-modern-e {
     background-color: #616161 !important;
     color: #FFFFFF
 }
 
-.blueberry-classic {
+.blueberry-classic-e {
     background-color: #5484ED !important;
     color: #000000
 }
 
-.blueberry-modern {
+.blueberry-modern-e {
     background-color: #3F51B5 !important;
     color: #FFFFFF
 }
 
-.basil-classic {
+.basil-classic-e {
     background-color: #51B749 !important;
     color: #000000
 }
 
-.basil-modern {
+.basil-modern-e {
     background-color: #0B8043 !important;
     color: #FFFFFF
 }
 
-.tomato-classic {
+.tomato-classic-e {
     background-color: #DC2127 !important;
     color: #000000
 }
 
-.tomato-modern {
+.tomato-modern-e {
     background-color: #D50000 !important;
     color: #FFFFFF
 }
 
 
 /*Calendar colors*/
-.cocoa-classic {
+.cocoa-classic-c {
     background-color: #AC725E !important;
     color: #000000
 }
 
-.cocoa-modern {
+.cocoa-modern-c {
     background-color: #795548 !important;
     color: #FFFFFF
 }
 
-.flamingo-classic {
+.flamingo-classic-c {
     background-color: #D06B64 !important;
     color: #000000
 }
 
-.flamingo-modern {
+.flamingo-modern-c {
     background-color: #E67C73 !important;
     color: #FFFFFF
 }
 
-.tomato-classic {
+.tomato-classic-c {
     background-color: #F83A22 !important;
     color: #000000
 }
 
-.tomato-modern {
+.tomato-modern-c {
     background-color: #D50000 !important;
     color: #FFFFFF
 }
 
-.tangerine-classic {
+.tangerine-classic-c {
     background-color: #FA573C !important;
     color: #000000
 }
 
-.tangerine-modern {
+.tangerine-modern-c {
     background-color: #F4511E !important;
     color: #FFFFFF
 }
 
-.pumpkin-classic {
+.pumpkin-classic-c {
     background-color: #FF7537 !important;
     color: #000000
 }
 
-.pumpkin-modern {
+.pumpkin-modern-c {
     background-color: #EF6C00 !important;
     color: #FFFFFF
 }
 
-.mango-classic {
+.mango-classic-c {
     background-color: #FFAD46 !important;
     color: #000000
 }
 
-.mango-modern {
+.mango-modern-c {
     background-color: #F09300 !important;
     color: #FFFFFF
 }
 
-.eucalyptus-classic {
+.eucalyptus-classic-c {
     background-color: #42D692 !important;
     color: #000000
 }
 
-.eucalyptus-modern {
+.eucalyptus-modern-c {
     background-color: #009688 !important;
     color: #FFFFFF
 }
 
-.basil-classic {
+.basil-classic-c {
     background-color: #16A765 !important;
     color: #000000
 }
 
-.basil-modern {
+.basil-modern-c {
     background-color: #0B8043 !important;
     color: #FFFFFF
 }
 
-.pistachio-classic {
+.pistachio-classic-c {
     background-color: #7BD148 !important;
     color: #000000
 }
 
-.pistachio-modern {
+.pistachio-modern-c {
     background-color: #7CB342 !important;
     color: #FFFFFF
 }
 
-.avocado-classic {
+.avocado-classic-c {
     background-color: #B3DC6C !important;
     color: #000000
 }
 
-.avocado-modern {
+.avocado-modern-c {
     background-color: #C0CA33 !important;
     color: #FFFFFF
 }
 
-.citron-classic {
+.citron-classic-c {
     background-color: #FBE983 !important;
     color: #000000
 }
 
-.citron-modern {
+.citron-modern-c {
     background-color: #E4C441 !important;
     color: #FFFFFF
 }
 
-.banana-classic {
+.banana-classic-c {
     background-color: #FAD165 !important;
     color: #000000
 }
 
-.banana-modern {
+.banana-modern-c {
     background-color: #F6BF26 !important;
     color: #FFFFFF
 }
 
-.sage-classic {
+.sage-classic-c {
     background-color: #92E1C0 !important;
     color: #000000
 }
 
-.sage-modern {
+.sage-modern-c {
     background-color: #33B679 !important;
     color: #FFFFFF
 }
 
-.peacock-classic {
+.peacock-classic-c {
     background-color: #9FE1E7 !important;
     color: #000000
 }
 
-.peacock-modern {
+.peacock-modern-c {
     background-color: #039BE5 !important;
     color: #FFFFFF
 }
 
-.cobalt-classic {
+.cobalt-classic-c {
     background-color: #9FC6E7 !important;
     color: #000000
 }
 
-.cobalt-modern {
+.cobalt-modern-c {
     background-color: #4285F4 !important;
     color: #FFFFFF
 }
 
-.blueberry-classic {
+.blueberry-classic-c {
     background-color: #4986E7 !important;
     color: #000000
 }
 
-.blueberry-modern {
+.blueberry-modern-c {
     background-color: #3F51B5 !important;
     color: #FFFFFF
 }
 
-.lavender-classic {
+.lavender-classic-c {
     background-color: #9A9CFF !important;
     color: #000000
 }
 
-.lavender-modern {
+.lavender-modern-c {
     background-color: #7986CB !important;
     color: #FFFFFF
 }
 
-.wisteria-classic {
+.wisteria-classic-c {
     background-color: #B99AFF !important;
     color: #000000
 }
 
-.wisteria-modern {
+.wisteria-modern-c {
     background-color: #B39DDB !important;
     color: #FFFFFF
 }
 
-.graphite-classic {
+.graphite-classic-c {
     background-color: #C2C2C2 !important;
     color: #000000
 }
 
-.graphite-modern {
+.graphite-modern-c {
     background-color: #616161 !important;
     color: #FFFFFF
 }
 
-.birch-classic {
+.birch-classic-c {
     background-color: #CABDBF !important;
     color: #000000
 }
 
-.birch-modern {
+.birch-modern-c {
     background-color: #A79B8E !important;
     color: #FFFFFF
 }
 
-.radicchio-classic {
+.radicchio-classic-c {
     background-color: #CCA6AC !important;
     color: #000000
 }
 
-.radicchio-modern {
+.radicchio-modern-c {
     background-color: #AD1457 !important;
     color: #FFFFFF
 }
 
-.cherry-blossom-classic {
+.cherry-blossom-classic-c {
     background-color: #F691B2 !important;
     color: #000000
 }
 
-.cherry-blossom-modern {
+.cherry-blossom-modern-c {
     background-color: #D81B60 !important;
     color: #FFFFFF
 }
 
-.grape-classic {
+.grape-classic-c {
     background-color: #CD74E6 !important;
     color: #000000
 }
 
-.grape-modern {
+.grape-modern-c {
     background-color: #8E24AA !important;
     color: #FFFFFF
 }
 
-.amethyst-classic {
+.amethyst-classic-c {
     background-color: #A47AE2 !important;
     color: #000000
 }
 
-.amethyst-modern {
+.amethyst-modern-c {
     background-color: #9E69AF !important;
     color: #FFFFFF
 }
