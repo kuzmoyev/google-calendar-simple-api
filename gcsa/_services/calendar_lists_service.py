@@ -97,12 +97,13 @@ class CalendarListService(BaseService):
         :return:
                 Updated calendar list entry object
         """
+        calendar_id = self._get_calendar_id(calendar)
         if color_rgb_format is None:
             color_rgb_format = calendar.foreground_color is not None or calendar.background_color is not None
 
         body = CalendarListEntrySerializer.to_json(calendar)
         calendar_json = self.service.calendarList().update(
-            calendarId=calendar.id,
+            calendarId=calendar_id,
             body=body,
             colorRgbFormat=color_rgb_format
         ).execute()
@@ -118,16 +119,25 @@ class CalendarListService(BaseService):
                 Calendar's ID or :py:class:`~gcsa.calendar.Calendar`/:py:class:`~gcsa.calendar.CalendarListEntry` object
                 with the set `calendar_id`.
         """
+        calendar_id = self._get_calendar_id(calendar)
+        self.service.calendarList().delete(calendarId=calendar_id).execute()
+
+    @staticmethod
+    def _get_calendar_id(calendar: Union[Calendar, CalendarListEntry, str]):
+        """If `calendar` is `Calendar` or `CalendarListEntry` returns its id.
+        If `calendar` is string, returns `calendar` itself.
+
+        :raises:
+            ValueError: if `calendar` is `Calendar` or `CalendarListEntry` object that doesn't have id
+            TypeError: if `calendar` is neither `Calendar` or `CalendarListEntry` object nor `str`
+        """
         if isinstance(calendar, (Calendar, CalendarListEntry)):
             if calendar.id is None:
-                raise ValueError("CalendarListEntry has to have calendar_id to be deleted.")
-            calendar_id = calendar.id
+                raise ValueError("Calendar has to have calendar_id to be deleted.")
+            return calendar.id
         elif isinstance(calendar, str):
-            calendar_id = calendar
+            return calendar
         else:
-            raise TypeError(
-                '"calendar" object must me Calendar, CalendarListEntry, or str, not {!r}'.format(
-                    calendar.__class__.__name__
-                )
-            )
-        self.service.calendarList().delete(calendarId=calendar_id).execute()
+            raise TypeError('"calendar" object must me Calendar, CalendarListEntry or str, not {!r}'.format(
+                calendar.__class__.__name__
+            ))
