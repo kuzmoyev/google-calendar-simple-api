@@ -120,6 +120,13 @@ class TestEventsService(TestCaseWithMockedService):
         self.assertEqual(len(events), 4)
         self.assertTrue(all(e.id.startswith('event_id_2') for e in events))
 
+        recurring_event_without_id = Event(
+            'recurring event',
+            D.today()[:],
+        )
+        with self.assertRaises(ValueError):
+            list(self.gc.get_instances(recurring_event=recurring_event_without_id))
+
     def test_get_event(self):
         start = D.today()[:]
         end = start + 2 * hours

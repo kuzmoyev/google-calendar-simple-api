@@ -129,7 +129,7 @@ class EventsService(BaseService):
         """Lists instances of recurring event
 
         :param recurring_event:
-                Recurring event (`Event` object) or id of the recurring event
+                Recurring event or instance of recurring event (`Event` object) or id of the recurring event
         :param time_min:
                 Staring date/datetime
         :param time_max:
@@ -149,7 +149,11 @@ class EventsService(BaseService):
                 Iterable of event objects
         """
         calendar_id = calendar_id or self.default_calendar
-        event_id = self._get_resource_id(recurring_event)
+        try:
+            event_id = self._get_resource_id(recurring_event)
+        except ValueError:
+            raise ValueError("Recurring event has to have id to retrieve its instances.")
+
         yield from self._list_events(
             self.service.events().instances,
             time_min=time_min,

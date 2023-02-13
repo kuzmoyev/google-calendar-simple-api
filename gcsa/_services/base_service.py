@@ -51,7 +51,7 @@ class BaseService(AuthenticatedService):
         """
         if isinstance(resource, Resource):
             if resource.id is None:
-                raise ValueError("Resource has to have id to be deleted.")
+                raise ValueError("Resource has to have id to be updated, moved or deleted.")
             return resource.id
         elif isinstance(resource, str):
             return resource
