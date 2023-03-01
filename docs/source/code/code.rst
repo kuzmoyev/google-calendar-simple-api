@@ -14,4 +14,5 @@ Code documentation
    conference
    reminders
    recurrence
+   acl
    settings

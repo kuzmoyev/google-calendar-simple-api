@@ -1,5 +1,6 @@
 from google.oauth2.credentials import Credentials
 
+from ._services.acl_service import ACLService
 from ._services.events_service import EventsService, SendUpdatesMode  # noqa: F401
 from ._services.calendars_service import CalendarsService
 from ._services.calendar_lists_service import CalendarListService
@@ -12,7 +13,8 @@ class GoogleCalendar(
     CalendarsService,
     CalendarListService,
     ColorsService,
-    SettingsService
+    SettingsService,
+    ACLService
 ):
     """Collection of all supported methods for events and calendars management."""
 
