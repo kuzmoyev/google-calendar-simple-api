@@ -60,7 +60,7 @@ class MockCalendarsRequests:
 
     @executable
     def update(self, calendarId, body):
-        """Emulates GoogleCalendar.service.calendars().insert().execute()"""
+        """Emulates GoogleCalendar.service.calendars().update().execute()"""
         calendar = CalendarSerializer.to_object(body)
         for i in range(len(self.test_calendars)):
             if calendarId == self.test_calendars[i].id:
