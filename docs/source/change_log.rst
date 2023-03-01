@@ -10,6 +10,7 @@ v2.1.0
 API
 ---
 * Adds support for python3.11
+* Adds support for access control list (ACL) management
 
 Core
 ----
