@@ -2,7 +2,7 @@ from gcsa.calendar import Calendar, AccessRoles
 from tests.google_calendar_tests.test_case_with_mocked_service import TestCaseWithMockedService
 
 
-class TestEventsService(TestCaseWithMockedService):
+class TestCalendarsService(TestCaseWithMockedService):
     def test_get_calendar(self):
         calendar = self.gc.get_calendar()
         self.assertEqual(calendar.id, 'primary')
