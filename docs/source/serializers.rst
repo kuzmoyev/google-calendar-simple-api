@@ -608,4 +608,58 @@ To object
     <CalendarListEntry Holidays in Czechia 2022 - (Státní svátky v ČR)>
 
 
+
+Access control rule serializer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To json
+-------
+
+.. code-block:: python
+
+    from gcsa.acl import AccessControlRule, ACLRole, ACLScopeType
+    from gcsa.serializers.acl_rule_serializer import ACLRuleSerializer
+
+    rule = AccessControlRule(
+        role=ACLRole.READER,
+        scope_type=ACLScopeType.USER,
+        scope_value='friend@gmail.com',
+    )
+
+    ACLRuleSerializer.to_json(rule)
+
+
+.. code-block:: javascript
+
+    {
+        'role': 'reader',
+        'scope': {
+            'type': 'user',
+            'value': 'friend@gmail.com'
+        }
+    }
+
+
+To object
+---------
+
+.. code-block:: python
+
+    acl_rule_json = {
+        'role': 'reader',
+        'scope': {
+            'type': 'user',
+            'value': 'friend@gmail.com'
+        },
+        'id': 'user:friend@gmail.com'
+    }
+
+    ACLRuleSerializer.to_object(acl_rule_json)
+
+.. code-block:: python
+
+    <AccessControlRule friend@gmail.com - reader>
+
+
+
 .. _`official API documentation`: https://developers.google.com/calendar

@@ -66,8 +66,9 @@ Contents
    conference
    reminders
    recurrence
-   serializers
+   acl
    settings
+   serializers
    why_gcsa
    change_log
    code/code

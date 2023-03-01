@@ -25,6 +25,11 @@ GoogleCalendar
             delete_calendar_list_entry,
             list_event_colors,
             list_calendar_colors,
+            get_acl_rules,
+            get_acl_rule,
+            add_acl_rule,
+            update_acl_rule,
+            delete_acl_rule,
             get_settings
         :undoc-members:
 
