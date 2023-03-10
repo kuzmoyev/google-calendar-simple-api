@@ -162,15 +162,15 @@ class Event(Resource):
         elif isinstance(self.start, datetime) or isinstance(self.end, datetime):
             raise TypeError('Start and end must either both be date or both be datetime.')
 
-        def insure_date(d):
+        def ensure_date(d):
             """Converts d to date if it is of type BeautifulDate."""
             if isinstance(d, BeautifulDate):
                 return date(year=d.year, month=d.month, day=d.day)
             else:
                 return d
 
-        self.start = insure_date(self.start)
-        self.end = insure_date(self.end)
+        self.start = ensure_date(self.start)
+        self.end = ensure_date(self.end)
 
         self.created = _created
         self.updated = _updated
@@ -277,17 +277,17 @@ class Event(Resource):
         return '<Event {}>'.format(self.__str__())
 
     def __lt__(self, other):
-        def insure_datetime(d, timezone):
+        def ensure_datetime(d, timezone):
             if type(d) == date:
                 return ensure_localisation(datetime(year=d.year, month=d.month, day=d.day), timezone)
             else:
                 return d
 
-        start = insure_datetime(self.start, self.timezone)
-        end = insure_datetime(self.end, self.timezone)
+        start = ensure_datetime(self.start, self.timezone)
+        end = ensure_datetime(self.end, self.timezone)
 
-        other_start = insure_datetime(other.start, other.timezone)
-        other_end = insure_datetime(other.end, other.timezone)
+        other_start = ensure_datetime(other.start, other.timezone)
+        other_end = ensure_datetime(other.end, other.timezone)
 
         return (start, end) < (other_start, other_end)
 
