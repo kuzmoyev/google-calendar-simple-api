@@ -1,7 +1,11 @@
+from datetime import datetime, date, time
 from typing import Callable, Type, Union
+
+from beautiful_date import BeautifulDate
 
 from gcsa._resource import Resource
 from gcsa._services.authentication import AuthenticatedService
+from gcsa.util.date_time_util import ensure_localisation
 
 
 class BaseService(AuthenticatedService):
@@ -59,3 +63,12 @@ class BaseService(AuthenticatedService):
             raise TypeError('"resource" object must be Resource or str, not {!r}'.format(
                 resource.__class__.__name__
             ))
+
+    @staticmethod
+    def _to_localized_iso(
+            dt: Union[date, datetime, BeautifulDate],
+            timezone: str
+    ):
+        if not isinstance(dt, datetime):
+            dt = datetime.combine(dt, time())
+        return ensure_localisation(dt, timezone).isoformat()

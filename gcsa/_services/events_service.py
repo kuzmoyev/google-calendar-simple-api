@@ -8,7 +8,6 @@ from tzlocal import get_localzone_name
 from gcsa._services.base_service import BaseService
 from gcsa.event import Event
 from gcsa.serializers.event_serializer import EventSerializer
-from gcsa.util.date_time_util import ensure_localisation
 
 
 class SendUpdatesMode:
@@ -41,14 +40,8 @@ class EventsService(BaseService):
         time_min = time_min or datetime.now()
         time_max = time_max or time_min + relativedelta(years=1)
 
-        if not isinstance(time_min, datetime):
-            time_min = datetime.combine(time_min, datetime.min.time())
-
-        if not isinstance(time_max, datetime):
-            time_max = datetime.combine(time_max, datetime.max.time())
-
-        time_min = ensure_localisation(time_min, timezone).isoformat()
-        time_max = ensure_localisation(time_max, timezone).isoformat()
+        time_min = self._to_localized_iso(time_min, timezone)
+        time_max = self._to_localized_iso(time_max, timezone)
 
         yield from self._list_paginated(
             request_method,

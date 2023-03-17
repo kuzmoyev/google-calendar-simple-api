@@ -48,8 +48,6 @@ class TestEventsService(TestCaseWithMockedService):
         time_min = D.today() + 5 * days
         time_max = D.today() + 7 * days
         events = list(self.gc.get_events(time_min=time_min, time_max=time_max))
-        print(time_min, '-', time_max)
-        print(events)
         self.assertEqual(len(events), 2)
 
         time_min = ensure_localisation(time_min[0:0])

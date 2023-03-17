@@ -1,5 +1,3 @@
-import dateutil.parser
-
 from datetime import date, datetime
 
 from tzlocal import get_localzone_name
@@ -164,7 +162,3 @@ class EventSerializer(BaseSerializer):
             _recurring_event_id=json_event.pop('recurringEventId', None),
             **json_event
         )
-
-    @staticmethod
-    def _get_datetime_from_string(s):
-        return dateutil.parser.parse(s)

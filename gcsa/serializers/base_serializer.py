@@ -2,6 +2,8 @@ import re
 from abc import ABC, abstractmethod
 import json
 
+import dateutil.parser
+
 
 def _type_to_snake_case(type_):
     return re.sub(r'(?<!^)(?=[A-Z])', '_', type_.__name__).lower()
@@ -73,3 +75,7 @@ class BaseSerializer(ABC):
         if cls.__init__.__code__.co_varnames != ('self', _type_to_snake_case(cls.type_)):
             raise AssertionError('Argument of the __init__ method has to have a name "{}".'
                                  .format(_type_to_snake_case(cls.type_)))
+
+    @staticmethod
+    def _get_datetime_from_string(s):
+        return dateutil.parser.parse(s)
