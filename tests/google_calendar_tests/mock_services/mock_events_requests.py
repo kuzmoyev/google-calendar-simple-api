@@ -1,7 +1,7 @@
 from .util import executable
 
-import dateutil
-from beautiful_date import D, days, years, hours
+import dateutil.parser
+from beautiful_date import D, days, years
 
 from gcsa.attendee import Attendee
 from gcsa.event import Event
@@ -18,9 +18,9 @@ class MockEventsRequests:
         self.test_events = [
             Event(
                 'test{}'.format(i),
-                start=ensure_localisation(D.today()[:] + i * days + i * hours),
+                start=ensure_localisation(D.today()[i:0] + i * days),
                 event_id=f'event_id_{str(i)}',
-                _updated=ensure_localisation(D.today()[:] + (i + 1) * days + i * hours),
+                _updated=ensure_localisation(D.today()[i:0] + (i + 1) * days),
                 attendees=[
                     Attendee(email='{}@gmail.com'.format(attendee_name.lower()), display_name=attendee_name)
                 ] if attendee_name else None
