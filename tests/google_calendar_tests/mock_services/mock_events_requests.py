@@ -129,9 +129,16 @@ class MockEventsRequests:
 
         filtered_events = list(filter(_filter, test_events))
         ordered_events = sorted(filtered_events, key=_sort_key)
-        serialized_events = list(map(EventSerializer.to_json, ordered_events))
 
-        current_page_events = ordered_events[page * self.EVENTS_PER_PAGE:(page + 1) * self.EVENTS_PER_PAGE]
+        def serialize(event):
+            event_json = EventSerializer.to_json(event)
+            # Add readonly fields to event json
+            event_json['updated'] = event.updated.isoformat()
+            event_json['recurringEventId'] = event.recurring_event_id
+            return event_json
+        serialized_events = list(map(serialize, ordered_events))
+
+        current_page_events = serialized_events[page * self.EVENTS_PER_PAGE:(page + 1) * self.EVENTS_PER_PAGE]
         next_page = page + 1 if (page + 1) * self.EVENTS_PER_PAGE < len(serialized_events) else None
         return {
             'items': current_page_events,
