@@ -2,6 +2,7 @@ from typing import List
 
 from tzlocal import get_localzone_name
 
+from ._resource import Resource
 from .reminders import Reminder
 
 
@@ -38,7 +39,7 @@ class AccessRoles:
     OWNER = "owner"
 
 
-class Calendar:
+class Calendar(Resource):
     def __init__(
             self,
             summary: str,
@@ -229,7 +230,7 @@ class CalendarListEntry(Calendar):
             allowed_conference_solution_types=_allowed_conference_solution_types
         )
         self.summary_override = summary_override
-        self.color_id = color_id
+        self._color_id = color_id
         self.background_color = background_color
         self.foreground_color = foreground_color
         self.hidden = hidden
@@ -239,6 +240,17 @@ class CalendarListEntry(Calendar):
         self.access_role = _access_role
         self.primary = _primary
         self.deleted = _deleted
+
+    @property
+    def color_id(self):
+        return self._color_id
+
+    @color_id.setter
+    def color_id(self, color_id):
+        """Sets the color_id and resets background_color and foreground_color."""
+        self._color_id = color_id
+        self.background_color = None
+        self.foreground_color = None
 
     def __str__(self):
         return '{} - ({})'.format(self.summary_override, self.summary)

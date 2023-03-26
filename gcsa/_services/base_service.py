@@ -1,5 +1,6 @@
-from typing import Callable, Type
+from typing import Callable, Type, Union
 
+from gcsa._resource import Resource
 from gcsa._services.authentication import AuthenticatedService
 
 
@@ -38,3 +39,23 @@ class BaseService(AuthenticatedService):
             page_token = response_json.get('nextPageToken')
             if not page_token:
                 break
+
+    @staticmethod
+    def _get_resource_id(resource: Union[Resource, str]):
+        """If `resource` is `Resource` returns its id.
+        If `resource` is string, returns `resource` itself.
+
+        :raises:
+            ValueError: if `resource` is `Resource` object that doesn't have id
+            TypeError: if `resource` is neither `Resource` nor `str`
+        """
+        if isinstance(resource, Resource):
+            if resource.id is None:
+                raise ValueError("Resource has to have id to be updated, moved or deleted.")
+            return resource.id
+        elif isinstance(resource, str):
+            return resource
+        else:
+            raise TypeError('"resource" object must be Resource or str, not {!r}'.format(
+                resource.__class__.__name__
+            ))

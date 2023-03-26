@@ -14,4 +14,6 @@ Code documentation
    conference
    reminders
    recurrence
+   acl
+   free_busy
    settings

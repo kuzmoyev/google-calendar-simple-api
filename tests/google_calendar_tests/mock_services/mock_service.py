@@ -1,7 +1,9 @@
+from .mock_acl_requests import MockACLRequests
 from .mock_calendar_list_requests import MockCalendarListRequests
 from .mock_calendars_requests import MockCalendarsRequests
 from .mock_colors_requests import MockColorsRequests
 from .mock_events_requests import MockEventsRequests
+from .mock_free_busy_requests import MockFreeBusyRequests
 from .mock_settings_requests import MockSettingsRequests
 
 
@@ -14,6 +16,8 @@ class MockService:
         self._calendar_list = MockCalendarListRequests()
         self._colors = MockColorsRequests()
         self._settings = MockSettingsRequests()
+        self._acl = MockACLRequests()
+        self._free_busy = MockFreeBusyRequests()
 
     def events(self):
         return self._events
@@ -29,3 +33,9 @@ class MockService:
 
     def settings(self):
         return self._settings
+
+    def acl(self):
+        return self._acl
+
+    def freebusy(self):
+        return self._free_busy

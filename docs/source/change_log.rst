@@ -4,6 +4,24 @@ Change log
 ==========
 
 
+v2.1.0
+~~~~~~
+
+API
+---
+* Adds support for python3.11
+* Adds support for access control list (ACL) management
+* Fix converting date to datetime in get_events
+* Adds support for free/busy requests
+
+Core
+----
+* None
+
+Backward compatibility
+----------------------
+* Full compatibility
+
 v2.0.1
 ~~~~~~
 

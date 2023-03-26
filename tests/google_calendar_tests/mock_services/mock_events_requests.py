@@ -1,7 +1,7 @@
 from .util import executable
 
-import dateutil
-from beautiful_date import D, days, years, hours
+import dateutil.parser
+from beautiful_date import D, days, years
 
 from gcsa.attendee import Attendee
 from gcsa.event import Event
@@ -18,9 +18,9 @@ class MockEventsRequests:
         self.test_events = [
             Event(
                 'test{}'.format(i),
-                start=ensure_localisation(D.today()[:] + i * days + i * hours),
+                start=ensure_localisation(D.today()[i:0] + i * days),
                 event_id=f'event_id_{str(i)}',
-                _updated=ensure_localisation(D.today()[:] + (i + 1) * days + i * hours),
+                _updated=ensure_localisation(D.today()[i:0] + (i + 1) * days),
                 attendees=[
                     Attendee(email='{}@gmail.com'.format(attendee_name.lower()), display_name=attendee_name)
                 ] if attendee_name else None
@@ -129,9 +129,16 @@ class MockEventsRequests:
 
         filtered_events = list(filter(_filter, test_events))
         ordered_events = sorted(filtered_events, key=_sort_key)
-        serialized_events = list(map(EventSerializer.to_json, ordered_events))
 
-        current_page_events = ordered_events[page * self.EVENTS_PER_PAGE:(page + 1) * self.EVENTS_PER_PAGE]
+        def serialize(event):
+            event_json = EventSerializer.to_json(event)
+            # Add readonly fields to event json
+            event_json['updated'] = event.updated.isoformat()
+            event_json['recurringEventId'] = event.recurring_event_id
+            return event_json
+        serialized_events = list(map(serialize, ordered_events))
+
+        current_page_events = serialized_events[page * self.EVENTS_PER_PAGE:(page + 1) * self.EVENTS_PER_PAGE]
         next_page = page + 1 if (page + 1) * self.EVENTS_PER_PAGE < len(serialized_events) else None
         return {
             'items': current_page_events,

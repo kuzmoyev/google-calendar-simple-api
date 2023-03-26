@@ -25,3 +25,12 @@ def executable(fn):
         return Executable(data)
 
     return wrapper
+
+
+def within(dt, time_min, time_max):
+    return time_min <= dt <= time_max
+
+
+def time_range_within(tr, time_min, time_max):
+    start, end = tr
+    return within(start, time_min, time_max) and within(end, time_min, time_max)
