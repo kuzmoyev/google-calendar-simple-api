@@ -30,6 +30,7 @@ GoogleCalendar
             add_acl_rule,
             update_acl_rule,
             delete_acl_rule,
+            get_free_busy,
             get_settings
         :undoc-members:
 
