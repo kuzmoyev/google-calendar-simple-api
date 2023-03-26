@@ -67,6 +67,7 @@ Contents
    reminders
    recurrence
    acl
+   free_busy
    settings
    serializers
    why_gcsa

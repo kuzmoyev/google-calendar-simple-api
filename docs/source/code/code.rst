@@ -15,4 +15,5 @@ Code documentation
    reminders
    recurrence
    acl
+   free_busy
    settings
