@@ -8,6 +8,7 @@ from tzlocal import get_localzone_name
 from gcsa._services.base_service import BaseService
 from gcsa.free_busy import FreeBusy, FreeBusyQueryError
 from gcsa.serializers.free_busy_serializer import FreeBusySerializer
+from gcsa.util.date_time_util import to_localized_iso
 
 
 class FreeBusyService(BaseService):
@@ -56,8 +57,8 @@ class FreeBusyService(BaseService):
         time_min = time_min or datetime.now()
         time_max = time_max or time_min + relativedelta(weeks=2)
 
-        time_min = self._to_localized_iso(time_min, timezone)
-        time_max = self._to_localized_iso(time_max, timezone)
+        time_min = to_localized_iso(time_min, timezone)
+        time_max = to_localized_iso(time_max, timezone)
 
         if resource_ids is None:
             resource_ids = [self.default_calendar]
