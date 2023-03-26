@@ -7,6 +7,73 @@ from gcsa.serializers.free_busy_serializer import FreeBusySerializer
 
 
 class TestFreeBusy(TestCase):
+    def test_iter(self):
+        free_busy = FreeBusy(
+            time_min=(24 / Mar / 2023)[13:22],
+            time_max=(25 / Mar / 2023)[13:22],
+            groups={},
+            calendars={
+                'calendar1': [
+                    TimeRange((24 / Mar / 2023)[14:22], (24 / Mar / 2023)[15:22]),
+                    TimeRange((24 / Mar / 2023)[17:22], (24 / Mar / 2023)[18:22]),
+                ]
+            }
+        )
+
+        ranges = list(free_busy)
+        self.assertEqual(len(ranges), 2)
+        self.assertEqual(ranges[0], free_busy.calendars['calendar1'][0])
+        self.assertEqual(ranges[1], free_busy.calendars['calendar1'][1])
+
+    def test_iter_errors(self):
+        free_busy = FreeBusy(
+            time_min=(24 / Mar / 2023)[13:22],
+            time_max=(25 / Mar / 2023)[13:22],
+            groups={},
+            calendars={
+                'calendar1': [
+                    TimeRange((24 / Mar / 2023)[14:22], (24 / Mar / 2023)[15:22]),
+                    TimeRange((24 / Mar / 2023)[17:22], (24 / Mar / 2023)[18:22]),
+                ],
+                'calendar2': [
+                    TimeRange((24 / Mar / 2023)[15:22], (24 / Mar / 2023)[16:22]),
+                    TimeRange((24 / Mar / 2023)[18:22], (24 / Mar / 2023)[19:22]),
+                ]
+            }
+        )
+
+        with self.assertRaises(ValueError):
+            iter(free_busy)
+
+        free_busy = FreeBusy(
+            time_min=(24 / Mar / 2023)[13:22],
+            time_max=(25 / Mar / 2023)[13:22],
+            groups={},
+            calendars={
+                'calendar1': [
+                    TimeRange((24 / Mar / 2023)[14:22], (24 / Mar / 2023)[15:22]),
+                    TimeRange((24 / Mar / 2023)[17:22], (24 / Mar / 2023)[18:22]),
+                ]
+            },
+            calendars_errors={
+                'calendar2': ['notFound']
+            }
+        )
+        with self.assertRaises(ValueError):
+            iter(free_busy)
+
+        free_busy = FreeBusy(
+            time_min=(24 / Mar / 2023)[13:22],
+            time_max=(25 / Mar / 2023)[13:22],
+            groups={},
+            calendars={},
+            calendars_errors={
+                'calendar1': ['notFound']
+            }
+        )
+        with self.assertRaises(ValueError):
+            iter(free_busy)
+
     def test_repr_str(self):
         free_busy = FreeBusy(
             time_min=(24 / Mar / 2023)[13:22],
