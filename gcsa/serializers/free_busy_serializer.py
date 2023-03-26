@@ -23,14 +23,14 @@ class FreeBusySerializer(BaseSerializer):
                     ],
                     'errors': free_busy.calendars_errors.get(c, [])
                 }
-                for c in free_busy.calendars | free_busy.calendars_errors
+                for c in {**free_busy.calendars, **free_busy.calendars_errors}
             },
             'groups': {
                 g: {
                     'calendars': free_busy.groups.get(g, []),
                     'errors': free_busy.groups_errors.get(g, [])
                 }
-                for g in free_busy.groups | free_busy.groups_errors
+                for g in {**free_busy.groups, **free_busy.groups_errors}
             },
             'timeMin': free_busy.time_min.isoformat(),
             'timeMax': free_busy.time_max.isoformat(),
