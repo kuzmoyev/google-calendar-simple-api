@@ -6,7 +6,7 @@ the `official API documentation`_. In general, you won't need to use them, ``gcs
 under the hood. It is documented just so you know they exist and can be used if necessary.
 
 .. note::
-    Note that serializer's ``to_json`` methods ignore read-only fields of the objects.
+    Note that serializers' ``to_json`` methods ignore read-only fields of the objects.
     Read-only fields of the objects are ones that are passed to the parameters of their ``__init__`` with
     underscores, e.g. ``Event(_updated=25/Nov/2020)``.
 
@@ -659,6 +659,146 @@ To object
 .. code-block:: python
 
     <AccessControlRule friend@gmail.com - reader>
+
+
+
+FreeBusy serializer
+~~~~~~~~~~~~~~~~~~~
+
+To json
+-------
+
+.. code-block:: python
+
+    from gcsa.free_busy import FreeBusy, TimeRange
+    from gcsa.serializers.free_busy_serializer import FreeBusySerializer
+
+    free_busy = FreeBusy(
+        time_min=(24 / Mar / 2023)[13:22],
+        time_max=(25 / Mar / 2023)[13:22],
+        groups={'group1': ['calendar1', 'calendar2']},
+        calendars={
+            'calendar1': [
+                TimeRange((24 / Mar / 2023)[14:22], (24 / Mar / 2023)[15:22]),
+                TimeRange((24 / Mar / 2023)[17:22], (24 / Mar / 2023)[18:22]),
+            ],
+            'calendar2': [
+                TimeRange((24 / Mar / 2023)[15:22], (24 / Mar / 2023)[16:22]),
+                TimeRange((24 / Mar / 2023)[18:22], (24 / Mar / 2023)[19:22]),
+            ]
+        },
+        groups_errors={
+            "non-existing-group": [
+                {
+                    "domain": "global",
+                    "reason": "notFound"
+                }
+            ]
+        },
+        calendars_errors={
+            "non-existing-calendar": [
+                {
+                    "domain": "global",
+                    "reason": "notFound"
+                }
+            ]
+        }
+    )
+
+    FreeBusySerializer.to_json(free_busy)
+
+
+.. code-block:: javascript
+
+    {
+        'calendars': {
+            'calendar1': {
+                'busy': [
+                    {'start': '2023-03-24T14:22:00', 'end': '2023-03-24T15:22:00'},
+                    {'start': '2023-03-24T17:22:00', 'end': '2023-03-24T18:22:00'}
+                ],
+                'errors': []
+            },
+            'calendar2': {
+                'busy': [
+                    {'start': '2023-03-24T15:22:00', 'end': '2023-03-24T16:22:00'},
+                    {'start': '2023-03-24T18:22:00', 'end': '2023-03-24T19:22:00'}
+                ],
+                'errors': []
+            },
+            'non-existing-calendar': {
+                'busy': [],
+                'errors': [
+                    {'domain': 'global', 'reason': 'notFound'}
+                ]
+            }
+        },
+        'groups': {
+            'group1': {
+                'calendars': ['calendar1', 'calendar2'],
+                'errors': []
+            },
+            'non-existing-group': {
+                'calendars': [],
+                'errors': [
+                    {'domain': 'global', 'reason': 'notFound'}
+                ]
+            }
+        },
+        'timeMin': '2023-03-24T13:22:00',
+        'timeMax': '2023-03-25T13:22:00'
+    }
+
+
+To object
+---------
+
+.. code-block:: python
+
+    free_busy_json = {
+        'calendars': {
+            'calendar1': {
+                'busy': [
+                    {'start': '2023-03-24T14:22:00', 'end': '2023-03-24T15:22:00'},
+                    {'start': '2023-03-24T17:22:00', 'end': '2023-03-24T18:22:00'}
+                ],
+                'errors': []
+            },
+            'calendar2': {
+                'busy': [
+                    {'start': '2023-03-24T15:22:00', 'end': '2023-03-24T16:22:00'},
+                    {'start': '2023-03-24T18:22:00', 'end': '2023-03-24T19:22:00'}
+                ],
+                'errors': []
+            },
+            'non-existing-calendar': {
+                'busy': [],
+                'errors': [
+                    {'domain': 'global', 'reason': 'notFound'}
+                ]
+            }
+        },
+        'groups': {
+            'group1': {
+                'calendars': ['calendar1', 'calendar2'],
+                'errors': []
+            },
+            'non-existing-group': {
+                'calendars': [],
+                'errors': [
+                    {'domain': 'global', 'reason': 'notFound'}
+                ]
+            }
+        },
+        'timeMin': '2023-03-24T13:22:00',
+        'timeMax': '2023-03-25T13:22:00'
+    }
+
+    FreeBusySerializer.to_object(free_busy_json)
+
+.. code-block:: python
+
+    <FreeBusy 2023-03-24 13:22:00 - 2023-03-25 13:22:00>
 
 
 
