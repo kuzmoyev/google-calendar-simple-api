@@ -48,6 +48,7 @@ class FreeBusyService(BaseService):
                 Default is `False`.
                 Note, request related errors (e.x. authentication error) will not be ignored regardless of
                 the `ignore_errors` value.
+
         :return:
                 :py:class:`~gcsa.free_busy.FreeBusy` object.
         """
