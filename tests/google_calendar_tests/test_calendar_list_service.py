@@ -2,7 +2,7 @@ from gcsa.calendar import CalendarListEntry, Calendar
 from tests.google_calendar_tests.test_case_with_mocked_service import TestCaseWithMockedService
 
 
-class TestEventsService(TestCaseWithMockedService):
+class TestCalendarListService(TestCaseWithMockedService):
     def test_get_calendar_list(self):
         calendars = list(self.gc.get_calendar_list())
         self.assertEqual(len(calendars), 8)

@@ -60,13 +60,16 @@ Contents
    authentication
    events
    calendars
+   colors
    attendees
    attachments
    conference
    reminders
    recurrence
-   serializers
+   acl
+   free_busy
    settings
+   serializers
    why_gcsa
    change_log
    code/code

@@ -8,7 +8,7 @@ from tzlocal import get_localzone_name
 from gcsa._services.base_service import BaseService
 from gcsa.event import Event
 from gcsa.serializers.event_serializer import EventSerializer
-from gcsa.util.date_time_util import ensure_localisation
+from gcsa.util.date_time_util import to_localized_iso
 
 
 class SendUpdatesMode:
@@ -41,14 +41,8 @@ class EventsService(BaseService):
         time_min = time_min or datetime.now()
         time_max = time_max or time_min + relativedelta(years=1)
 
-        if not isinstance(time_min, datetime):
-            time_min = datetime.combine(time_min, datetime.min.time())
-
-        if not isinstance(time_max, datetime):
-            time_max = datetime.combine(time_max, datetime.max.time())
-
-        time_min = ensure_localisation(time_min, timezone).isoformat()
-        time_max = ensure_localisation(time_max, timezone).isoformat()
+        time_min = to_localized_iso(time_min, timezone)
+        time_max = to_localized_iso(time_max, timezone)
 
         yield from self._list_paginated(
             request_method,
@@ -119,17 +113,17 @@ class EventsService(BaseService):
 
     def get_instances(
             self,
-            recurring_event,
-            time_min=None,
-            time_max=None,
-            timezone=get_localzone_name(),
+            recurring_event: Union[Event, str],
+            time_min: Union[date, datetime, BeautifulDate] = None,
+            time_max: Union[date, datetime, BeautifulDate] = None,
+            timezone: str = get_localzone_name(),
             calendar_id: str = None,
             **kwargs
     ) -> Iterable[Event]:
         """Lists instances of recurring event
 
         :param recurring_event:
-                Recurring event (Event object) or id of a recurring event
+                Recurring event or instance of recurring event (`Event` object) or id of the recurring event
         :param time_min:
                 Staring date/datetime
         :param time_max:
@@ -149,6 +143,11 @@ class EventsService(BaseService):
                 Iterable of event objects
         """
         calendar_id = calendar_id or self.default_calendar
+        try:
+            event_id = self._get_resource_id(recurring_event)
+        except ValueError:
+            raise ValueError("Recurring event has to have id to retrieve its instances.")
+
         yield from self._list_events(
             self.service.events().instances,
             time_min=time_min,
@@ -156,7 +155,7 @@ class EventsService(BaseService):
             timezone=timezone,
             calendar_id=calendar_id,
             **{
-                'eventId': recurring_event if isinstance(recurring_event, str) else recurring_event.id,
+                'eventId': event_id,
                 **kwargs
             }
         )
@@ -311,10 +310,11 @@ class EventsService(BaseService):
                 Updated event object.
         """
         calendar_id = calendar_id or self.default_calendar
+        event_id = self._get_resource_id(event)
         body = EventSerializer.to_json(event)
         event_json = self.service.events().update(
             calendarId=calendar_id,
-            eventId=event.id,
+            eventId=event_id,
             body=body,
             conferenceDataVersion=1,
             sendUpdates=send_updates,
@@ -384,9 +384,10 @@ class EventsService(BaseService):
                 Moved event object.
         """
         source_calendar_id = source_calendar_id or self.default_calendar
+        event_id = self._get_resource_id(event)
         moved_event_json = self.service.events().move(
             calendarId=source_calendar_id,
-            eventId=event.id,
+            eventId=event_id,
             destination=destination_calendar_id,
             sendUpdates=send_updates,
             **kwargs
@@ -416,14 +417,7 @@ class EventsService(BaseService):
                 See https://developers.google.com/calendar/v3/reference/events/delete#optional-parameters
         """
         calendar_id = calendar_id or self.default_calendar
-        if isinstance(event, Event):
-            if event.id is None:
-                raise ValueError("Event has to have event_id to be deleted.")
-            event_id = event.id
-        elif isinstance(event, str):
-            event_id = event
-        else:
-            raise TypeError('"event" object must be Event or str, not {!r}'.format(event.__class__.__name__))
+        event_id = self._get_resource_id(event)
 
         self.service.events().delete(
             calendarId=calendar_id,

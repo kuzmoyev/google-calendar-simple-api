@@ -48,7 +48,7 @@ class TestEventsService(TestCaseWithMockedService):
         time_min = D.today() + 5 * days
         time_max = D.today() + 7 * days
         events = list(self.gc.get_events(time_min=time_min, time_max=time_max))
-        self.assertEqual(len(events), 3)
+        self.assertEqual(len(events), 2)
 
         time_min = ensure_localisation(time_min[0:0])
         time_max = ensure_localisation(time_max[23:59:59])
@@ -119,6 +119,13 @@ class TestEventsService(TestCaseWithMockedService):
         events = list(self.gc.get_instances(recurring_event=recurring_event))
         self.assertEqual(len(events), 4)
         self.assertTrue(all(e.id.startswith('event_id_2') for e in events))
+
+        recurring_event_without_id = Event(
+            'recurring event',
+            D.today()[:],
+        )
+        with self.assertRaises(ValueError):
+            list(self.gc.get_instances(recurring_event=recurring_event_without_id))
 
     def test_get_event(self):
         start = D.today()[:]

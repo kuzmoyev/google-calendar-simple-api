@@ -14,7 +14,7 @@ except ImportError:
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '2.0.1'
+VERSION = '2.1.0'
 
 
 class UploadCommand(Command):
@@ -118,6 +118,7 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
     ],
     cmdclass={
         'upload': UploadCommand,
