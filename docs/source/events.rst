@@ -33,15 +33,15 @@ Specify range of listed events in two ways:
 
 .. code-block:: python
 
-    gc.get_events(start_date, end_date, order_by='updated')
+    gc.get_events(time_min, time_max, order_by='updated')
 
 or
 
 .. code-block:: python
 
-    gc[start_date:end_date:'updated']
+    gc[time_min:time_max:'updated']
 
-``start_date`` and ``end_date`` can be ``date`` or ``datetime`` objects. ``order_by`` can be `'startTime'`
+``time_min`` and ``time_max`` can be ``date`` or ``datetime`` objects. ``order_by`` can be `'startTime'`
 or `'updated'`. If not specified, unspecified stable order is used.
 
 
