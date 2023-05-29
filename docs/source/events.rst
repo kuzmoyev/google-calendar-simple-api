@@ -28,18 +28,21 @@ This code will print out events for one year starting today:
     for event in gc:
         print(event)
 
+.. note::
+    :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_events` and :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_instances`
+    return generators_.
 
 Specify range of listed events in two ways:
 
 .. code-block:: python
 
-    gc.get_events(time_min, time_max, order_by='updated')
+    events = gc.get_events(time_min, time_max, order_by='updated')
 
 or
 
 .. code-block:: python
 
-    gc[time_min:time_max:'updated']
+    events = gc[time_min:time_max:'updated']
 
 ``time_min`` and ``time_max`` can be ``date`` or ``datetime`` objects. ``order_by`` can be `'startTime'`
 or `'updated'`. If not specified, unspecified stable order is used.
@@ -49,23 +52,22 @@ Use ``query`` parameter for free text search through all event fields (except fo
 
 .. code-block:: python
 
-    gc.get_events(query='Meeting')
-    gc.get_events(query='John') # Name of attendee
+    events = gc.get_events(query='Meeting')
+
+or
+
+.. code-block:: python
+
+    events = gc.get_events(query='John') # Name of attendee
+
 
 Use ``single_events`` parameter to expand recurring events into instances and only return single one-off events and
 instances of recurring events, but not the underlying recurring events themselves.
 
 .. code-block:: python
 
-    gc.get_events(single_events=True)
+    events = gc.get_events(single_events=True)
 
-
-Get event by id
-~~~~~~~~~~~~~~~
-
-.. code-block:: python
-
-    gc.get_event('<event_id>')
 
 
 List recurring event instances
@@ -73,17 +75,23 @@ List recurring event instances
 
 .. code-block:: python
 
-    gc.get_instances('<recurring_event_id>')
+    events = gc.get_instances('<recurring_event_id>')
 
 or
 
 .. code-block:: python
 
-    gc.get_instances(recurring_event)
+    events = gc.get_instances(recurring_event)
 
 where ``recurring_event`` is :py:class:`~gcsa.event.Event` object with set ``event_id``. You'd probably get it from
 the ``get_events`` method.
 
+Get event by id
+~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    event = gc.get_event('<event_id>')
 
 Create event
 ~~~~~~~~~~~~
@@ -120,7 +128,7 @@ Now **add** your event to the calendar:
 
 .. code-block:: python
 
-    gc.add_event(event)
+    event = gc.add_event(event)
 
 See dedicated pages on how to add :ref:`attendees`, :ref:`attachments`, :ref:`conference`, :ref:`reminders`, and
 :ref:`recurrence` to an event.
@@ -132,7 +140,7 @@ Update event
 .. code-block:: python
 
     event.location = 'Prague'
-    gc.update_event(event)
+    event = gc.update_event(event)
 
 
 Import event
@@ -140,7 +148,7 @@ Import event
 
 .. code-block:: python
 
-    gc.import_event(event)
+    event = gc.import_event(event)
 
 This operation is used to add a private copy of an existing event to a calendar.
 
@@ -150,7 +158,7 @@ Move event to another calendar
 
 .. code-block:: python
 
-    gc.move_event(event, destination_calendar_id='primary')
+    event = gc.move_event(event, destination_calendar_id='primary')
 
 
 Delete event
@@ -172,3 +180,4 @@ You can also delete the event by providing its id.
 
 .. _datetime: https://docs.python.org/3/library/datetime.html
 .. _beautiful_date: https://github.com/kuzmoyev/beautiful-date
+.. _generators: https://wiki.python.org/moin/Generators
