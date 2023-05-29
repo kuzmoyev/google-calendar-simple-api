@@ -9,6 +9,8 @@ try:
     from sphinx.setup_command import BuildDoc
 except ImportError:
     class BuildDoc(Command):
+        user_options = []
+
         def run(self):
             raise
 
