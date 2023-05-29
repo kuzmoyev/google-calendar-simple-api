@@ -29,8 +29,19 @@ This code will print out events for one year starting today:
         print(event)
 
 .. note::
-    :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_events` and :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_instances`
-    return generators_.
+    In the following examples, :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_events` and
+    :py:meth:`~gcsa.google_calendar.GoogleCalendar.get_instances` return generators_. You can iterate over them directly:
+
+    .. code-block::
+
+        for event in gc.get_events():
+            print(event)
+
+    but to get the list of events use:
+
+    .. code-block::
+
+        events = list(gc.get_events())
 
 Specify range of listed events in two ways:
 
