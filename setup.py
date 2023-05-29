@@ -5,12 +5,7 @@ from shutil import rmtree
 import os
 import sys
 
-try:
-    from sphinx.setup_command import BuildDoc
-except ImportError:
-    class BuildDoc(Command):
-        def run(self):
-            raise
+from sphinx.setup_command import BuildDoc
 
 here = os.path.abspath(os.path.dirname(__file__))
 
