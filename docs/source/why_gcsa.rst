@@ -7,7 +7,7 @@ Why GCSA?
   :align: right
 
 
-I found that picture "The 50 push-ups in a month challenge" back in 2017 and decided that **it's time**.
+I found that picture "The 50 push-ups in a month challenge" back in 2017 and decided it was time to try it.
 
 I wanted a calendar reminder of how many push-ups I need to do every day. As a developer, I couldn't afford
 to spend *10 minutes* putting the events manually. So I spent *3 hours* getting the official API to work to do this
