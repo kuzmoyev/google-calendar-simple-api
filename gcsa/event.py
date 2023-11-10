@@ -278,7 +278,7 @@ class Event(Resource):
 
     def __lt__(self, other):
         def ensure_datetime(d, timezone):
-            if type(d) == date:
+            if type(d) is date:
                 return ensure_localisation(datetime(year=d.year, month=d.month, day=d.day), timezone)
             else:
                 return d

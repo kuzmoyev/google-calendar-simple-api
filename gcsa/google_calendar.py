@@ -47,10 +47,11 @@ class GoogleCalendar(
                 Credentials with token and refresh token.
                 If specified, ``credentials_path``, ``token_path``, and ``save_token`` are ignored.
                 If not specified, credentials are retrieved from "token.pickle" file (specified in ``token_path`` or
-                default path) or with authentication flow using secret from "credentials.json" (specified in
-                ``credentials_path`` or default path)
+                default path) or with authentication flow using secret from "credentials.json" ("client_secret_*.json")
+                (specified in ``credentials_path`` or default path)
         :param credentials_path:
-                Path to "credentials.json" file. Default: ~/.credentials
+                Path to "credentials.json" ("client_secret_*.json") file.
+                Default: ~/.credentials/credentials.json or ~/.credentials/client_secret*.json
         :param token_path:
                 Existing path to load the token from, or path to save the token after initial authentication flow.
                 Default: "token.pickle" in the same directory as the credentials_path

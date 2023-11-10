@@ -13,7 +13,7 @@ class TestGoogleCalendarCredentials(TestCase):
     def setUp(self):
         self.setUpPyfakefs()
 
-        self.credentials_dir = '/.credentials'
+        self.credentials_dir = path.join(path.expanduser('~'), '.credentials')
         self.credentials_path = path.join(self.credentials_dir, 'credentials.json')
         self.fs.create_dir(self.credentials_dir)
         self.fs.create_file(self.credentials_path)
@@ -53,20 +53,37 @@ class TestGoogleCalendarCredentials(TestCase):
         self.assertTrue(gc.credentials.valid)
         self.assertFalse(gc.credentials.expired)
 
-    def test_get_default_credentials_path_exist(self):
-        self.fs.create_dir(path.join(path.expanduser('~'), '.credentials'))
+    def test_get_default_credentials_exist(self):
         self.assertEqual(
-            path.join(path.expanduser('~'), '.credentials/credentials.json'),
+            self.credentials_path,
             GoogleCalendar._get_default_credentials_path()
         )
 
     def test_get_default_credentials_path_not_exist(self):
-        self.assertFalse(path.exists(path.join(path.expanduser('~'), '.credentials')))
+        self.fs.reset()
+        with self.assertRaises(FileNotFoundError):
+            GoogleCalendar._get_default_credentials_path()
+
+    def test_get_default_credentials_not_exist(self):
+        self.fs.remove(self.credentials_path)
+        with self.assertRaises(FileNotFoundError):
+            GoogleCalendar._get_default_credentials_path()
+
+    def test_get_default_credentials_client_secrets(self):
+        self.fs.remove(self.credentials_path)
+        client_secret_path = path.join(self.credentials_dir, 'client_secret_1234.json')
+        self.fs.create_file(client_secret_path)
         self.assertEqual(
-            path.join(path.expanduser('~'), '.credentials/credentials.json'),
+            client_secret_path,
             GoogleCalendar._get_default_credentials_path()
         )
-        self.assertTrue(path.exists(path.join(path.expanduser('~'), '.credentials')))
+
+    def test_get_default_credentials_multiple_client_secrets(self):
+        self.fs.remove(self.credentials_path)
+        self.fs.create_file(path.join(self.credentials_dir, 'client_secret_1234.json'))
+        self.fs.create_file(path.join(self.credentials_dir, 'client_secret_12345.json'))
+        with self.assertRaises(ValueError):
+            GoogleCalendar._get_default_credentials_path()
 
     def test_get_token_valid(self):
         gc = GoogleCalendar(token_path=self.valid_token_path)

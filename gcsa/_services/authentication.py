@@ -1,5 +1,6 @@
 import pickle
 import os.path
+import glob
 from typing import List
 
 from googleapiclient import discovery
@@ -32,10 +33,11 @@ class AuthenticatedService:
                 Credentials with token and refresh token.
                 If specified, ``credentials_path``, ``token_path``, and ``save_token`` are ignored.
                 If not specified, credentials are retrieved from "token.pickle" file (specified in ``token_path`` or
-                default path) or with authentication flow using secret from "credentials.json" (specified in
-                ``credentials_path`` or default path)
+                default path) or with authentication flow using secret from "credentials.json" ("client_secret_*.json")
+                (specified in ``credentials_path`` or default path)
         :param credentials_path:
-                Path to "credentials.json" file. Default: ~/.credentials
+                Path to "credentials.json" ("client_secret_*.json") file.
+                Default: ~/.credentials/credentials.json or ~/.credentials/client_secret*.json
         :param token_path:
                 Existing path to load the token from, or path to save the token after initial authentication flow.
                 Default: "token.pickle" in the same directory as the credentials_path
@@ -109,12 +111,28 @@ class AuthenticatedService:
 
     @staticmethod
     def _get_default_credentials_path() -> str:
-        """Checks if ".credentials" folder in home directory exists. If not, creates it.
-        :return: expanded path to .credentials folder
+        """Checks if `.credentials` folder in home directory exists and contains `credentials.json` or
+        `client_secret*.json` file.
+
+        :raises ValueError: if `.credentials` folder does not exist, none of `credentials.json` or `client_secret*.json`
+        files do not exist, or there are multiple `client_secret*.json` files.
+        :return: expanded path to `credentials.json` or `client_secret*.json` file
         """
         home_dir = os.path.expanduser('~')
         credential_dir = os.path.join(home_dir, '.credentials')
         if not os.path.exists(credential_dir):
-            os.makedirs(credential_dir)
+            raise FileNotFoundError(f'Default credentials directory "{credential_dir}" does not exist.')
         credential_path = os.path.join(credential_dir, 'credentials.json')
-        return credential_path
+        if os.path.exists(credential_path):
+            return credential_path
+        else:
+            credentials_files = glob.glob(credential_dir + '/client_secret*.json')
+            if len(credentials_files) > 1:
+                raise ValueError(f"Multiple credential files found in {credential_dir}.\n"
+                                 f"Try specifying the credentials file, e.x.:\n"
+                                 f"GoogleCalendar(credentials_path='{credentials_files[0]}')")
+            elif not credentials_files:
+                raise FileNotFoundError(f'Credentials file (credentials.json or client_secret*.json)'
+                                        f'not found in the default path: "{credential_dir}".')
+            else:
+                return credentials_files[0]
