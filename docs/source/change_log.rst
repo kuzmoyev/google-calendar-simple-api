@@ -3,6 +3,21 @@
 Change log
 ==========
 
+v2.2.0
+~~~~~~
+
+API
+---
+* Adds support for new credentials file names (i.e. client_secret_*.json)
+
+Core
+----
+* None
+
+Backward compatibility
+----------------------
+* Full compatibility
+
 
 v2.1.0
 ~~~~~~

@@ -8,10 +8,10 @@ There are several ways to authenticate in ``GoogleCalendar``.
 Credentials file
 ----------------
 
-If you have a ``credentials.json`` file (see :ref:`getting_started`), ``GoogleCalendar`` will read all the needed data
-to generate the token and refresh-token from it.
+If you have a ``credentials.json`` (``client_secret_*.json``) file (see :ref:`getting_started`), ``GoogleCalendar``
+will read all the needed data to generate the token and refresh-token from it.
 
-To read ``credentials.json`` from the default path (``~/.credentials/credentials.json``) use:
+To read ``credentials.json`` (``client_secret_*.json``) from the default directory (``~/.credentials``) use:
 
 .. code-block:: python
 
@@ -19,7 +19,7 @@ To read ``credentials.json`` from the default path (``~/.credentials/credentials
 
 In this case, if ``~/.credentials/token.pickle`` file exists, it will read it and refresh only if needed. If
 ``token.pickle`` does not exist, it will be created during authentication flow and saved alongside with
-``credentials.json`` in ``~/.credentials/token.pickle``.
+``credentials.json`` (``client_secret_*.json``) in ``~/.credentials/token.pickle``.
 
 To **avoid saving** the token use:
 
@@ -29,15 +29,21 @@ To **avoid saving** the token use:
 
 After token is generated during authentication flow, it can be accessed in ``gc.credentials`` field.
 
-To specify ``credentials.json`` file path use ``credentials_path`` parameter:
+To specify ``credentials.json`` (``client_secret_*.json``) file path use ``credentials_path`` parameter:
 
 .. code-block:: python
 
     gc = GoogleCalendar(credentials_path='path/to/credentials.json')
 
+or
+
+.. code-block:: python
+
+    gc = GoogleCalendar(credentials_path='path/to/client_secret_273833015691-qwerty.apps.googleusercontent.com.json')
+
 Similarly, if ``token.pickle`` file exists in the same folder (``path/to/``), it will be used and refreshed only if
-needed. If it doesn't exist, it will be generated and stored alongside the ``credentials.json`` (in
-``path/to/token.pickle``).
+needed. If it doesn't exist, it will be generated and stored alongside the ``credentials.json`` (``client_secret_*.json``)
+(in ``path/to/token.pickle``).
 
 To specify different path for the pickled token file use ``token_path`` parameter:
 

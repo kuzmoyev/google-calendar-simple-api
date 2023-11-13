@@ -33,8 +33,8 @@ Now you need to get your API credentials:
     .. note::  You will need to enable the "Google Calendar API" for your project.
 
     2. `Configure the OAuth consent screen`_
-    3. `Create a OAuth client ID credential`_ and download the ``credentials.json`` file
-    4. Put downloaded ``credentials.json`` file into ``~/.credentials/`` directory
+    3. `Create a OAuth client ID credential`_ and download the ``credentials.json`` (``client_secret_*.json``) file
+    4. Put downloaded ``credentials.json`` (``client_secret_*.json``) file into ``~/.credentials/`` directory
 
 
 .. _`Create a new Google Cloud Platform (GCP) project`: https://developers.google.com/workspace/guides/create-project
@@ -44,7 +44,7 @@ Now you need to get your API credentials:
 
 See more options in :ref:`authentication`.
 
-    .. note:: You can put ``credentials.json`` file anywhere you want and specify
+    .. note:: You can put ``credentials.json`` (``client_secret_*.json``) file anywhere you want and specify
         the path to it in your code afterwords. But remember not to share it (e.g. add it
         to ``.gitignore``) as it is your private credentials.
 
@@ -52,7 +52,7 @@ See more options in :ref:`authentication`.
         | On the first run, your application will prompt you to the default browser
           to get permissions from you to use your calendar. This will create
           ``token.pickle`` file in the same folder (unless specified otherwise) as your
-          ``credentials.json``. So don't forget to also add it to ``.gitignore`` if
+          ``credentials.json`` (``client_secret_*.json``). So don't forget to also add it to ``.gitignore`` if
           it is in a GIT repository.
         | If you don't want to save it in ``.pickle`` file, you can use ``save_token=False``
           when initializing the ``GoogleCalendar``.
