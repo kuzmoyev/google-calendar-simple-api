@@ -61,9 +61,20 @@ auxiliary classes and objects:
     from gcsa.recurrence import SECONDLY, MINUTELY, HOURLY, \
                                 DAILY, WEEKLY, MONTHLY, YEARLY
 
+`Earth Hour`_, which occurs on the last Saturday of March every year:
+
+.. code-block:: python
+
+    from datetime import datetime
+
+    r = Recurrence.rule(freq=MONTHLY, interval=12, by_week_day=SA(-1))
+    start = datetime(year=2024, month=3, day=23, hour=20, minute=30)
+    event = Event("Earth hour", start=start, recurrence=r)
+
+    event = gc.add_event(event)
 
 
-Examples were taken from the `Internet Calendaring and Scheduling Core Object Specification (iCalendar)`_
+Following examples were taken from the `Internet Calendaring and Scheduling Core Object Specification (iCalendar)`_
 and adapted to ``gcsa``.
 
 
@@ -286,3 +297,4 @@ Thursday, for the next 3 months`:
 
 
 .. _`Internet Calendaring and Scheduling Core Object Specification (iCalendar)`: https://tools.ietf.org/html/rfc5545#section-3.8.5
+.. _`Earth Hour`: https://www.earthhour.org/
