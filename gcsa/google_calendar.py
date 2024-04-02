@@ -30,7 +30,8 @@ class GoogleCalendar(
             save_token: bool = True,
             read_only: bool = False,
             authentication_flow_host: str = 'localhost',
-            authentication_flow_port: int = 8080
+            authentication_flow_port: int = 8080,
+            authentication_flow_bind_addr: str = None
     ):
         """
         Specify ``credentials`` to use in requests or ``credentials_path`` and ``token_path`` to get credentials from.
@@ -63,6 +64,9 @@ class GoogleCalendar(
                 Host to receive response during authentication flow
         :param authentication_flow_port:
                 Port to receive response during authentication flow
+        :param authentication_flow_bind_addr:
+                Optional IP address for the redirect server to listen on when it is not the same as host
+                (e.g. in a container)
         """
         super().__init__(
             default_calendar=default_calendar,
@@ -72,5 +76,6 @@ class GoogleCalendar(
             save_token=save_token,
             read_only=read_only,
             authentication_flow_host=authentication_flow_host,
-            authentication_flow_port=authentication_flow_port
+            authentication_flow_port=authentication_flow_port,
+            authentication_flow_bind_addr=authentication_flow_bind_addr
         )

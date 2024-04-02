@@ -24,7 +24,8 @@ class AuthenticatedService:
             save_token: bool = True,
             read_only: bool = False,
             authentication_flow_host: str = 'localhost',
-            authentication_flow_port: int = 8080
+            authentication_flow_port: int = 8080,
+            authentication_flow_bind_addr: str = None
     ):
         """
         Specify ``credentials`` to use in requests or ``credentials_path`` and ``token_path`` to get credentials from.
@@ -49,6 +50,9 @@ class AuthenticatedService:
                 Host to receive response during authentication flow
         :param authentication_flow_port:
                 Port to receive response during authentication flow
+        :param authentication_flow_bind_addr:
+                Optional IP address for the redirect server to listen on when it is not the same as host
+                (e.g. in a container)
         """
 
         if credentials:
@@ -66,7 +70,8 @@ class AuthenticatedService:
                 scopes,
                 save_token,
                 authentication_flow_host,
-                authentication_flow_port
+                authentication_flow_port,
+                authentication_flow_bind_addr
             )
 
         self.service = discovery.build('calendar', 'v3', credentials=self.credentials)
@@ -87,7 +92,8 @@ class AuthenticatedService:
             scopes: List[str],
             save_token: bool,
             host: str,
-            port: int
+            port: int,
+            bind_addr: str
     ) -> Credentials:
         credentials = None
 
@@ -101,7 +107,7 @@ class AuthenticatedService:
             else:
                 credentials_path = os.path.join(credentials_dir, credentials_file)
                 flow = InstalledAppFlow.from_client_secrets_file(credentials_path, scopes)
-                credentials = flow.run_local_server(host=host, port=port)
+                credentials = flow.run_local_server(host=host, port=port, bind_addr=bind_addr)
 
             if save_token:
                 with open(token_path, 'wb') as token_file:

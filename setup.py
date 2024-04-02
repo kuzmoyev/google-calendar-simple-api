@@ -97,7 +97,7 @@ setup(
         "tzlocal>=4,<5",
         "google-api-python-client>=1.8",
         "google-auth-httplib2>=0.0.4",
-        "google-auth-oauthlib>=0.5,<1.0",
+        "google-auth-oauthlib>=0.5,<2.0",
         "python-dateutil>=2.7",
         "beautiful_date>=2.0.0",
     ],
