@@ -225,11 +225,11 @@ class Event(Resource):
 
     def add_attendees(
             self,
-            attendee: List[Union[str, Attendee]]
+            attendees: List[Union[str, Attendee]]
     ):
         """Adds multiple attendees to an event. See :py:class:`~gcsa.attendee.Attendee`.
         Each attendee may be given as email string or :py:class:`~gcsa.attendee.Attendee` object."""
-        for a in attendee:
+        for a in attendees:
             self.add_attendee(a)
 
     def add_attachment(
