@@ -61,7 +61,9 @@ or
 
     event.add_attendee('attendee@gmail.com')
 
-to add a single attendee. Use :py:meth:`~gcsa.event.Event.add_attendees` method to add multiple at once:
+to add a single attendee.
+
+Use :py:meth:`~gcsa.event.Event.add_attendees` method to add multiple at once:
 
 .. code-block:: python
 
