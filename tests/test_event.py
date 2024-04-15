@@ -109,12 +109,18 @@ class TestEvent(TestCase):
         self.assertEqual(len(e.attendees), 2)
         e.add_attendee(Attendee("attendee3@gmail.com"))
         e.add_attendee(Attendee(email="attendee4@gmail.com"))
-        self.assertEqual(len(e.attendees), 4)
+        e.add_attendees([
+            Attendee(email="attendee5@gmail.com"),
+            "attendee6@gmail.com"
+        ])
+        self.assertEqual(len(e.attendees), 6)
 
         self.assertEqual(e.attendees[0].email, "attendee@gmail.com")
         self.assertEqual(e.attendees[1].email, "attendee2@gmail.com")
         self.assertEqual(e.attendees[2].email, "attendee3@gmail.com")
         self.assertEqual(e.attendees[3].email, "attendee4@gmail.com")
+        self.assertEqual(e.attendees[4].email, "attendee5@gmail.com")
+        self.assertEqual(e.attendees[5].email, "attendee6@gmail.com")
 
     def test_reminders_checks(self):
         with self.assertRaises(ValueError):
