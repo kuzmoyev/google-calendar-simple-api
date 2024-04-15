@@ -61,5 +61,19 @@ or
 
     event.add_attendee('attendee@gmail.com')
 
+to add a single attendee. Use :py:meth:`~gcsa.event.Event.add_attendees` method to add multiple at once:
+
+.. code-block:: python
+
+    event.add_attendees(
+        [
+            Attendee('attendee@gmail.com',
+                display_name='Friend',
+                additional_guests=3
+            ),
+            'attendee_by_email1@gmail.com',
+            'attendee_by_email2@gmail.com'
+        ]
+    )
 
 Update event using :py:meth:`~gcsa.google_calendar.GoogleCalendar.update_event` method to save the changes.

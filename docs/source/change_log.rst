@@ -3,6 +3,22 @@
 Change log
 ==========
 
+v2.3.0
+~~~~~~
+
+API
+---
+* Adds `add_attendees` method to the `Event` for adding multiple attendees.
+
+Core
+----
+* None
+
+Backward compatibility
+----------------------
+* Full compatibility
+
+
 v2.2.0
 ~~~~~~
 
