@@ -223,6 +223,15 @@ class Event(Resource):
         Attendee may be given as email string or :py:class:`~gcsa.attendee.Attendee` object."""
         self.attendees.append(self._ensure_attendee_from_email(attendee))
 
+    def add_attendees(
+            self,
+            attendee: List[Union[str, Attendee]]
+    ):
+        """Adds multiple attendees to an event. See :py:class:`~gcsa.attendee.Attendee`.
+        Each attendee may be given as email string or :py:class:`~gcsa.attendee.Attendee` object."""
+        for a in attendee:
+            self.add_attendee(a)
+
     def add_attachment(
             self,
             file_url: str,
