@@ -22,7 +22,9 @@ class Reminder:
         :param minutes_before_start:
                 Minutes before reminder
         :param days_before:
-
+                Days before reminder
+        :param at:
+                Specific time for a reminder
         """
         # Nothing was provided
         if minutes_before_start is None and days_before is None and at is None:
@@ -96,8 +98,15 @@ class EmailReminder(Reminder):
     ):
         """Represents email reminder object
 
+        Provide `minutes_before_start` to create "relative" reminder.
+        Provide `days_before` and `at` to create "absolute" reminder.
+
         :param minutes_before_start:
                 Minutes before reminder
+        :param days_before:
+                Days before reminder
+        :param at:
+                Specific time for a reminder
         """
         if not days_before and not at and not minutes_before_start:
             minutes_before_start = 60
@@ -113,8 +122,15 @@ class PopupReminder(Reminder):
     ):
         """Represents popup reminder object
 
+        Provide `minutes_before_start` to create "relative" reminder.
+        Provide `days_before` and `at` to create "absolute" reminder.
+
         :param minutes_before_start:
                 Minutes before reminder
+        :param days_before:
+                Days before reminder
+        :param at:
+                Specific time for a reminder
         """
         if not days_before and not at and not minutes_before_start:
             minutes_before_start = 30
