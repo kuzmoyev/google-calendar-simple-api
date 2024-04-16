@@ -3,7 +3,7 @@ from typing import List, Union
 
 from beautiful_date import BeautifulDate
 from tzlocal import get_localzone_name
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, time
 
 from ._resource import Resource
 from .attachment import Attachment
@@ -243,17 +243,21 @@ class Event(Resource):
 
     def add_email_reminder(
             self,
-            minutes_before_start: int = 60
+            minutes_before_start: int = None,
+            days_before: int = None,
+            at: time = None
     ):
         """Adds email reminder to an event. See :py:class:`~gcsa.reminders.EmailReminder`"""
-        self.add_reminder(EmailReminder(minutes_before_start))
+        self.add_reminder(EmailReminder(minutes_before_start, days_before, at))
 
     def add_popup_reminder(
             self,
-            minutes_before_start: int = 30
+            minutes_before_start: int = None,
+            days_before: int = None,
+            at: time = None
     ):
         """Adds popup reminder to an event. See :py:class:`~gcsa.reminders.PopupReminder`"""
-        self.add_reminder(PopupReminder(minutes_before_start))
+        self.add_reminder(PopupReminder(minutes_before_start, days_before, at))
 
     def add_reminder(
             self,

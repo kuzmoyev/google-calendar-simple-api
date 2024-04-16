@@ -1,3 +1,4 @@
+from datetime import time
 from unittest import TestCase
 from beautiful_date import Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, Dec, hours, days, Nov
 
@@ -96,6 +97,18 @@ class TestEvent(TestCase):
         self.assertEqual(len(e.reminders), 2)
         self.assertIsInstance(e.reminders[1], PopupReminder)
         self.assertEqual(e.reminders[1].minutes_before_start, 41)
+
+        e.add_popup_reminder(days_before=1, at=time(12, 0))
+        self.assertEqual(len(e.reminders), 3)
+        self.assertIsInstance(e.reminders[2], PopupReminder)
+        self.assertEqual(e.reminders[2].days_before, 1)
+        self.assertEqual(e.reminders[2].at, time(12, 0))
+
+        e.add_email_reminder(days_before=1, at=time(13, 30))
+        self.assertEqual(len(e.reminders), 4)
+        self.assertIsInstance(e.reminders[3], EmailReminder)
+        self.assertEqual(e.reminders[3].days_before, 1)
+        self.assertEqual(e.reminders[3].at, time(13, 30))
 
     def test_add_attendees(self):
         e = Event('Good day',
@@ -346,6 +359,38 @@ class TestEventSerializer(TestCase):
                 'overrides': [
                     {'method': 'popup', 'minutes': 30},
                     {'method': 'email', 'minutes': 120}
+                ],
+                'useDefault': False
+            },
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
+        }
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
+
+        e = Event('Good day',
+                  start=(1 / Jan / 2019)[11:22:33],
+                  timezone=TEST_TIMEZONE,
+                  reminders=[
+                      PopupReminder(35),
+                      EmailReminder(45),
+                      PopupReminder(days_before=3, at=time(12, 30)),
+                      EmailReminder(days_before=2, at=time(11, 25)),
+                  ])
+        expected_event_json = {
+            'summary': 'Good day',
+            'start': {'dateTime': '2019-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2019-01-01T12:22:33+13:00', 'timeZone': TEST_TIMEZONE},
+            'recurrence': [],
+            'visibility': 'default',
+            'attendees': [],
+            'reminders': {
+                'overrides': [
+                    {'method': 'popup', 'minutes': 35},
+                    {'method': 'email', 'minutes': 45},
+                    {'method': 'popup', 'minutes': (11 * 60 + 22) + (2 * 24 * 60 + 11 * 60 + 30)},
+                    {'method': 'email', 'minutes': (11 * 60 + 22) + (1 * 24 * 60 + 12 * 60 + 35)},
                 ],
                 'useDefault': False
             },

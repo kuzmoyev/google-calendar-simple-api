@@ -11,6 +11,12 @@ except ImportError:
     class BuildDoc(Command):
         user_options = []
 
+        def initialize_options(self) -> None:
+            pass
+
+        def finalize_options(self) -> None:
+            pass
+
         def run(self):
             raise
 

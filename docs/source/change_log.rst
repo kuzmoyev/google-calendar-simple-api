@@ -9,6 +9,7 @@ v2.3.0
 API
 ---
 * Adds `add_attendees` method to the `Event` for adding multiple attendees.
+* Add specific time reminders (N days before at HH:MM)
 
 Core
 ----

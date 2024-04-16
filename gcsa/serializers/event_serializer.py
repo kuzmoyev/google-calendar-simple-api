@@ -33,10 +33,6 @@ class EventSerializer(BaseSerializer):
             'guestsCanModify': event.guests_can_modify,
             'guestsCanSeeOtherGuests': event.guests_can_see_other_guests,
             'transparency': event.transparency,
-            'reminders': {
-                'useDefault': event.default_reminders,
-                'overrides': [ReminderSerializer.to_json(r) for r in event.reminders]
-            },
             'attachments': [AttachmentSerializer.to_json(a) for a in event.attachments],
             **event.other
         }
@@ -54,16 +50,14 @@ class EventSerializer(BaseSerializer):
             data['start'] = {'date': event.start.isoformat()}
             data['end'] = {'date': event.end.isoformat()}
 
-        if event.default_reminders:
-            data['reminders'] = {
-                'useDefault': True
-            }
-        else:
-            data['reminders'] = {
-                'useDefault': False
-            }
-            if event.reminders:
-                data['reminders']['overrides'] = [ReminderSerializer.to_json(r) for r in event.reminders]
+        data['reminders'] = {
+            'useDefault': event.default_reminders
+        }
+        if event.reminders:
+            data['reminders']['overrides'] = [
+                ReminderSerializer.to_json(r.convert_to_relative(event.start))
+                for r in event.reminders
+            ]
 
         if event.conference_solution is not None:
             if isinstance(event.conference_solution, ConferenceSolution):
