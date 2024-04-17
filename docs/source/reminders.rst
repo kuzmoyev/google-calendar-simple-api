@@ -100,7 +100,7 @@ You can also set specific time for a reminder.
             ]
         )
 
-        event.reminders[0].minutes_before_start == None
+        event.reminders[0].minutes_before_start is None
         event.reminders[0].days_before == 1
         event.reminders[0].at == time(12, 00)
 
