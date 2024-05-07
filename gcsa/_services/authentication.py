@@ -6,7 +6,7 @@ from typing import List
 from googleapiclient import discovery
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
+from google.auth.credentials import Credentials
 
 
 class AuthenticatedService:
@@ -80,7 +80,7 @@ class AuthenticatedService:
     def _ensure_refreshed(
             credentials: Credentials
     ) -> Credentials:
-        if not credentials.valid and credentials.expired and credentials.refresh_token:
+        if not credentials.valid and credentials.expired:
             credentials.refresh(Request())
         return credentials
 
