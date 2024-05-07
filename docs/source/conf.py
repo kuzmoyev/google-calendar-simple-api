@@ -186,3 +186,5 @@ html_css_files = [
     'css/custom.css',
     'css/colors.css',
 ]
+
+autodoc_preserve_defaults = True

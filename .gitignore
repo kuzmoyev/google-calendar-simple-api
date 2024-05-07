@@ -9,6 +9,7 @@ build
 dist
 .eggs
 gcsa.egg-info
+docs/html
 
 example.py
 coverage.xml
