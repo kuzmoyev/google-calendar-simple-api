@@ -106,7 +106,7 @@ You can also set specific time for a reminder.
 
         event = gc.add_event(event)
 
-        event.reminders[0].minutes_before_start == 12 * 60
+        event.reminders[0].minutes_before_start == 24 * 60  # exactly one day before
         event.reminders[0].days_before is None
         event.reminders[0].at is None
 
