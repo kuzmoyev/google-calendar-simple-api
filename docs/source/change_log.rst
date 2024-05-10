@@ -8,19 +8,19 @@ v2.3.0
 
 API
 ---
-* Adds `add_attendees` method to the `Event` for adding multiple attendees.
+* Adds `add_attendees` method to the `Event` for adding multiple attendees
 * Add specific time reminders (N days before at HH:MM)
 * Support Python3.12
 * Allow service account credentials in `GoogleCalendar`
 
 Core
 ----
-* None
+* Don't evaluate default arguments in code docs (primarily for `timezone=get_localzone_name()`)
 
 Backward compatibility
 ----------------------
 * If token is expired but doesn't have refresh token, raises `google.auth.exceptions.RefreshError`
-  instead of sending the request.
+  instead of sending the request
 
 
 v2.2.0
