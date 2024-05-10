@@ -1,22 +1,14 @@
 #!/usr/bin/env python3
+import subprocess
 
 from setuptools import setup, find_packages, Command
 from shutil import rmtree
 import os
 import sys
 
-try:
-    from sphinx.setup_command import BuildDoc
-except ImportError:
-    class BuildDoc(Command):
-        user_options = []
-
-        def run(self):
-            raise
-
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '2.2.0'
+VERSION = '2.3.0'
 
 
 class UploadCommand(Command):
@@ -60,6 +52,49 @@ class UploadCommand(Command):
         sys.exit()
 
 
+class BuildDoc(Command):
+    user_options = []
+
+    def initialize_options(self) -> None:
+        pass
+
+    def finalize_options(self) -> None:
+        pass
+
+    def run(self):
+        output_path = 'docs/html'
+        changed_files = []
+        cmd = [
+            'sphinx-build',
+            'docs/source', output_path,
+            '--builder', 'html',
+            '--define', f'version={VERSION}',
+            '--verbose'
+        ]
+        with subprocess.Popen(
+                cmd,
+                stdout=subprocess.PIPE,
+                bufsize=1,
+                universal_newlines=True
+        ) as p:
+            for line in p.stdout:
+                print(line, end='')
+                if line.startswith('reading sources... ['):
+                    file_name = line.rsplit(maxsplit=1)[1]
+                    if file_name:
+                        changed_files.append(file_name + '.html')
+
+        index_path = os.path.join(os.getcwd(), output_path, 'index.html')
+        print('\nIndex:')
+        print(f'file://{index_path}')
+
+        if changed_files:
+            print('Update pages:')
+            for cf in changed_files:
+                f_path = os.path.join(os.getcwd(), output_path, cf)
+                print(cf, f'file://{f_path}')
+
+
 with open('README.rst') as f:
     long_description = ''.join(f.readlines())
 
@@ -97,7 +132,7 @@ setup(
         "tzlocal>=4,<5",
         "google-api-python-client>=1.8",
         "google-auth-httplib2>=0.0.4",
-        "google-auth-oauthlib>=0.5,<1.0",
+        "google-auth-oauthlib>=0.5,<2.0",
         "python-dateutil>=2.7",
         "beautiful_date>=2.0.0",
     ],
@@ -121,15 +156,10 @@ setup(
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
     ],
     cmdclass={
         'upload': UploadCommand,
         'docs': BuildDoc,
-    },
-    command_options={
-        'docs': {
-            'version': ('setup.py', VERSION),
-            'build_dir': ('setup.py', 'docs/build')
-        }
-    },
+    }
 )

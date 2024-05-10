@@ -3,7 +3,7 @@ from typing import List, Union
 
 from beautiful_date import BeautifulDate
 from tzlocal import get_localzone_name
-from datetime import datetime, date, timedelta
+from datetime import datetime, date, timedelta, time
 
 from ._resource import Resource
 from .attachment import Attachment
@@ -223,6 +223,15 @@ class Event(Resource):
         Attendee may be given as email string or :py:class:`~gcsa.attendee.Attendee` object."""
         self.attendees.append(self._ensure_attendee_from_email(attendee))
 
+    def add_attendees(
+            self,
+            attendees: List[Union[str, Attendee]]
+    ):
+        """Adds multiple attendees to an event. See :py:class:`~gcsa.attendee.Attendee`.
+        Each attendee may be given as email string or :py:class:`~gcsa.attendee.Attendee` object."""
+        for a in attendees:
+            self.add_attendee(a)
+
     def add_attachment(
             self,
             file_url: str,
@@ -234,17 +243,21 @@ class Event(Resource):
 
     def add_email_reminder(
             self,
-            minutes_before_start: int = 60
+            minutes_before_start: int = None,
+            days_before: int = None,
+            at: time = None
     ):
         """Adds email reminder to an event. See :py:class:`~gcsa.reminders.EmailReminder`"""
-        self.add_reminder(EmailReminder(minutes_before_start))
+        self.add_reminder(EmailReminder(minutes_before_start, days_before, at))
 
     def add_popup_reminder(
             self,
-            minutes_before_start: int = 30
+            minutes_before_start: int = None,
+            days_before: int = None,
+            at: time = None
     ):
         """Adds popup reminder to an event. See :py:class:`~gcsa.reminders.PopupReminder`"""
-        self.add_reminder(PopupReminder(minutes_before_start))
+        self.add_reminder(PopupReminder(minutes_before_start, days_before, at))
 
     def add_reminder(
             self,

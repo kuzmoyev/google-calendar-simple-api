@@ -50,7 +50,7 @@ If applicable, add screenshots to help explain your problem.
 
 - OS: [e.g. Linux/Windows/MacOS]
 - GCSA version: [e.g. 2.0.1]
-- Python version: [e.g. 3.11]
+- Python version: [e.g. 3.12]
 
 ## Additional context
 
