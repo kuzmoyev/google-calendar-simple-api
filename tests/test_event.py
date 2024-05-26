@@ -59,7 +59,7 @@ class TestEvent(TestCase):
         self.assertTrue(event.guests_can_modify)
         self.assertFalse(event.guests_can_see_other_guests)
 
-    def test_init_no_end(self | None):
+    def test_init_no_end(self):
         start = 1 / Jun / 2019
         event = Event('Good day', start, timezone=TEST_TIMEZONE)
         self.assertEqual(event.end, start + 1 * days)
