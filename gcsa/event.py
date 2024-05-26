@@ -163,7 +163,7 @@ class Event(Resource):
             self.end = ensure_localisation(self.end, timezone)
 
             if self.start.microsecond != 0 or self.end.microsecond:
-                log.warn(
+                log.warning(
                     "Microseconds are used in start/end, but are not supported in Google Calendar API, and will be dropped on submission."
                 )
         elif isinstance(self.start, datetime) or isinstance(self.end, datetime):
