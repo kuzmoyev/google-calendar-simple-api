@@ -46,7 +46,7 @@ class Transparency:
 class Event(Resource):
     def __init__(
             self,
-            summary: str,
+            summary: str | None,
             start: Union[date, datetime, BeautifulDate],
             end: Union[date, datetime, BeautifulDate] = None,
             *,
