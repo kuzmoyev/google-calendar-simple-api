@@ -1,4 +1,5 @@
 from datetime import time
+import datetime
 from unittest import TestCase
 from beautiful_date import Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, Dec, hours, days, Nov
 
@@ -66,6 +67,36 @@ class TestEvent(TestCase):
         start = ensure_localisation((1 / Jul / 2019)[12:00], TEST_TIMEZONE)
         event = Event('Lunch', start, timezone=TEST_TIMEZONE)
         self.assertEqual(event.end, start + 1 * hours)
+
+    def test_init_with_microseconds(self):
+        with self.assertLogs("gcsa.event", level="WARNING") as cm:
+            Event(
+                "Test",
+                start=datetime.datetime(
+                    year=1979, month=1, day=1, hour=1, minute=1, second=1, microsecond=1
+                ),
+            )
+            self.assertEqual(
+                cm.output,
+                [
+                    "WARNING:gcsa.event:Microseconds are used in start/end, but are not supported in Google Calendar API, and will be dropped on submission."
+                ],
+            )
+
+    def test_init_without_title(self):
+        with self.assertLogs("gcsa.event", level="WARNING") as cm:
+            Event(
+                "",
+                start=datetime.datetime(
+                    year=1979, month=1, day=1, hour=1, minute=1, second=1, microsecond=0
+                ),
+            )
+            self.assertEqual(
+                cm.output,
+                [
+                    "WARNING:gcsa.event:Summary is empty in 1979-01-01 01:01:01+01:00 - . Note that if the event is loaded from Google Calendar, its summary will be `None`"
+                ],
+            )
 
     def test_init_no_start_or_end(self):
         event = Event('Good day', start=None, timezone=TEST_TIMEZONE)
