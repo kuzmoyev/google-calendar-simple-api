@@ -59,7 +59,7 @@ class TestEvent(TestCase):
         self.assertTrue(event.guests_can_modify)
         self.assertFalse(event.guests_can_see_other_guests)
 
-    def test_init_no_end(self):
+    def test_init_no_end(self | None):
         start = 1 / Jun / 2019
         event = Event('Good day', start, timezone=TEST_TIMEZONE)
         self.assertEqual(event.end, start + 1 * days)
@@ -90,11 +90,12 @@ class TestEvent(TestCase):
                 start=datetime.datetime(
                     year=1979, month=1, day=1, hour=1, minute=1, second=1, microsecond=0
                 ),
+                timezone=TEST_TIMEZONE,
             )
             self.assertEqual(
                 cm.output,
                 [
-                    "WARNING:gcsa.event:Summary is empty in 1979-01-01 01:01:01+01:00 - . Note that if the event is loaded from Google Calendar, its summary will be `None`"
+                    "WARNING:gcsa.event:Summary is empty in 1979-01-01 01:01:01+12:00 - . Note that if the event is loaded from Google Calendar, its summary will be `None`"
                 ],
             )
 
