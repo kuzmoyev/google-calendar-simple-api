@@ -1,6 +1,6 @@
 from functools import total_ordering
 import logging
-from typing import List, Union
+from typing import List, Optional, Union
 
 from beautiful_date import BeautifulDate
 from tzlocal import get_localzone_name
@@ -46,7 +46,7 @@ class Transparency:
 class Event(Resource):
     def __init__(
             self,
-            summary: str | None,
+            summary: Optional[str] | None,
             start: Union[date, datetime, BeautifulDate],
             end: Union[date, datetime, BeautifulDate] = None,
             *,
@@ -162,7 +162,7 @@ class Event(Resource):
             self.start = ensure_localisation(self.start, timezone)
             self.end = ensure_localisation(self.end, timezone)
 
-            if self.start.microsecond != 0 or self.end.microsecond:
+            if self.start.microsecond != 0 or self.end.microsecond != 0:
                 log.warning(
                     "Microseconds are used in start/end, but are not supported in Google Calendar API, and will be dropped on submission."
                 )
