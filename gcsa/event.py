@@ -165,9 +165,9 @@ class Event(Resource):
 
             if self.start.microsecond != 0 or self.end.microsecond != 0:
                 log.warning(
-                    "Microseconds are used in start/end,"
-                    + "but are not supported in the Google Calendar API"
-                    + "and will be dropped on submission."
+                    "Microseconds are used in start/end, " +
+                    "but are not supported in the Google Calendar API " +
+                    "and will be dropped on submission."
                 )
         elif isinstance(self.start, datetime) or isinstance(self.end, datetime):
             raise TypeError('Start and end must either both be date or both be datetime.')
@@ -198,7 +198,7 @@ class Event(Resource):
         self.summary = summary
         if self.summary == "":
             log.warning(
-                f"Summary is empty in {self}. Note that if the event is loaded"
+                f"Summary is empty in {self}. Note that if the event is loaded "
                 + "from Google Calendar, its summary will be `None`"
             )
 

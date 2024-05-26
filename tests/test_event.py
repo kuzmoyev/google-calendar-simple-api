@@ -79,9 +79,9 @@ class TestEvent(TestCase):
             self.assertEqual(
                 cm.output,
                 [
-                    "WARNING:gcsa.event:Microseconds are used in start/end," +
-                    "but are not supported in Google Calendar API" +
-                    ", and will be dropped on submission."
+                    "WARNING:gcsa.event:Microseconds are used in start/end, " +
+                    "but are not supported in the Google Calendar API " +
+                    "and will be dropped on submission."
                 ],
             )
 
@@ -97,9 +97,9 @@ class TestEvent(TestCase):
             self.assertEqual(
                 cm.output,
                 [
-                    "WARNING:gcsa.event:Summary is empty in 1979-01-01 01:01:01+12:00 - ."
-                    "Note that if the event is loaded from Google Calendar,"
-                    +" its summary will be `None`"
+                    "WARNING:gcsa.event:Summary is empty in 1979-01-01 01:01:01+12:00 - . " +
+                    "Note that if the event is loaded from Google Calendar, " +
+                    "its summary will be `None`"
                 ],
             )
 
