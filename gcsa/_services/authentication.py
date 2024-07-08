@@ -9,6 +9,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow, WSGITimeout
 from google.auth.transport.requests import Request
 from google.auth.credentials import Credentials
 
+from gcsa.exceptions import FailedToAuthenticateError
+
 
 class AuthenticatedService:
     """Handles authentication of the `GoogleCalendar`"""
@@ -122,6 +124,9 @@ class AuthenticatedService:
                     )
                 except WSGITimeout:
                     print('Authentication flow timed out. Please try again.')
+
+            if credentials is None:
+                raise FailedToAuthenticateError
 
             if save_token:
                 with open(token_path, 'wb') as token_file:
