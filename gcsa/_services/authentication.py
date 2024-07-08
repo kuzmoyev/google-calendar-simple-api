@@ -2,6 +2,7 @@ import pickle
 import os.path
 import glob
 from typing import List
+import webbrowser
 
 from googleapiclient import discovery
 from google_auth_oauthlib.flow import InstalledAppFlow, WSGITimeout
@@ -93,7 +94,8 @@ class AuthenticatedService:
             save_token: bool,
             host: str,
             port: int,
-            bind_addr: str
+            bind_addr: str,
+            open_browser: bool = True
     ) -> Credentials:
         credentials = None
 
@@ -109,7 +111,14 @@ class AuthenticatedService:
                 flow = InstalledAppFlow.from_client_secrets_file(credentials_path, scopes)
                 try:
                     credentials = flow.run_local_server(
-                        host=host, port=port, bind_addr=bind_addr, timeout_seconds=120
+                        host=host, port=port, bind_addr=bind_addr, timeout_seconds=120,
+                        open_browser=open_browser
+                    )
+                except webbrowser.Error:
+                    # System has no default browser configured, retry without opening browser
+                    return AuthenticatedService._get_credentials(
+                        token_path, credentials_dir, credentials_file, scopes, save_token, host, port,
+                        bind_addr, open_browser=False
                     )
                 except WSGITimeout:
                     print('Authentication flow timed out. Please try again.')
