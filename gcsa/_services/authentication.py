@@ -13,7 +13,6 @@ class AuthenticatedService:
     """Handles authentication of the `GoogleCalendar`"""
 
     _READ_WRITE_SCOPES = 'https://www.googleapis.com/auth/calendar'
-    _LIST_ORDERS = ("startTime", "updated")
 
     def __init__(
             self,
