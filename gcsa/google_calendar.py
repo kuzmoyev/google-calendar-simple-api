@@ -1,3 +1,5 @@
+from typing import Optional
+
 from google.oauth2.credentials import Credentials
 
 from ._services.acl_service import ACLService
@@ -31,7 +33,8 @@ class GoogleCalendar(
             read_only: bool = False,
             authentication_flow_host: str = 'localhost',
             authentication_flow_port: int = 8080,
-            authentication_flow_bind_addr: str = None
+            authentication_flow_bind_addr: str = None,
+            open_browser: Optional[bool] = None
     ):
         """
         Specify ``credentials`` to use in requests or ``credentials_path`` and ``token_path`` to get credentials from.
@@ -67,6 +70,12 @@ class GoogleCalendar(
         :param authentication_flow_bind_addr:
                 Optional IP address for the redirect server to listen on when it is not the same as host
                 (e.g. in a container)
+        :param open_browser:
+                Whether to open the authorization URL in the user's browser.
+                    * None (default): try opening the URL in the browser, if it fails proceed without the browser
+                    * True: try opening the URL in the browser,
+                            raise `webbrowser.Error` if runnable browser can not be located
+                    * False: do not open URL in the browser.
         """
         super().__init__(
             default_calendar=default_calendar,
@@ -77,5 +86,6 @@ class GoogleCalendar(
             read_only=read_only,
             authentication_flow_host=authentication_flow_host,
             authentication_flow_port=authentication_flow_port,
-            authentication_flow_bind_addr=authentication_flow_bind_addr
+            authentication_flow_bind_addr=authentication_flow_bind_addr,
+            open_browser=open_browser
         )

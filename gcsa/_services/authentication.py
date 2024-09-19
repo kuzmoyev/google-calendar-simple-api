@@ -1,12 +1,16 @@
+import logging
 import pickle
 import os.path
 import glob
-from typing import List
+import webbrowser
+from typing import List, Optional
 
 from googleapiclient import discovery
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.auth.credentials import Credentials
+
+log = logging.getLogger(__name__)
 
 
 class AuthenticatedService:
@@ -24,7 +28,8 @@ class AuthenticatedService:
             read_only: bool = False,
             authentication_flow_host: str = 'localhost',
             authentication_flow_port: int = 8080,
-            authentication_flow_bind_addr: str = None
+            authentication_flow_bind_addr: str = None,
+            open_browser: Optional[bool] = None
     ):
         """
         Specify ``credentials`` to use in requests or ``credentials_path`` and ``token_path`` to get credentials from.
@@ -52,6 +57,12 @@ class AuthenticatedService:
         :param authentication_flow_bind_addr:
                 Optional IP address for the redirect server to listen on when it is not the same as host
                 (e.g. in a container)
+        :param open_browser:
+                Whether to open the authorization URL in the user's browser.
+                    * None (default): try opening the URL in the browser, if it fails proceed without the browser
+                    * True: try opening the URL in the browser,
+                            raise `webbrowser.Error` if runnable browser can not be located
+                    * False: do not open URL in the browser.
         """
 
         if credentials:
@@ -70,7 +81,8 @@ class AuthenticatedService:
                 save_token,
                 authentication_flow_host,
                 authentication_flow_port,
-                authentication_flow_bind_addr
+                authentication_flow_bind_addr,
+                open_browser
             )
 
         self.service = discovery.build('calendar', 'v3', credentials=self.credentials)
@@ -92,7 +104,8 @@ class AuthenticatedService:
             save_token: bool,
             host: str,
             port: int,
-            bind_addr: str
+            bind_addr: str,
+            open_browser: Optional[bool]
     ) -> Credentials:
         credentials = None
 
@@ -106,7 +119,25 @@ class AuthenticatedService:
             else:
                 credentials_path = os.path.join(credentials_dir, credentials_file)
                 flow = InstalledAppFlow.from_client_secrets_file(credentials_path, scopes)
-                credentials = flow.run_local_server(host=host, port=port, bind_addr=bind_addr)
+                try:
+                    credentials = flow.run_local_server(
+                        host=host,
+                        port=port,
+                        bind_addr=bind_addr,
+                        open_browser=open_browser or open_browser is None
+                    )
+                except webbrowser.Error:
+                    if open_browser:
+                        raise
+                    else:
+                        # Try without browser
+                        log.warning("Could not locate runnable browser")
+                        credentials = flow.run_local_server(
+                            host=host,
+                            port=port,
+                            bind_addr=bind_addr,
+                            open_browser=False
+                        )
 
             if save_token:
                 with open(token_path, 'wb') as token_file:
