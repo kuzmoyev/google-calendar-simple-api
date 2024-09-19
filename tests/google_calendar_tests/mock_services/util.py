@@ -1,3 +1,6 @@
+import webbrowser
+
+
 class MockToken:
     def __init__(self, valid, refresh_token='refresh_token'):
         self.valid = valid
@@ -7,6 +10,17 @@ class MockToken:
     def refresh(self, _):
         self.valid = True
         self.expired = False
+
+
+class MockAuthFlow:
+    def __init__(self, has_browser=True):
+        self.has_browser = has_browser
+
+    def run_local_server(self, *args, open_browser=True, **kwargs):
+        if not self.has_browser and open_browser:
+            raise webbrowser.Error
+
+        return MockToken(valid=True)
 
 
 def executable(fn):

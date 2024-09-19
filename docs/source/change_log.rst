@@ -3,6 +3,24 @@
 Change log
 ==========
 
+v2.4.0
+~~~~~~
+
+API
+---
+* Warn user about microseconds in start/end datetime
+* Warn user about empty summary
+* Adds open_browser argument to GoogleCalendar
+
+Core
+----
+* None
+
+Backward compatibility
+----------------------
+* If there is no available browser, by default, authentication will not raise an error and retry without the browser
+
+
 v2.3.0
 ~~~~~~
 

@@ -1,11 +1,12 @@
 import pickle
+import webbrowser
 from os import path
 from unittest.mock import patch
 
 from pyfakefs.fake_filesystem_unittest import TestCase
 
 from gcsa.google_calendar import GoogleCalendar
-from tests.google_calendar_tests.mock_services.util import MockToken
+from tests.google_calendar_tests.mock_services.util import MockToken, MockAuthFlow
 
 
 class TestGoogleCalendarCredentials(TestCase):
@@ -31,18 +32,10 @@ class TestGoogleCalendarCredentials(TestCase):
     def _add_mocks(self):
         self.build_patcher = patch('googleapiclient.discovery.build', return_value=None).start()
 
-        class MockAuthFlow:
-            def run_local_server(self, *args, **kwargs):
-                return MockToken(valid=True)
-
         self.from_client_secrets_file_patcher = patch(
             'google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file',
             return_value=MockAuthFlow()
         ).start()
-
-    def tearDown(self):
-        self.build_patcher.stop()
-        self.from_client_secrets_file_patcher.stop()
 
     def test_with_given_credentials(self):
         GoogleCalendar(credentials=MockToken(valid=True))
@@ -101,3 +94,22 @@ class TestGoogleCalendarCredentials(TestCase):
         self.assertTrue(gc.credentials.valid)
         self.assertFalse(gc.credentials.expired)
         self.assertTrue(self.from_client_secrets_file_patcher.called)
+
+    def test_no_browser_without_error(self):
+        self.from_client_secrets_file_patcher = patch(
+            'google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file',
+            return_value=MockAuthFlow(has_browser=False)
+        ).start()
+
+        gc = GoogleCalendar(credentials_path=self.credentials_path, open_browser=None)
+        self.assertTrue(gc.credentials.valid)
+        self.assertTrue(self.from_client_secrets_file_patcher.called)
+
+    def test_no_browser_with_error(self):
+        self.from_client_secrets_file_patcher = patch(
+            'google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file',
+            return_value=MockAuthFlow(has_browser=False)
+        ).start()
+
+        with self.assertRaises(webbrowser.Error):
+            GoogleCalendar(credentials_path=self.credentials_path, open_browser=True)
