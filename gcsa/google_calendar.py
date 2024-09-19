@@ -72,10 +72,10 @@ class GoogleCalendar(
                 (e.g. in a container)
         :param open_browser:
                 Whether to open the authorization URL in the user's browser.
-                    * None (default): try opening the URL in the browser, if it fails proceed without the browser
-                    * True: try opening the URL in the browser,
-                            raise `webbrowser.Error` if runnable browser can not be located
-                    * False: do not open URL in the browser.
+                    - `None` (default): try opening the URL in the browser, if it fails proceed without the browser
+                    - `True`: try opening the URL in the browser,
+                      raise `webbrowser.Error` if runnable browser can not be located
+                    - `False`: do not open URL in the browser.
         """
         super().__init__(
             default_calendar=default_calendar,
