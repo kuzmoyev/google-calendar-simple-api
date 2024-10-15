@@ -1,3 +1,5 @@
+from typing import Optional
+
 from .person import Person
 
 
@@ -19,14 +21,14 @@ class Attendee(Person):
     def __init__(
             self,
             email: str,
-            display_name: str = None,
-            comment: str = None,
-            optional: bool = None,
-            is_resource: bool = None,
-            additional_guests: int = None,
-            _id: str = None,
-            _is_self: bool = None,
-            _response_status: str = None
+            display_name: Optional[str] = None,
+            comment: Optional[str] = None,
+            optional: Optional[bool] = None,
+            is_resource: Optional[bool] = None,
+            additional_guests: Optional[int] = None,
+            _id: Optional[str] = None,
+            _is_self: Optional[bool] = None,
+            _response_status: Optional[str] = None
     ):
         """Represents attendee of the event.
 

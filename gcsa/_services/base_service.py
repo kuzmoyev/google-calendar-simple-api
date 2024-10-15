@@ -1,4 +1,4 @@
-from typing import Callable, Type, Union
+from typing import Callable, Type, Union, Optional
 
 from gcsa._resource import Resource
 from gcsa._services.authentication import AuthenticatedService
@@ -22,7 +22,7 @@ class BaseService(AuthenticatedService):
     @staticmethod
     def _list_paginated(
             request_method: Callable,
-            serializer_cls: Type = None,
+            serializer_cls: Optional[Type] = None,
             **kwargs
     ):
         page_token = None

@@ -1,4 +1,4 @@
-from typing import Iterable, Union
+from typing import Iterable, Union, Optional
 
 from gcsa._services.base_service import BaseService
 from gcsa.acl import AccessControlRule
@@ -10,7 +10,7 @@ class ACLService(BaseService):
 
     def get_acl_rules(
             self,
-            calendar_id: str = None,
+            calendar_id: Optional[str] = None,
             show_deleted: bool = False
     ) -> Iterable[AccessControlRule]:
         """Returns the rules in the access control list for the calendar.
@@ -39,7 +39,7 @@ class ACLService(BaseService):
     def get_acl_rule(
             self,
             rule_id: str,
-            calendar_id: str = None
+            calendar_id: Optional[str] = None
     ) -> AccessControlRule:
         """Returns an access control rule
 
@@ -64,7 +64,7 @@ class ACLService(BaseService):
             self,
             acl_rule: AccessControlRule,
             send_notifications: bool = True,
-            calendar_id: str = None
+            calendar_id: Optional[str] = None
     ):
         """Adds access control rule
 
@@ -93,7 +93,7 @@ class ACLService(BaseService):
             self,
             acl_rule: AccessControlRule,
             send_notifications: bool = True,
-            calendar_id: str = None
+            calendar_id: Optional[str] = None
     ):
         """Updates given access control rule
 
@@ -123,7 +123,7 @@ class ACLService(BaseService):
     def delete_acl_rule(
             self,
             acl_rule: Union[AccessControlRule, str],
-            calendar_id: str = None
+            calendar_id: Optional[str] = None
     ):
         """Deletes access control rule.
 

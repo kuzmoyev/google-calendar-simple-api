@@ -1,4 +1,4 @@
-from typing import Iterable, Union
+from typing import Iterable, Union, Optional
 
 from gcsa._services.base_service import BaseService
 from gcsa.calendar import CalendarListEntry, Calendar
@@ -10,7 +10,7 @@ class CalendarListService(BaseService):
 
     def get_calendar_list(
             self,
-            min_access_role: str = None,
+            min_access_role: Optional[str] = None,
             show_deleted: bool = False,
             show_hidden: bool = False
     ) -> Iterable[CalendarListEntry]:
@@ -37,7 +37,7 @@ class CalendarListService(BaseService):
 
     def get_calendar_list_entry(
             self,
-            calendar_id: str = None
+            calendar_id: Optional[str] = None
     ) -> CalendarListEntry:
         """Returns a calendar with the corresponding calendar_id from the user's calendar list.
 
@@ -56,7 +56,7 @@ class CalendarListService(BaseService):
     def add_calendar_list_entry(
             self,
             calendar: CalendarListEntry,
-            color_rgb_format: bool = None
+            color_rgb_format: Optional[bool] = None
     ) -> CalendarListEntry:
         """Adds an existing calendar into the user's calendar list.
 
@@ -83,7 +83,7 @@ class CalendarListService(BaseService):
     def update_calendar_list_entry(
             self,
             calendar: CalendarListEntry,
-            color_rgb_format: bool = None
+            color_rgb_format: Optional[bool] = None
     ) -> CalendarListEntry:
         """Updates an existing calendar on the user's calendar list.
 

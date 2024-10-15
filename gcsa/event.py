@@ -49,31 +49,31 @@ class Event(Resource):
             self,
             summary: Optional[str],
             start: Union[date, datetime, BeautifulDate],
-            end: Union[date, datetime, BeautifulDate] = None,
+            end: Optional[Union[date, datetime, BeautifulDate]] = None,
             *,
             timezone: str = get_localzone_name(),
-            event_id: str = None,
-            description: str = None,
-            location: str = None,
-            recurrence: Union[str, List[str]] = None,
-            color_id: str = None,
+            event_id: Optional[str] = None,
+            description: Optional[str] = None,
+            location: Optional[str] = None,
+            recurrence: Optional[Union[str, List[str]]] = None,
+            color_id: Optional[str] = None,
             visibility: str = Visibility.DEFAULT,
-            attendees: Union[Attendee, str, List[Attendee], List[str]] = None,
-            attachments: Union[Attachment, List[Attachment]] = None,
-            conference_solution: Union[ConferenceSolution, ConferenceSolutionCreateRequest] = None,
-            reminders: Union[Reminder, List[Reminder]] = None,
+            attendees: Optional[Union[Attendee, str, List[Attendee], List[str]]] = None,
+            attachments: Optional[Union[Attachment, List[Attachment]]] = None,
+            conference_solution: Optional[Union[ConferenceSolution, ConferenceSolutionCreateRequest]] = None,
+            reminders: Optional[Union[Reminder, List[Reminder]]] = None,
             default_reminders: bool = False,
-            minutes_before_popup_reminder: int = None,
-            minutes_before_email_reminder: int = None,
+            minutes_before_popup_reminder: Optional[int] = None,
+            minutes_before_email_reminder: Optional[int] = None,
             guests_can_invite_others: bool = True,
             guests_can_modify: bool = False,
             guests_can_see_other_guests: bool = True,
-            transparency: str = None,
-            _creator: Person = None,
-            _organizer: Person = None,
-            _created: datetime = None,
-            _updated: datetime = None,
-            _recurring_event_id: str = None,
+            transparency: Optional[str] = None,
+            _creator: Optional[Person] = None,
+            _organizer: Optional[Person] = None,
+            _created: Optional[datetime] = None,
+            _updated: Optional[datetime] = None,
+            _recurring_event_id: Optional[str] = None,
             **other
     ):
         """
@@ -147,7 +147,7 @@ class Event(Resource):
                 See more in https://developers.google.com/calendar/v3/reference/events
         """
 
-        def ensure_list(obj):
+        def ensure_list(obj) -> List:
             return [] if obj is None else obj if isinstance(obj, list) else [obj]
 
         self.timezone = timezone
@@ -251,26 +251,26 @@ class Event(Resource):
     def add_attachment(
             self,
             file_url: str,
-            title: str = None,
-            mime_type: str = None
+            title: Optional[str] = None,
+            mime_type: Optional[str] = None
     ):
         """Adds attachment to an event. See :py:class:`~gcsa.attachment.Attachment`"""
         self.attachments.append(Attachment(file_url=file_url, title=title, mime_type=mime_type))
 
     def add_email_reminder(
             self,
-            minutes_before_start: int = None,
-            days_before: int = None,
-            at: time = None
+            minutes_before_start: Optional[int] = None,
+            days_before: Optional[int] = None,
+            at: Optional[time] = None
     ):
         """Adds email reminder to an event. See :py:class:`~gcsa.reminders.EmailReminder`"""
         self.add_reminder(EmailReminder(minutes_before_start, days_before, at))
 
     def add_popup_reminder(
             self,
-            minutes_before_start: int = None,
-            days_before: int = None,
-            at: time = None
+            minutes_before_start: Optional[int] = None,
+            days_before: Optional[int] = None,
+            at: Optional[time] = None
     ):
         """Adds popup reminder to an event. See :py:class:`~gcsa.reminders.PopupReminder`"""
         self.add_reminder(PopupReminder(minutes_before_start, days_before, at))

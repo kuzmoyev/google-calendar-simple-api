@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Union, Iterator, Iterable, Callable
+from typing import Union, Iterator, Iterable, Callable, Optional
 
 from beautiful_date import BeautifulDate
 from dateutil.relativedelta import relativedelta
@@ -57,13 +57,13 @@ class EventsService(BaseService):
 
     def get_events(
             self,
-            time_min: Union[date, datetime, BeautifulDate] = None,
-            time_max: Union[date, datetime, BeautifulDate] = None,
-            order_by: str = None,
+            time_min: Optional[Union[date, datetime, BeautifulDate]] = None,
+            time_max: Optional[Union[date, datetime, BeautifulDate]] = None,
+            order_by: Optional[str] = None,
             timezone: str = get_localzone_name(),
             single_events: bool = False,
-            query: str = None,
-            calendar_id: str = None,
+            query: Optional[str] = None,
+            calendar_id: Optional[str] = None,
             **kwargs
     ) -> Iterable[Event]:
         """Lists events.
@@ -119,7 +119,7 @@ class EventsService(BaseService):
             time_min: Union[date, datetime, BeautifulDate] = None,
             time_max: Union[date, datetime, BeautifulDate] = None,
             timezone: str = get_localzone_name(),
-            calendar_id: str = None,
+            calendar_id: Optional[str] = None,
             **kwargs
     ) -> Iterable[Event]:
         """Lists instances of recurring event
@@ -187,7 +187,7 @@ class EventsService(BaseService):
     def get_event(
             self,
             event_id: str,
-            calendar_id: str = None,
+            calendar_id: Optional[str] = None,
             **kwargs
     ) -> Event:
         """Returns the event with the corresponding event_id.
@@ -217,7 +217,7 @@ class EventsService(BaseService):
             self,
             event: Event,
             send_updates: str = SendUpdatesMode.NONE,
-            calendar_id: str = None,
+            calendar_id: Optional[str] = None,
             **kwargs
     ) -> Event:
         """Creates event in the calendar
@@ -253,7 +253,7 @@ class EventsService(BaseService):
             self,
             event_string: str,
             send_updates: str = SendUpdatesMode.NONE,
-            calendar_id: str = None,
+            calendar_id: Optional[str] = None,
             **kwargs
     ) -> Event:
         """Creates event in the calendar by string description.
@@ -290,7 +290,7 @@ class EventsService(BaseService):
             self,
             event: Event,
             send_updates: str = SendUpdatesMode.NONE,
-            calendar_id: str = None,
+            calendar_id: Optional[str] = None,
             **kwargs
     ) -> Event:
         """Updates existing event in the calendar
@@ -327,7 +327,7 @@ class EventsService(BaseService):
     def import_event(
             self,
             event: Event,
-            calendar_id: str = None,
+            calendar_id: Optional[str] = None,
             **kwargs
     ) -> Event:
         """Imports an event in the calendar
@@ -362,7 +362,7 @@ class EventsService(BaseService):
             event: Event,
             destination_calendar_id: str,
             send_updates: str = SendUpdatesMode.NONE,
-            source_calendar_id: str = None,
+            source_calendar_id: Optional[str] = None,
             **kwargs
     ) -> Event:
         """Moves existing event from calendar to another calendar
@@ -400,7 +400,7 @@ class EventsService(BaseService):
             self,
             event: Union[Event, str],
             send_updates: str = SendUpdatesMode.NONE,
-            calendar_id: str = None,
+            calendar_id: Optional[str] = None,
             **kwargs
     ):
         """Deletes an event.

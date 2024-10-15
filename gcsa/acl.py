@@ -1,3 +1,5 @@
+from typing import Optional
+
 from gcsa._resource import Resource
 
 
@@ -40,8 +42,8 @@ class AccessControlRule(Resource):
             *,
             role: str,
             scope_type: str,
-            acl_id: str = None,
-            scope_value: str = None
+            acl_id: Optional[str] = None,
+            scope_value: Optional[str] = None
     ):
         """
         :param role:

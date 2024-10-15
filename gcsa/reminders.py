@@ -1,5 +1,5 @@
 from datetime import time, date, datetime
-from typing import Union
+from typing import Union, Optional
 
 from beautiful_date import BeautifulDate, days
 
@@ -8,9 +8,9 @@ class Reminder:
     def __init__(
             self,
             method: str,
-            minutes_before_start: int = None,
-            days_before: int = None,
-            at: time = None
+            minutes_before_start: Optional[int] = None,
+            days_before: Optional[int] = None,
+            at: Optional[time] = None
     ):
         """Represents base reminder object
 
@@ -67,10 +67,15 @@ class Reminder:
 
     def convert_to_relative(self, start: Union[date, datetime, BeautifulDate]) -> 'Reminder':
         """Converts absolute reminder (with set `days_before` and `at`) to relative (with set `minutes_before_start`)
-         relative to `start` date/datetime. Returns self if `minutes_before_start` already set.
+         relative to `start` date/datetime. Returns self if `minutes_before_start` is already set.
          """
         if self.minutes_before_start is not None:
             return self
+
+        if self.days_before is None or self.at is None:
+            raise ValueError(f'Both "days_before" and "at" values need to be set '
+                             f'when using absolute time for a reminder. '
+                             f'Provided days_before={self.days_before} and at={self.at}.')
 
         tzinfo = start.tzinfo if isinstance(start, datetime) else None
         start_of_the_day = datetime.combine(start, datetime.min.time(), tzinfo=tzinfo)
@@ -92,9 +97,9 @@ class Reminder:
 class EmailReminder(Reminder):
     def __init__(
             self,
-            minutes_before_start: int = None,
-            days_before: int = None,
-            at: time = None
+            minutes_before_start: Optional[int] = None,
+            days_before: Optional[int] = None,
+            at: Optional[time] = None
     ):
         """Represents email reminder object
 
@@ -116,9 +121,9 @@ class EmailReminder(Reminder):
 class PopupReminder(Reminder):
     def __init__(
             self,
-            minutes_before_start: int = None,
-            days_before: int = None,
-            at: time = None
+            minutes_before_start: Optional[int] = None,
+            days_before: Optional[int] = None,
+            at: Optional[time] = None
     ):
         """Represents popup reminder object
 
