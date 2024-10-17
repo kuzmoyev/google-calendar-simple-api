@@ -12,13 +12,14 @@ Issue submissions, discussions, suggestions are as welcomed contributions as pul
 1. [Fork](https://github.com/kuzmoyev/google-calendar-simple-api/fork) the repository
 2. Clone it with `git clone git@github.com:{your_username}/google-calendar-simple-api.git`
 3. Install dependencies if needed with `pip install -e .` (or `pip install -e ".[dev]"` if you want to run tests, compile documentation, etc.). 
-Use [virtualenv](https://virtualenv.pypa.io/en/latest/) to avoid polluting your global python
+   Use [virtualenv](https://virtualenv.pypa.io/en/latest/) to avoid polluting your global python
 4. Make and commit the changes. Add `closes #{issue_number}` to commit message if applies
 5. Run the tests with `tox` (these will be run on pull request):
     * `tox` - all the tests
     * `tox -e pytest` - unit tests
     * `tox -e flake8` - style check
     * `tox -e sphinx` - docs compilation test
+    * `tox -e mypy` - static type check
 6. Push
 7. Create pull request
     * towards `dev` branch if the changes require a new GCSA version (i.e. changes in [gcsa](https://github.com/kuzmoyev/google-calendar-simple-api/tree/master/gcsa) module)
