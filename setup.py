@@ -101,6 +101,7 @@ with open('README.rst') as f:
 DOCS_REQUIRES = [
     'sphinx',
     'sphinx-rtd-theme',
+    'sphinxcontrib-googleanalytics',
 ]
 
 TEST_REQUIRES = [

@@ -41,7 +41,8 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
     'sphinx.ext.autosummary',
-    'sphinx_rtd_theme'
+    'sphinx_rtd_theme',
+    'sphinxcontrib.googleanalytics'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -178,9 +179,7 @@ autoclass_content = 'both'
 autodoc_member_order = 'bysource'
 autodoc_typehints = "description"
 
-html_theme_options = {
-    'analytics_id': 'G-PT0TPQSZ56',
-}
+googleanalytics_id = 'G-PT0TPQSZ56'
 
 html_css_files = [
     'css/custom.css',
