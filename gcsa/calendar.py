@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from tzlocal import get_localzone_name
 
@@ -42,13 +42,13 @@ class AccessRoles:
 class Calendar(Resource):
     def __init__(
             self,
-            summary: str,
+            summary: Optional[str],
             *,
-            calendar_id: str = None,
-            description: str = None,
-            location: str = None,
-            timezone: str = get_localzone_name(),
-            allowed_conference_solution_types: List[str] = None
+            calendar_id: Optional[str] = None,
+            description: Optional[str] = None,
+            location: Optional[str] = None,
+            timezone: Optional[str] = get_localzone_name(),
+            allowed_conference_solution_types: Optional[List[str]] = None
     ):
         """
         :param summary:
@@ -80,14 +80,14 @@ class Calendar(Resource):
 
     def to_calendar_list_entry(
             self,
-            summary_override: str = None,
-            color_id: str = None,
-            background_color: str = None,
-            foreground_color: str = None,
+            summary_override: Optional[str] = None,
+            color_id: Optional[str] = None,
+            background_color: Optional[str] = None,
+            foreground_color: Optional[str] = None,
             hidden: bool = False,
             selected: bool = False,
-            default_reminders: List[Reminder] = None,
-            notification_types: List[str] = None,
+            default_reminders: Optional[List[Reminder]] = None,
+            notification_types: Optional[List[str]] = None,
     ) -> 'CalendarListEntry':
         """Converts :py:class:`~gcsa.calendar.Calendar` to :py:class:`~gcsa.calendar.CalendarListEntry`
         that can be added to the calendar list.
@@ -120,7 +120,7 @@ class Calendar(Resource):
         :return:
                 :py:class:`~gcsa.calendar.CalendarListEntry` object that can be added to the calendar list.
         """
-        if self.id is None:
+        if self.calendar_id is None:
             raise ValueError('Calendar has to have `calendar_id` set to be converted to CalendarListEntry')
 
         return CalendarListEntry(
@@ -161,20 +161,20 @@ class CalendarListEntry(Calendar):
             self,
             calendar_id: str,
             *,
-            summary_override: str = None,
-            color_id: str = None,
-            background_color: str = None,
-            foreground_color: str = None,
+            summary_override: Optional[str] = None,
+            color_id: Optional[str] = None,
+            background_color: Optional[str] = None,
+            foreground_color: Optional[str] = None,
             hidden: bool = False,
             selected: bool = False,
-            default_reminders: List[Reminder] = None,
-            notification_types: List[str] = None,
-            _summary: str = None,
-            _description: str = None,
-            _location: str = None,
-            _timezone: str = None,
-            _allowed_conference_solution_types: List[str] = None,
-            _access_role: str = None,
+            default_reminders: Optional[List[Reminder]] = None,
+            notification_types: Optional[List[str]] = None,
+            _summary: Optional[str] = None,
+            _description: Optional[str] = None,
+            _location: Optional[str] = None,
+            _timezone: Optional[str] = None,
+            _allowed_conference_solution_types: Optional[List[str]] = None,
+            _access_role: Optional[str] = None,
             _primary: bool = False,
             _deleted: bool = False
     ):

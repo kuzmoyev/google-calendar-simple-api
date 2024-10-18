@@ -1,4 +1,4 @@
-from typing import Union, List
+from typing import Union, List, Optional
 from uuid import uuid4
 
 
@@ -21,10 +21,10 @@ class _BaseConferenceSolution:
 
     def __init__(
             self,
-            conference_id: str = None,
-            signature: str = None,
-            notes: str = None,
-            _status: str = 'success'
+            conference_id: Optional[str] = None,
+            signature: Optional[str] = None,
+            notes: Optional[str] = None,
+            _status: Optional[str] = None
     ):
         """
         :param conference_id:
@@ -59,11 +59,12 @@ class _BaseConferenceSolution:
                   In this case `ConferenceSolution` with created entry points
                   is stored in the event's `conference_data`. And `ConferenceSolutionCreateRequest` is omitted.
 
-                Create requests are asynchronous. Check ``status`` field of event's ``conference_solution`` to find it's
+                Create requests are asynchronous. Check ``status`` field of event's ``conference_solution`` to find its
                 status. If the status is ``"success"``, ``conference_solution`` will contain a
-                :py:class:`~gcsa.conference.ConferenceSolution` object and you'll be able to access it's field (like
-                ``entry_points``). Otherwise (if ``status`` is ``""pending"`` or ``"failure"``), ``conference_solution``
-                will contain a :py:class:`~gcsa.conference.ConferenceSolutionCreateRequest` object.
+                :py:class:`~gcsa.conference.ConferenceSolution` object, and you'll be able to access its field (like
+                ``entry_points``).
+                Otherwise, (if ``status`` is ``""pending"`` or ``"failure"``), ``conference_solution`` will contain
+                a :py:class:`~gcsa.conference.ConferenceSolutionCreateRequest` object.
 
         """
         if notes and len(notes) > 2048:
@@ -100,13 +101,13 @@ class EntryPoint:
     def __init__(
             self,
             entry_point_type: str,
-            uri: str = None,
-            label: str = None,
-            pin: str = None,
-            access_code: str = None,
-            meeting_code: str = None,
-            passcode: str = None,
-            password: str = None
+            uri: Optional[str] = None,
+            label: Optional[str] = None,
+            pin: Optional[str] = None,
+            access_code: Optional[str] = None,
+            meeting_code: Optional[str] = None,
+            passcode: Optional[str] = None,
+            password: Optional[str] = None
     ):
         """
         When creating new conference data, populate only the subset of `meeting_code`, `access_code`, `passcode`,
@@ -219,12 +220,12 @@ class ConferenceSolution(_BaseConferenceSolution):
     def __init__(
             self,
             entry_points: Union[EntryPoint, List[EntryPoint]],
-            solution_type: str = None,
-            name: str = None,
-            icon_uri: str = None,
-            conference_id: str = None,
-            signature: str = None,
-            notes: str = None
+            solution_type: Optional[str] = None,
+            name: Optional[str] = None,
+            icon_uri: Optional[str] = None,
+            conference_id: Optional[str] = None,
+            signature: Optional[str] = None,
+            notes: Optional[str] = None
     ):
         """
         :param entry_points:
@@ -337,12 +338,12 @@ class ConferenceSolutionCreateRequest(_BaseConferenceSolution):
 
     def __init__(
             self,
-            solution_type: str = None,
-            request_id: str = None,
-            _status: str = None,
-            conference_id: str = None,
-            signature: str = None,
-            notes: str = None
+            solution_type: Optional[str] = None,
+            request_id: Optional[str] = None,
+            _status: Optional[str] = None,
+            conference_id: Optional[str] = None,
+            signature: Optional[str] = None,
+            notes: Optional[str] = None
     ):
         """
         :param solution_type:

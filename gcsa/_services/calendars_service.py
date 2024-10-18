@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Union, Optional
 
 from gcsa._services.base_service import BaseService
 from gcsa.calendar import Calendar, CalendarListEntry
@@ -10,7 +10,7 @@ class CalendarsService(BaseService):
 
     def get_calendar(
             self,
-            calendar_id: str = None
+            calendar_id: Optional[str] = None
     ) -> Calendar:
         """Returns the calendar with the corresponding calendar_id.
 

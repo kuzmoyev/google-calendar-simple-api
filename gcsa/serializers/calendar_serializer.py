@@ -17,11 +17,11 @@ class CalendarSerializer(BaseSerializer):
             "description": calendar.description,
             "location": calendar.location,
             "timeZone": calendar.timezone,
+            "conferenceProperties": (
+                {"allowedConferenceSolutionTypes": calendar.allowed_conference_solution_types}
+                if calendar.allowed_conference_solution_types else None
+            )
         }
-        if calendar.allowed_conference_solution_types:
-            data["conferenceProperties"] = {
-                "allowedConferenceSolutionTypes": calendar.allowed_conference_solution_types
-            }
 
         data = CalendarSerializer._remove_empty_values(data)
 

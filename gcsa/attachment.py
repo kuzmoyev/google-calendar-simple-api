@@ -1,3 +1,6 @@
+from typing import Optional
+
+
 class Attachment:
     _SUPPORTED_MIME_TYPES = {
         "application/vnd.google-apps.audio",
@@ -21,10 +24,10 @@ class Attachment:
     def __init__(
             self,
             file_url: str,
-            title: str = None,
-            mime_type: str = None,
-            _icon_link: str = None,
-            _file_id: str = None
+            title: Optional[str] = None,
+            mime_type: Optional[str] = None,
+            _icon_link: Optional[str] = None,
+            _file_id: Optional[str] = None
     ):
         """File attachment for the event.
 

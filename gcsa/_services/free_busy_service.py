@@ -1,5 +1,5 @@
 from datetime import date, datetime
-from typing import Union, List
+from typing import Union, List, Optional
 
 from beautiful_date import BeautifulDate
 from dateutil.relativedelta import relativedelta
@@ -14,13 +14,13 @@ from gcsa.util.date_time_util import to_localized_iso
 class FreeBusyService(BaseService):
     def get_free_busy(
             self,
-            resource_ids: Union[str, List[str]] = None,
+            resource_ids: Optional[Union[str, List[str]]] = None,
             *,
-            time_min: Union[date, datetime, BeautifulDate] = None,
-            time_max: Union[date, datetime, BeautifulDate] = None,
+            time_min: Optional[Union[date, datetime, BeautifulDate]] = None,
+            time_max: Optional[Union[date, datetime, BeautifulDate]] = None,
             timezone: str = get_localzone_name(),
-            group_expansion_max: int = None,
-            calendar_expansion_max: int = None,
+            group_expansion_max: Optional[int] = None,
+            calendar_expansion_max: Optional[int] = None,
             ignore_errors: bool = False
     ) -> FreeBusy:
         """Returns free/busy information for a set of calendars and/or groups.

@@ -63,6 +63,17 @@ class TestReminder(TestCase):
         self.assertEqual(reminder.method, 'popup')
         self.assertEqual(reminder.minutes_before_start, 4 * 24 * 60 + 13 * 60 + 35)
 
+    def test_absolute_reminder_conversion_missing_fields(self):
+        absolute_reminder = PopupReminder(days_before=5, at=time(10, 25))
+        absolute_reminder.at = None
+        with self.assertRaises(ValueError):
+            absolute_reminder.convert_to_relative(16 / Apr / 2024)
+
+        absolute_reminder = PopupReminder(days_before=5, at=time(10, 25))
+        absolute_reminder.days_before = None
+        with self.assertRaises(ValueError):
+            absolute_reminder.convert_to_relative(16 / Apr / 2024)
+
     def test_reminder_checks(self):
         # No time provided
         with self.assertRaises(ValueError):

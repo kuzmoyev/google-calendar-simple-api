@@ -26,14 +26,14 @@ class GoogleCalendar(
             self,
             default_calendar: str = 'primary',
             *,
-            credentials: Credentials = None,
-            credentials_path: str = None,
-            token_path: str = None,
+            credentials: Optional[Credentials] = None,
+            credentials_path: Optional[str] = None,
+            token_path: Optional[str] = None,
             save_token: bool = True,
             read_only: bool = False,
             authentication_flow_host: str = 'localhost',
             authentication_flow_port: int = 8080,
-            authentication_flow_bind_addr: str = None,
+            authentication_flow_bind_addr: Optional[str] = None,
             open_browser: Optional[bool] = None
     ):
         """

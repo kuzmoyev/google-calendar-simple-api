@@ -8,7 +8,7 @@ import sys
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '2.4.0'
+VERSION = '2.5.0'
 
 
 class UploadCommand(Command):
@@ -101,6 +101,7 @@ with open('README.rst') as f:
 DOCS_REQUIRES = [
     'sphinx',
     'sphinx-rtd-theme',
+    'sphinxcontrib-googleanalytics',
 ]
 
 TEST_REQUIRES = [
@@ -157,6 +158,7 @@ setup(
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: 3.12',
+        'Programming Language :: Python :: 3.13',
     ],
     cmdclass={
         'upload': UploadCommand,

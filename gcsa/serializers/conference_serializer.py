@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 from gcsa.conference import ConferenceSolutionCreateRequest, ConferenceSolution, EntryPoint
 from .base_serializer import BaseSerializer
 
@@ -98,7 +100,7 @@ class ConferenceSolutionCreateRequestSerializer(BaseSerializer):
 
     @staticmethod
     def _to_json(cscr: ConferenceSolutionCreateRequest):
-        data = {
+        data: Dict[str, Any] = {
             'createRequest': {
                 'requestId': cscr.request_id,
                 'conferenceSolutionKey': {

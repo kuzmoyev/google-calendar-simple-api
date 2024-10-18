@@ -1,6 +1,7 @@
 import re
 from abc import ABC, abstractmethod
 import json
+from typing import Type
 
 import dateutil.parser
 
@@ -10,7 +11,7 @@ def _type_to_snake_case(type_):
 
 
 class BaseSerializer(ABC):
-    type_ = None
+    type_: Type
 
     def __init__(self, obj):
         if isinstance(obj, self.type_):
@@ -70,7 +71,7 @@ class BaseSerializer(ABC):
         """Checks that "type_" is defined and that name of the argument in subclasses __init__ method is the name of
         the "type_" in lowercase. It ensures that error in __init__ function of BaseSerializer has a correct message.
         """
-        if cls.type_ is None:
+        if not hasattr(cls, 'type_') or cls.type_ is None:
             raise AssertionError('Subclass of BaseSerializer has to define class "type_" that is being serialized.')
         if cls.__init__.__code__.co_varnames != ('self', _type_to_snake_case(cls.type_)):
             raise AssertionError('Argument of the __init__ method has to have a name "{}".'

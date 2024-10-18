@@ -1,10 +1,13 @@
+from typing import Optional
+
+
 class Person:
     def __init__(
             self,
-            email: str = None,
-            display_name: str = None,
-            _id: str = None,
-            _is_self: bool = None
+            email: Optional[str] = None,
+            display_name: Optional[str] = None,
+            _id: Optional[str] = None,
+            _is_self: Optional[bool] = None
     ):
         """Represents organizer's, creator's, or primary attendee's fields.
         For attendees see more in :py:class:`~gcsa.attendee.Attendee`.

@@ -1,7 +1,7 @@
 import json
 from collections import namedtuple
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 TimeRange = namedtuple('TimeRange', ('start', 'end'))
 
@@ -14,8 +14,8 @@ class FreeBusy:
             time_max: datetime,
             groups: Dict[str, List[str]],
             calendars: Dict[str, List[TimeRange]],
-            groups_errors: Dict = None,
-            calendars_errors: Dict = None,
+            groups_errors: Optional[Dict] = None,
+            calendars_errors: Optional[Dict] = None,
     ):
         """Represents free/busy information for a given calendar(s) and/or group(s)
 
