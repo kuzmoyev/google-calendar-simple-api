@@ -3,6 +3,24 @@
 Change log
 ==========
 
+
+v2.5.0
+~~~~~~
+
+API
+---
+* Consistent type annotations (primarily regarding `Optional`)
+* Support python3.13
+
+Core
+----
+* Include mypy as a PR check
+
+Backward compatibility
+----------------------
+* Full compatibility
+
+
 v2.4.0
 ~~~~~~
 
