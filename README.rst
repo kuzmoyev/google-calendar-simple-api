@@ -77,7 +77,7 @@ Create recurring event
 
 
 **Suggestion**: use beautiful_date_ to create `date` and `datetime` objects in your
-projects (*because its beautiful... just like you*).
+projects (*because it's beautiful... just like you*).
 
 
 References
