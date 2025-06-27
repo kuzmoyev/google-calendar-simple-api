@@ -12,7 +12,7 @@ from .attendee import Attendee
 from .conference import ConferenceSolution, ConferenceSolutionCreateRequest
 from .person import Person
 from .reminders import PopupReminder, EmailReminder, Reminder
-from .util.date_time_util import ensure_localisation
+from .util.date_time_util import ensure_localisation, DateOrDatetime
 
 log = logging.getLogger(__name__)
 
@@ -48,8 +48,8 @@ class Event(Resource):
     def __init__(
             self,
             summary: Optional[str],
-            start: Union[date, datetime, BeautifulDate],
-            end: Optional[Union[date, datetime, BeautifulDate]] = None,
+            start: DateOrDatetime,
+            end: Optional[DateOrDatetime] = None,
             *,
             timezone: str = get_localzone_name(),
             event_id: Optional[str] = None,

@@ -1,7 +1,9 @@
-from datetime import time, date, datetime
-from typing import Union, Optional
+from datetime import time, datetime
+from typing import Optional
 
-from beautiful_date import BeautifulDate, days
+from beautiful_date import days
+
+from gcsa.util.date_time_util import DateOrDatetime
 
 
 class Reminder:
@@ -65,7 +67,7 @@ class Reminder:
     def __repr__(self):
         return '<{}>'.format(self.__str__())
 
-    def convert_to_relative(self, start: Union[date, datetime, BeautifulDate]) -> 'Reminder':
+    def convert_to_relative(self, start: DateOrDatetime) -> 'Reminder':
         """Converts absolute reminder (with set `days_before` and `at`) to relative (with set `minutes_before_start`)
          relative to `start` date/datetime. Returns self if `minutes_before_start` is already set.
          """

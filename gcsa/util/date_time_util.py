@@ -1,13 +1,30 @@
 from datetime import datetime, date, time
+from typing import overload, Union
+
 from dateutil.tz import gettz
 from tzlocal import get_localzone_name
 
+from beautiful_date import BeautifulDate
 
-def ensure_localisation(dt, timezone=get_localzone_name()):
-    """Insures localisation with provided timezone on "datetime" object.
+DateOrDatetime = Union[date, datetime, BeautifulDate]
 
-    Does nothing to object of type "date"."""
 
+@overload
+def ensure_localisation(dt: datetime, timezone: str = ...) -> datetime: ...
+
+
+@overload
+def ensure_localisation(dt: date, timezone: str = ...) -> date: ...
+
+
+@overload
+def ensure_localisation(dt: BeautifulDate, timezone: str = ...) -> BeautifulDate: ...
+
+
+def ensure_localisation(dt: DateOrDatetime, timezone: str = get_localzone_name()) -> DateOrDatetime:
+    """Ensures localisation with provided timezone on a datetime object.
+
+    Does nothing to an object of type date."""
     if isinstance(dt, datetime):
         if dt.tzinfo is None:
             tz = gettz(timezone)
