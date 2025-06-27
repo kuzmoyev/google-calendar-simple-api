@@ -49,14 +49,14 @@ class AuthenticatedService:
         :param save_token:
                 Whether to pickle token after authentication flow for future uses
         :param read_only:
-                If require read only access. Default: False
+                If require read-only access. Default: False
         :param authentication_flow_host:
                 Host to receive response during authentication flow
         :param authentication_flow_port:
                 Port to receive response during authentication flow
         :param authentication_flow_bind_addr:
-                Optional IP address for the redirect server to listen on when it is not the same as host
-                (e.g. in a container)
+                Optional IP address for the redirect server to listen on when it is different from host
+                (e.g., in a container)
         :param open_browser:
                 Whether to open the authorization URL in the user's browser.
                     - `None` (default): try opening the URL in the browser, if it fails proceed without the browser
@@ -130,7 +130,7 @@ class AuthenticatedService:
                     if open_browser:
                         raise
                     else:
-                        # Try without browser
+                        # Try without a browser
                         log.warning("Could not locate runnable browser")
                         credentials = flow.run_local_server(
                             host=host,
