@@ -148,10 +148,9 @@ class Event(Resource):
                 See more at https://developers.google.com/calendar/v3/reference/events
         """
 
-        if timezone is None and isinstance(start, datetime) and start.tzinfo is None:
-            self.timezone = get_localzone_name()
-        else:
-            self.timezone = timezone
+        self.timezone = get_localzone_name() \
+            if timezone is None and isinstance(start, datetime) and start.tzinfo is None \
+            else timezone
 
         self.start = start
         if end or start is None:
