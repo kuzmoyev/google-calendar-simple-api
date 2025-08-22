@@ -24,6 +24,14 @@ It is a Pythonic object oriented adapter for the official API. See the full `doc
 Installation
 ------------
 
+Using `uv`_:
+
+.. code-block:: bash
+
+    uv add gcsa
+
+Using pip:
+
 .. code-block:: bash
 
     pip install gcsa
@@ -86,6 +94,7 @@ References
 Template for `setup.py` was taken from `kennethreitz/setup.py`_
 
 
+.. _uv: https://docs.astral.sh/uv/
 .. _documentation: https://google-calendar-simple-api.readthedocs.io/en/latest/?badge=latest
 .. _`Getting started page`: https://google-calendar-simple-api.readthedocs.io/en/latest/getting_started.html
 .. _beautiful_date: https://github.com/kuzmoyev/beautiful-date
