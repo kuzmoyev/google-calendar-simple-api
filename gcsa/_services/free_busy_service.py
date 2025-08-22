@@ -1,14 +1,13 @@
-from datetime import date, datetime
+from datetime import datetime
 from typing import Union, List, Optional
 
-from beautiful_date import BeautifulDate
 from dateutil.relativedelta import relativedelta
 from tzlocal import get_localzone_name
 
 from gcsa._services.base_service import BaseService
 from gcsa.free_busy import FreeBusy, FreeBusyQueryError
 from gcsa.serializers.free_busy_serializer import FreeBusySerializer
-from gcsa.util.date_time_util import to_localized_iso
+from gcsa.util.date_time_util import to_localized_iso, DateOrDatetime
 
 
 class FreeBusyService(BaseService):
@@ -16,8 +15,8 @@ class FreeBusyService(BaseService):
             self,
             resource_ids: Optional[Union[str, List[str]]] = None,
             *,
-            time_min: Optional[Union[date, datetime, BeautifulDate]] = None,
-            time_max: Optional[Union[date, datetime, BeautifulDate]] = None,
+            time_min: Optional[DateOrDatetime] = None,
+            time_max: Optional[DateOrDatetime] = None,
             timezone: str = get_localzone_name(),
             group_expansion_max: Optional[int] = None,
             calendar_expansion_max: Optional[int] = None,

@@ -1,14 +1,13 @@
 from datetime import date, datetime
 from typing import Union, Iterator, Iterable, Callable, Optional
 
-from beautiful_date import BeautifulDate
 from dateutil.relativedelta import relativedelta
 from tzlocal import get_localzone_name
 
 from gcsa._services.base_service import BaseService
 from gcsa.event import Event
 from gcsa.serializers.event_serializer import EventSerializer
-from gcsa.util.date_time_util import to_localized_iso
+from gcsa.util.date_time_util import to_localized_iso, DateOrDatetime
 
 
 class SendUpdatesMode:
@@ -32,8 +31,8 @@ class EventsService(BaseService):
     def _list_events(
             self,
             request_method: Callable,
-            time_min: Union[date, datetime, BeautifulDate],
-            time_max: Union[date, datetime, BeautifulDate],
+            time_min: DateOrDatetime,
+            time_max: DateOrDatetime,
             timezone: str,
             calendar_id: str,
             **kwargs
@@ -57,8 +56,8 @@ class EventsService(BaseService):
 
     def get_events(
             self,
-            time_min: Optional[Union[date, datetime, BeautifulDate]] = None,
-            time_max: Optional[Union[date, datetime, BeautifulDate]] = None,
+            time_min: Optional[DateOrDatetime] = None,
+            time_max: Optional[DateOrDatetime] = None,
             order_by: Optional[str] = None,
             timezone: str = get_localzone_name(),
             single_events: bool = False,
@@ -116,8 +115,8 @@ class EventsService(BaseService):
     def get_instances(
             self,
             recurring_event: Union[Event, str],
-            time_min: Union[date, datetime, BeautifulDate] = None,
-            time_max: Union[date, datetime, BeautifulDate] = None,
+            time_min: DateOrDatetime = None,
+            time_max: DateOrDatetime = None,
             timezone: str = get_localzone_name(),
             calendar_id: Optional[str] = None,
             **kwargs

@@ -3,6 +3,7 @@ from datetime import datetime, date
 from tzlocal import get_localzone_name
 
 from .util.date_time_util import ensure_localisation
+from .util.utils import ensure_iterable, check_all_type_and_range, to_string, check_all_type
 
 
 class Duration:
@@ -470,27 +471,6 @@ class Recurrence:
 
         .. _`RRULE format`: https://tools.ietf.org/html/rfc5545#section-3.8.5
         """
-
-        def ensure_iterable(it):
-            return it if isinstance(it, (list, tuple, set)) else [it] if it is not None else []
-
-        def check_all_type(it, type_, name):
-            if any(not isinstance(o, type_) for o in it):
-                raise TypeError('"{}" parameter must be a {} or list of {}s.'
-                                .format(name, type_.__name__, type_.__name__))
-
-        def check_all_type_and_range(it, type_, range_, name, nonzero=False):
-            check_all_type(it, type_, name)
-            low, high = range_
-            if any(not (low <= o <= high) for o in it):
-                raise ValueError('"{}" parameter must be in range {}-{}.'
-                                 .format(name, low, high))
-            if nonzero and any(o == 0 for o in it):
-                raise ValueError('"{}" parameter must be in range {}-{} and nonzero.'
-                                 .format(name, low, high))
-
-        def to_string(values):
-            return ','.join(map(str, values)) if values else None
 
         if freq not in (SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY):
             raise ValueError('"freq" parameter must be one of SECONDLY, HOURLY, MINUTELY, DAILY, '

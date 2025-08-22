@@ -1,5 +1,8 @@
-from datetime import time
-import datetime
+from datetime import time, datetime
+from zoneinfo import ZoneInfo
+
+from tzlocal import get_localzone_name
+
 from unittest import TestCase
 from beautiful_date import Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sept, Oct, Dec, hours, days, Nov
 
@@ -45,8 +48,8 @@ class TestEvent(TestCase):
 
         self.assertEqual(event.summary, 'Breakfast')
         self.assertEqual(event.id, '123')
-        self.assertEqual(event.start, ensure_localisation((1 / Feb / 2019)[9:00], TEST_TIMEZONE))
-        self.assertEqual(event.end, ensure_localisation((31 / Dec / 2019)[23:59], TEST_TIMEZONE))
+        self.assertEqual(event.start, (1 / Feb / 2019)[9:00])
+        self.assertEqual(event.end, (31 / Dec / 2019)[23:59])
         self.assertEqual(event.created, ensure_localisation((20 / Nov / 2020)[16:19], TEST_TIMEZONE))
         self.assertEqual(event.updated, ensure_localisation((25 / Nov / 2020)[16:19], TEST_TIMEZONE))
         self.assertEqual(event.description, 'Everyday breakfast')
@@ -72,7 +75,7 @@ class TestEvent(TestCase):
         with self.assertLogs("gcsa.event", level="WARNING") as cm:
             Event(
                 "Test",
-                start=datetime.datetime(
+                start=datetime(
                     year=1979, month=1, day=1, hour=1, minute=1, second=1, microsecond=1
                 ),
             )
@@ -89,7 +92,7 @@ class TestEvent(TestCase):
         with self.assertLogs("gcsa.event", level="WARNING") as cm:
             Event(
                 "",
-                start=datetime.datetime(
+                start=datetime(
                     year=1979, month=1, day=1, hour=1, minute=1, second=1, microsecond=0
                 ),
                 timezone=TEST_TIMEZONE,
@@ -97,7 +100,7 @@ class TestEvent(TestCase):
             self.assertEqual(
                 cm.output,
                 [
-                    "WARNING:gcsa.event:Summary is empty in 1979-01-01 01:01:01+12:00 - . " +
+                    "WARNING:gcsa.event:Summary is empty in 1979-01-01 01:01:01 - . " +
                     "Note that if the event is loaded from Google Calendar, " +
                     "its summary will be `None`"
                 ],
@@ -298,8 +301,42 @@ class TestEventSerializer(TestCase):
         e = Event('Good day', start=(28 / Oct / 2019)[11:22:33], timezone=TEST_TIMEZONE)
         expected_event_json = {
             'summary': 'Good day',
-            'start': {'dateTime': '2019-10-28T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
-            'end': {'dateTime': '2019-10-28T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'start': {'dateTime': '2019-10-28T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2019-10-28T12:22:33', 'timeZone': TEST_TIMEZONE},
+            'recurrence': [],
+            'visibility': 'default',
+            'attendees': [],
+            'reminders': {'useDefault': False},
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
+        }
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
+
+    def test_to_json_without_timezone(self):
+        e = Event('Good day', start=(28 / Sept / 2019)[11:22:33])
+        expected_event_json = {
+            'summary': 'Good day',
+            'start': {'dateTime': '2019-09-28T11:22:33', 'timeZone': get_localzone_name()},
+            'end': {'dateTime': '2019-09-28T12:22:33', 'timeZone': get_localzone_name()},
+            'recurrence': [],
+            'visibility': 'default',
+            'attendees': [],
+            'reminders': {'useDefault': False},
+            'attachments': [],
+            'guestsCanInviteOthers': True,
+            'guestsCanModify': False,
+            'guestsCanSeeOtherGuests': True,
+        }
+        self.assertDictEqual(EventSerializer.to_json(e), expected_event_json)
+
+    def test_to_json_with_tzinfo(self):
+        e = Event('Good day', start=datetime(2019, 9, 28, 11, 22, 33, tzinfo=ZoneInfo(TEST_TIMEZONE)))
+        expected_event_json = {
+            'summary': 'Good day',
+            'start': {'dateTime': '2019-09-28T11:22:33+12:00'},
+            'end': {'dateTime': '2019-09-28T12:22:33+12:00'},
             'recurrence': [],
             'visibility': 'default',
             'attendees': [],
@@ -327,8 +364,8 @@ class TestEventSerializer(TestCase):
                   ])
         expected_event_json = {
             'summary': 'Good day',
-            'start': {'dateTime': '2019-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
-            'end': {'dateTime': '2020-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
+            'start': {'dateTime': '2019-01-01T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2020-01-01T11:22:33', 'timeZone': TEST_TIMEZONE},
             'recurrence': [
                 'RRULE:FREQ=DAILY;WKST=SU',
                 'EXRULE:FREQ=DAILY;BYDAY=MO;WKST=SU',
@@ -354,8 +391,8 @@ class TestEventSerializer(TestCase):
                   ])
         expected_event_json = {
             'summary': 'Good day',
-            'start': {'dateTime': '2019-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
-            'end': {'dateTime': '2019-01-01T12:22:33+13:00', 'timeZone': TEST_TIMEZONE},
+            'start': {'dateTime': '2019-01-01T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2019-01-01T12:22:33', 'timeZone': TEST_TIMEZONE},
             'recurrence': [],
             'visibility': 'default',
             'attendees': [],
@@ -386,8 +423,8 @@ class TestEventSerializer(TestCase):
                   minutes_before_email_reminder=120)
         expected_event_json = {
             'summary': 'Good day',
-            'start': {'dateTime': '2019-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
-            'end': {'dateTime': '2019-01-01T12:22:33+13:00', 'timeZone': TEST_TIMEZONE},
+            'start': {'dateTime': '2019-01-01T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2019-01-01T12:22:33', 'timeZone': TEST_TIMEZONE},
             'recurrence': [],
             'visibility': 'default',
             'attendees': [],
@@ -416,8 +453,8 @@ class TestEventSerializer(TestCase):
                   ])
         expected_event_json = {
             'summary': 'Good day',
-            'start': {'dateTime': '2019-01-01T11:22:33+13:00', 'timeZone': TEST_TIMEZONE},
-            'end': {'dateTime': '2019-01-01T12:22:33+13:00', 'timeZone': TEST_TIMEZONE},
+            'start': {'dateTime': '2019-01-01T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2019-01-01T12:22:33', 'timeZone': TEST_TIMEZONE},
             'recurrence': [],
             'visibility': 'default',
             'attendees': [],
@@ -447,8 +484,8 @@ class TestEventSerializer(TestCase):
                   ])
         expected_event_json = {
             'summary': 'Good day',
-            'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
-            'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'start': {'dateTime': '2020-07-01T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2020-07-01T12:22:33', 'timeZone': TEST_TIMEZONE},
             'recurrence': [],
             'visibility': 'default',
             'attendees': [
@@ -498,8 +535,8 @@ class TestEventSerializer(TestCase):
         )
         expected_event_json = {
             'summary': 'Good day',
-            'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
-            'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'start': {'dateTime': '2020-07-01T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2020-07-01T12:22:33', 'timeZone': TEST_TIMEZONE},
             'recurrence': [],
             'visibility': 'default',
             'attendees': [],
@@ -545,8 +582,8 @@ class TestEventSerializer(TestCase):
         )
         expected_event_json = {
             'summary': 'Good day',
-            'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
-            'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'start': {'dateTime': '2020-07-01T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2020-07-01T12:22:33', 'timeZone': TEST_TIMEZONE},
             'recurrence': [],
             'visibility': 'default',
             'attendees': [],
@@ -581,8 +618,8 @@ class TestEventSerializer(TestCase):
         )
         expected_event_json = {
             'summary': 'Good day',
-            'start': {'dateTime': '2020-07-01T11:22:33+12:00', 'timeZone': TEST_TIMEZONE},
-            'end': {'dateTime': '2020-07-01T12:22:33+12:00', 'timeZone': TEST_TIMEZONE},
+            'start': {'dateTime': '2020-07-01T11:22:33', 'timeZone': TEST_TIMEZONE},
+            'end': {'dateTime': '2020-07-01T12:22:33', 'timeZone': TEST_TIMEZONE},
             'recurrence': [],
             'visibility': 'default',
             'attendees': [],
@@ -672,8 +709,8 @@ class TestEventSerializer(TestCase):
         event = serializer.get_object()
 
         self.assertEqual(event.summary, 'Good day')
-        self.assertEqual(event.start, ensure_localisation((1 / Jan / 2019)[11:22:33], TEST_TIMEZONE))
-        self.assertEqual(event.end, ensure_localisation((1 / Jan / 2019)[12:22:33], TEST_TIMEZONE))
+        self.assertEqual(event.start, (1 / Jan / 2019)[11:22:33])
+        self.assertEqual(event.end, (1 / Jan / 2019)[12:22:33])
         self.assertEqual(event.updated, ensure_localisation((25 / Nov / 2020)[14:53:46], 'UTC'))
         self.assertEqual(event.created, ensure_localisation((24 / Nov / 2020)[14:53:46], 'UTC'))
         self.assertEqual(event.description, 'Very good day indeed')

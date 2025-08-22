@@ -3,6 +3,22 @@
 Change log
 ==========
 
+v2.6.0
+~~~~~~
+
+API
+---
+* Infer timezone from `start` field of the `Event` if not explicitly provided by `timezone` field
+
+Core
+----
+* None
+
+Backward compatibility
+----------------------
+* It will not use devices timezone if `start` field has `tzinfo`
+
+
 v2.5.1
 ~~~~~~
 

@@ -8,7 +8,7 @@ import sys
 
 here = os.path.abspath(os.path.dirname(__file__))
 
-VERSION = '2.5.1'
+VERSION = '2.6.0'
 
 
 class UploadCommand(Command):
@@ -130,7 +130,7 @@ setup(
     zip_safe=False,
     packages=find_packages(exclude=("tests", "tests.*")),
     install_requires=[
-        "tzlocal>=4,<5",
+        "tzlocal>=4,<6",
         "google-api-python-client>=1.8",
         "google-auth-httplib2>=0.0.4",
         "google-auth-oauthlib>=0.5,<2.0",

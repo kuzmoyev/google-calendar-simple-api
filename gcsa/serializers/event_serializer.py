@@ -1,7 +1,5 @@
 from datetime import date, datetime
 
-from tzlocal import get_localzone_name
-
 from gcsa.event import Event
 from .base_serializer import BaseSerializer
 from .attachment_serializer import AttachmentSerializer
@@ -38,14 +36,13 @@ class EventSerializer(BaseSerializer):
         }
 
         if isinstance(event.start, datetime) and isinstance(event.end, datetime):
-            data['start'] = {
-                'dateTime': event.start.isoformat(),
-                'timeZone': event.timezone
-            }
-            data['end'] = {
-                'dateTime': event.end.isoformat(),
-                'timeZone': event.timezone
-            }
+            data['start'] = {'dateTime': event.start.isoformat()}
+            data['end'] = {'dateTime': event.end.isoformat()}
+
+            if event.timezone is not None:
+                data['start']['timeZone'] = event.timezone
+                data['end']['timeZone'] = event.timezone
+
         elif isinstance(event.start, date) and isinstance(event.end, date):
             data['start'] = {'date': event.start.isoformat()}
             data['end'] = {'date': event.end.isoformat()}
@@ -80,7 +77,7 @@ class EventSerializer(BaseSerializer):
                 start = EventSerializer._get_datetime_from_string(start_data['date']).date()
             else:
                 start = EventSerializer._get_datetime_from_string(start_data['dateTime'])
-            timezone = start_data.get('timeZone', get_localzone_name())
+            timezone = start_data.get('timeZone')
 
         end = None
         end_data = json_event.pop('end', None)
