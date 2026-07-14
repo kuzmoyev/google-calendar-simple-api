@@ -1,3 +1,4 @@
+from copy import deepcopy
 from datetime import time, datetime
 from zoneinfo import ZoneInfo
 
@@ -191,6 +192,12 @@ class TestEvent(TestCase):
                   reminders=[EmailReminder()] * 5)
         with self.assertRaises(ValueError):
             e.add_email_reminder()
+
+        e = Event('Default reminders',
+                  start=20 / Jul / 2020,
+                  default_reminders=True)
+        with self.assertRaises(ValueError):
+            e.add_popup_reminder()
 
     def test_repr_str(self):
         e = Event('Good event',
@@ -767,6 +774,19 @@ class TestEventSerializer(TestCase):
         self.assertEqual(event.id, 'recurring_event_id_20201107T070000Z')
         self.assertTrue(event.is_recurring_instance)
         self.assertEqual(event.recurring_event_id, 'recurring_event_id')
+
+    def test_to_object_does_not_mutate_input(self):
+        event_json = {
+            "summary": "Good day",
+            "start": {"date": "2020-07-20"},
+            "end": {"date": "2020-07-22"},
+            "reminders": {"useDefault": False, "overrides": [{"method": "popup", "minutes": 30}]},
+        }
+        event_json_copy = deepcopy(event_json)
+
+        EventSerializer.to_object(event_json)
+
+        self.assertEqual(event_json, event_json_copy)
 
     def test_to_object_conference_data(self):
         event_json = {

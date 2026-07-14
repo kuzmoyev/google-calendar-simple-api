@@ -23,6 +23,10 @@ class TestReminder(TestCase):
         self.assertEqual(reminder.days_before, 1)
         self.assertEqual(reminder.at, time(0, 0))
 
+        reminder = EmailReminder(0)
+        self.assertEqual(reminder.method, 'email')
+        self.assertEqual(reminder.minutes_before_start, 0)
+
     def test_popup_reminder(self):
         reminder = PopupReminder()
         self.assertEqual(reminder.method, 'popup')
@@ -37,6 +41,10 @@ class TestReminder(TestCase):
         self.assertEqual(reminder.minutes_before_start, None)
         self.assertEqual(reminder.days_before, 1)
         self.assertEqual(reminder.at, time(0, 0))
+
+        reminder = PopupReminder(0)
+        self.assertEqual(reminder.method, 'popup')
+        self.assertEqual(reminder.minutes_before_start, 0)
 
     def test_repr_str(self):
         reminder = EmailReminder(34)
@@ -147,6 +155,16 @@ class TestReminderSerializer(TestCase):
 
         self.assertIsInstance(reminder, PopupReminder)
         self.assertEqual(reminder.minutes_before_start, 22)
+
+        reminder_json = {
+            'method': 'popup',
+            'minutes': 0
+        }
+
+        reminder = ReminderSerializer.to_object(reminder_json)
+
+        self.assertIsInstance(reminder, PopupReminder)
+        self.assertEqual(reminder.minutes_before_start, 0)
 
         with self.assertRaises(ValueError):
             reminder_json = {

@@ -31,7 +31,7 @@ class BaseService(AuthenticatedService):
                 **kwargs,
                 pageToken=page_token
             ).execute()
-            for item_json in response_json['items']:
+            for item_json in response_json.get('items', []):
                 if serializer_cls:
                     yield serializer_cls(item_json).get_object()
                 else:

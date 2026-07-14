@@ -3,6 +3,33 @@
 Change log
 ==========
 
+v2.7.0
+~~~~~~
+
+API
+---
+* Fix 0-minute reminders being replaced by the default (30/60 minutes), including on events loaded from the API
+* Fix value equality of `Calendar` and `CalendarListEntry`
+* Keep calendars with no busy ranges in `FreeBusy.calendars`
+* Compare `timezone`, `transparency`, and `conference_solution` in `Event` equality
+* Raise `ValueError` when adding reminder overrides to an event that uses default reminders
+* Don't mutate the input dict in serializers' `to_object`
+* Handle event list responses without `items`
+* Resolve the local timezone at call time instead of import time
+* Support python3.14
+
+Core
+----
+* Require python>=3.9 in package metadata
+* Run style and docs checks on python3.14 in CI; update GitHub action versions
+
+Backward compatibility
+----------------------
+* Equality of `Event`, `Calendar`, and `CalendarListEntry` may give different results (value-based and covers more fields)
+* `add_reminder` now raises `ValueError` if the event uses default reminders
+* Reminders set to 0 minutes before start keep their value instead of being replaced by the default
+* Package no longer installs on python<3.9
+
 v2.6.0
 ~~~~~~
 

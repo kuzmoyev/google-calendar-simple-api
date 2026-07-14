@@ -153,7 +153,14 @@ class Calendar(Resource):
         elif self is other:
             return True
         else:
-            return super().__eq__(other)
+            return (
+                    self.summary == other.summary
+                    and self.calendar_id == other.calendar_id
+                    and self.description == other.description
+                    and self.location == other.location
+                    and self.timezone == other.timezone
+                    and self.allowed_conference_solution_types == other.allowed_conference_solution_types
+            )
 
 
 class CalendarListEntry(Calendar):
@@ -264,4 +271,17 @@ class CalendarListEntry(Calendar):
         elif self is other:
             return True
         else:
-            return super().__eq__(other)
+            return (
+                    super().__eq__(other)
+                    and self.summary_override == other.summary_override
+                    and self.color_id == other.color_id
+                    and self.background_color == other.background_color
+                    and self.foreground_color == other.foreground_color
+                    and self.hidden == other.hidden
+                    and self.selected == other.selected
+                    and self.default_reminders == other.default_reminders
+                    and self.notification_types == other.notification_types
+                    and self.access_role == other.access_role
+                    and self.primary == other.primary
+                    and self.deleted == other.deleted
+            )

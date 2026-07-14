@@ -191,3 +191,21 @@ class TestFreeBusySerializer(TestCase):
         free_busy = FreeBusySerializer(free_busy_json).to_object(free_busy_json)
         self.assertEqual(free_busy.time_min, (24 / Mar / 2023)[13:22])
         self.assertEqual(free_busy.time_max, (25 / Mar / 2023)[13:22])
+
+    def test_to_object_free_calendar(self):
+        free_busy_json = {
+            'calendars': {
+                'calendar1': {
+                    'busy': [],
+                }
+            },
+            'groups': {},
+            'timeMin': '2023-03-24T13:22:00',
+            'timeMax': '2023-03-25T13:22:00'
+        }
+
+        free_busy = FreeBusySerializer.to_object(free_busy_json)
+
+        self.assertIn('calendar1', free_busy.calendars)
+        self.assertEqual(free_busy.calendars['calendar1'], [])
+        self.assertEqual(list(free_busy), [])

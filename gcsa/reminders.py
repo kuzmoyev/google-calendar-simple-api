@@ -115,7 +115,7 @@ class EmailReminder(Reminder):
         :param at:
                 Specific time for a reminder
         """
-        if not days_before and not at and not minutes_before_start:
+        if minutes_before_start is None and days_before is None and at is None:
             minutes_before_start = 60
         super().__init__('email', minutes_before_start, days_before, at)
 
@@ -139,6 +139,6 @@ class PopupReminder(Reminder):
         :param at:
                 Specific time for a reminder
         """
-        if not days_before and not at and not minutes_before_start:
+        if minutes_before_start is None and days_before is None and at is None:
             minutes_before_start = 30
         super().__init__('popup', minutes_before_start, days_before, at)
