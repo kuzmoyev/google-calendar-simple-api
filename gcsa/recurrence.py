@@ -390,7 +390,7 @@ class Recurrence:
         period_strings = []
         for start, end in ps:
             if not isinstance(start, (date, datetime)):
-                msg = 'The start object(s) must be a date or datetime, not {!r}.'.format(end.__class__.__name__)
+                msg = 'The start object(s) must be a date or datetime, not {!r}.'.format(start.__class__.__name__)
                 raise TypeError(msg)
 
             start = ensure_localisation(start, timezone)
