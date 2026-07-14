@@ -33,12 +33,13 @@ class EventsService(BaseService):
             request_method: Callable,
             time_min: DateOrDatetime,
             time_max: DateOrDatetime,
-            timezone: str,
+            timezone: Optional[str],
             calendar_id: str,
             **kwargs
     ) -> Iterable[Event]:
         """Lists paginated events received from request_method."""
 
+        timezone = timezone or get_localzone_name()
         time_min = time_min or datetime.now()
         time_max = time_max or time_min + relativedelta(years=1)
 
@@ -59,7 +60,7 @@ class EventsService(BaseService):
             time_min: Optional[DateOrDatetime] = None,
             time_max: Optional[DateOrDatetime] = None,
             order_by: Optional[str] = None,
-            timezone: str = get_localzone_name(),
+            timezone: Optional[str] = None,
             single_events: bool = False,
             query: Optional[str] = None,
             calendar_id: Optional[str] = None,
@@ -117,7 +118,7 @@ class EventsService(BaseService):
             recurring_event: Union[Event, str],
             time_min: DateOrDatetime = None,
             time_max: DateOrDatetime = None,
-            timezone: str = get_localzone_name(),
+            timezone: Optional[str] = None,
             calendar_id: Optional[str] = None,
             **kwargs
     ) -> Iterable[Event]:

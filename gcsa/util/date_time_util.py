@@ -10,23 +10,24 @@ DateOrDatetime = Union[date, datetime, BeautifulDate]
 
 
 @overload
-def ensure_localisation(dt: datetime, timezone: str = ...) -> datetime: ...
+def ensure_localisation(dt: datetime, timezone: Optional[str] = ...) -> datetime: ...
 
 
 @overload
-def ensure_localisation(dt: date, timezone: str = ...) -> date: ...
+def ensure_localisation(dt: date, timezone: Optional[str] = ...) -> date: ...
 
 
 @overload
-def ensure_localisation(dt: BeautifulDate, timezone: str = ...) -> BeautifulDate: ...
+def ensure_localisation(dt: BeautifulDate, timezone: Optional[str] = ...) -> BeautifulDate: ...
 
 
-def ensure_localisation(dt: DateOrDatetime, timezone: Optional[str] = get_localzone_name()) -> DateOrDatetime:
+def ensure_localisation(dt: DateOrDatetime, timezone: Optional[str] = None) -> DateOrDatetime:
     """Ensures localization with provided timezone on a datetime object.
+    Uses the local timezone if none is provided.
     Does nothing to an object of type date."""
     if isinstance(dt, datetime):
         if dt.tzinfo is None:
-            tz = gettz(timezone)
+            tz = gettz(timezone if timezone is not None else get_localzone_name())
             dt = dt.replace(tzinfo=tz)
         return dt
     elif isinstance(dt, date):
@@ -35,7 +36,7 @@ def ensure_localisation(dt: DateOrDatetime, timezone: Optional[str] = get_localz
         raise TypeError('"date" or "datetime" object expected, not {!r}.'.format(dt.__class__.__name__))
 
 
-def to_localized_iso(dt, timezone=get_localzone_name()):
+def to_localized_iso(dt, timezone: Optional[str] = None):
     if not isinstance(dt, datetime):
         dt = datetime.combine(dt, time())
     return ensure_localisation(dt, timezone).isoformat()

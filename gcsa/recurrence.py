@@ -245,7 +245,7 @@ class Recurrence:
         return 'RDATE;' + Recurrence._dates(ds)
 
     @staticmethod
-    def times(dts, timezone=get_localzone_name()):
+    def times(dts, timezone=None):
         """Converts datetime(s) set to RDATE format.
 
         :param dts:
@@ -260,7 +260,7 @@ class Recurrence:
         return 'RDATE;' + Recurrence._times(dts, timezone)
 
     @staticmethod
-    def periods(ps, timezone=get_localzone_name()):
+    def periods(ps, timezone=None):
         """Converts date period(s) to RDATE format.
 
         Period is defined as tuple of starting date/datetime and ending date/datetime or duration as Duration object:
@@ -290,7 +290,7 @@ class Recurrence:
         return 'EXDATE;' + Recurrence._dates(ds)
 
     @staticmethod
-    def exclude_times(dts, timezone=get_localzone_name()):
+    def exclude_times(dts, timezone=None):
         """Converts datetime(s) set to EXDATE format.
 
         :param dts:
@@ -305,7 +305,7 @@ class Recurrence:
         return 'EXDATE;' + Recurrence._times(dts, timezone)
 
     @staticmethod
-    def exclude_periods(ps, timezone=get_localzone_name()):
+    def exclude_periods(ps, timezone=None):
         """Converts date period(s) to EXDATE format.
 
         Period is defined as tuple of starting date/datetime and ending date/datetime or duration as Duration object:
@@ -323,7 +323,7 @@ class Recurrence:
         return 'EXDATE;' + Recurrence._periods(ps, timezone)
 
     @staticmethod
-    def _times(dts, timezone=get_localzone_name()):
+    def _times(dts, timezone=None):
         """Converts datetime(s) set to RDATE format.
 
         :param dts:
@@ -335,6 +335,7 @@ class Recurrence:
         :return:
                 RDATE string of datetimes with specified timezone.
         """
+        timezone = timezone or get_localzone_name()
 
         if not isinstance(dts, list):
             dts = [dts]
@@ -369,7 +370,7 @@ class Recurrence:
         return 'VALUE=DATE:' + ','.join(d.strftime('%Y%m%d') for d in ds)
 
     @staticmethod
-    def _periods(ps, timezone=get_localzone_name()):
+    def _periods(ps, timezone=None):
         """Converts date period(s) to RDATE format.
 
         Period is defined as tuple of starting date/datetime and ending date/datetime or duration as Duration object:
@@ -384,6 +385,8 @@ class Recurrence:
         :return:
                 RDATE string of periods.
         """
+        timezone = timezone or get_localzone_name()
+
         if not isinstance(ps, list):
             ps = [ps]
 

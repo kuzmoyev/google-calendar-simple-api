@@ -17,7 +17,7 @@ class FreeBusyService(BaseService):
             *,
             time_min: Optional[DateOrDatetime] = None,
             time_max: Optional[DateOrDatetime] = None,
-            timezone: str = get_localzone_name(),
+            timezone: Optional[str] = None,
             group_expansion_max: Optional[int] = None,
             calendar_expansion_max: Optional[int] = None,
             ignore_errors: bool = False
@@ -53,6 +53,7 @@ class FreeBusyService(BaseService):
                 :py:class:`~gcsa.free_busy.FreeBusy` object.
         """
 
+        timezone = timezone or get_localzone_name()
         time_min = time_min or datetime.now()
         time_max = time_max or time_min + relativedelta(weeks=2)
 
