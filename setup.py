@@ -107,7 +107,6 @@ DOCS_REQUIRES = [
 TEST_REQUIRES = [
     'setuptools',
     'pytest',
-    'pytest-pep8',
     'pytest-cov',
     'pyfakefs',
     'flake8',
@@ -129,6 +128,7 @@ setup(
     url='https://github.com/kuzmoyev/google-calendar-simple-api',
     zip_safe=False,
     packages=find_packages(exclude=("tests", "tests.*")),
+    python_requires='>=3.9',
     install_requires=[
         "tzlocal>=4,<6",
         "google-api-python-client>=1.8",
@@ -150,10 +150,6 @@ setup(
         'Natural Language :: English',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
