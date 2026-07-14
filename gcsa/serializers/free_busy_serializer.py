@@ -54,8 +54,8 @@ class FreeBusySerializer(BaseSerializer):
 
         if calendars_json:
             calendars = {
-                cn: list(map(FreeBusySerializer._make_time_range, c['busy']))
-                for cn, c in calendars_json.items() if c.get('busy') and not c.get('errors')
+                cn: list(map(FreeBusySerializer._make_time_range, c.get('busy', [])))
+                for cn, c in calendars_json.items() if not c.get('errors')
             }
             calendars_errors = {
                 cn: c['errors']
