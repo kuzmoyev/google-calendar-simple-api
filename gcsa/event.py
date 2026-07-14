@@ -271,6 +271,8 @@ class Event(Resource):
             reminder: Reminder
     ):
         """Adds a reminder to an event. See :py:mod:`~gcsa.reminders`"""
+        if self.default_reminders:
+            raise ValueError('Cannot specify both default reminders and overrides at the same time.')
         if len(self.reminders) > 4:
             raise ValueError('The maximum number of override reminders is 5.')
         self.reminders.append(reminder)

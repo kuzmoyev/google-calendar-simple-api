@@ -193,6 +193,12 @@ class TestEvent(TestCase):
         with self.assertRaises(ValueError):
             e.add_email_reminder()
 
+        e = Event('Default reminders',
+                  start=20 / Jul / 2020,
+                  default_reminders=True)
+        with self.assertRaises(ValueError):
+            e.add_popup_reminder()
+
     def test_repr_str(self):
         e = Event('Good event',
                   start=20 / Jul / 2020)
