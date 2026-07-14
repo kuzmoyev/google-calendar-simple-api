@@ -93,7 +93,16 @@ class TestCalendar(TestCase):
             timezone=TEST_TIMEZONE,
             allowed_conference_solution_types=TEST_ALLOWED_CONFERENCE_SOLUTION_TYPES
         )
+        c1_copy = Calendar(
+            summary='Summary',
+            calendar_id='Calendar id',
+            description='Description',
+            location='Fiji',
+            timezone=TEST_TIMEZONE,
+            allowed_conference_solution_types=TEST_ALLOWED_CONFERENCE_SOLUTION_TYPES
+        )
         self.assertEqual(c1, c1)
+        self.assertEqual(c1, c1_copy)
         self.assertNotEqual(c1, c2)
         self.assertNotEqual(c1, 'Calendar')
 
@@ -239,7 +248,13 @@ class TestCalendarListEntry(TestCase):
             summary_override='Summary override2',
             _summary='Summary2',
         )
+        c1_copy = CalendarListEntry(
+            calendar_id='Calendar id',
+            summary_override='Summary override',
+            _summary='Summary',
+        )
         self.assertEqual(c1, c1)
+        self.assertEqual(c1, c1_copy)
         self.assertNotEqual(c1, c2)
         self.assertNotEqual(c1, 'Calendar')
 
