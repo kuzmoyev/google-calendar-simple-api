@@ -1,5 +1,6 @@
 import re
 from abc import ABC, abstractmethod
+from copy import deepcopy
 import json
 from typing import Type
 
@@ -60,7 +61,8 @@ class BaseSerializer(ABC):
         if isinstance(json_, str):
             return json.loads(json_)
         else:
-            return json_
+            # Deep copy so that serializers can pop from the json without mutating the caller's dict
+            return deepcopy(json_)
 
     @classmethod
     def ensure_type(cls, obj):
