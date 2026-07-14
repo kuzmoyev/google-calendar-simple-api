@@ -299,6 +299,8 @@ class Event(Resource):
         return '<Event {}>'.format(self.__str__())
 
     def __lt__(self, other):
+        if not isinstance(other, Event):
+            return NotImplemented
         start = ensure_datetime(self.start, self.timezone)
         end = ensure_datetime(self.end, self.timezone)
 
@@ -311,6 +313,7 @@ class Event(Resource):
                 isinstance(other, Event)
                 and self.start == other.start
                 and self.end == other.end
+                and self.timezone == other.timezone
                 and self.event_id == other.event_id
                 and self.summary == other.summary
                 and self.description == other.description
@@ -320,6 +323,7 @@ class Event(Resource):
                 and self.visibility == other.visibility
                 and self.attendees == other.attendees
                 and self.attachments == other.attachments
+                and self.conference_solution == other.conference_solution
                 and self.reminders == other.reminders
                 and self.default_reminders == other.default_reminders
                 and self.created == other.created
@@ -328,5 +332,6 @@ class Event(Resource):
                 and self.guests_can_invite_others == other.guests_can_invite_others
                 and self.guests_can_modify == other.guests_can_modify
                 and self.guests_can_see_other_guests == other.guests_can_see_other_guests
+                and self.transparency == other.transparency
                 and self.other == other.other
         )
