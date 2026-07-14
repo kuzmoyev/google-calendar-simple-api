@@ -75,7 +75,8 @@ class BaseSerializer(ABC):
         """
         if not hasattr(cls, 'type_') or cls.type_ is None:
             raise AssertionError('Subclass of BaseSerializer has to define class "type_" that is being serialized.')
-        if cls.__init__.__code__.co_varnames != ('self', _type_to_snake_case(cls.type_)):
+        init_code = cls.__init__.__code__
+        if init_code.co_varnames[:init_code.co_argcount] != ('self', _type_to_snake_case(cls.type_)):
             raise AssertionError('Argument of the __init__ method has to have a name "{}".'
                                  .format(_type_to_snake_case(cls.type_)))
 
