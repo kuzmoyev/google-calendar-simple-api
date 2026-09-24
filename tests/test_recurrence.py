@@ -1,5 +1,8 @@
+from datetime import date, datetime, timezone
 from functools import partial
 from unittest import TestCase
+from unittest.mock import patch
+from zoneinfo import ZoneInfo
 
 from beautiful_date import Jun, Jul
 
@@ -132,6 +135,46 @@ class TestRecurrence(TestCase):
             t("hello")
         with self.assertRaises(TypeError):
             t([(15 / Jun / 2020)[10:30], "hello"])
+
+    def test_times_convert_aware_datetimes(self):
+        when = datetime(2026, 7, 20, 15, tzinfo=timezone.utc)
+        for method, prefix in ((Recurrence.times, 'RDATE'), (Recurrence.exclude_times, 'EXDATE')):
+            with self.subTest(method=method.__name__):
+                self.assertEqual(
+                    method(when, timezone='America/New_York'),
+                    prefix + ';TZID=America/New_York:20260720T110000'
+                )
+
+    def test_times_convert_mixed_timezones(self):
+        values = [
+            datetime(2026, 1, 2, 2, tzinfo=timezone.utc),
+            datetime(2026, 1, 2, 9, tzinfo=ZoneInfo('Asia/Tokyo')),
+            datetime(2026, 1, 1, 23, 30, tzinfo=ZoneInfo('America/New_York')),
+            datetime(2026, 1, 1, 18),
+            date(2026, 1, 2),
+        ]
+        expected = '20260101T210000,20260101T190000,20260101T233000,20260101T180000,20260102T000000'
+        for method, prefix in ((Recurrence.times, 'RDATE'), (Recurrence.exclude_times, 'EXDATE')):
+            with self.subTest(method=method.__name__):
+                self.assertEqual(method(values, timezone='America/New_York'),
+                                 prefix + ';TZID=America/New_York:' + expected)
+
+    def test_times_convert_across_daylight_saving(self):
+        values = [
+            datetime(2026, 3, 8, 6, 30, tzinfo=timezone.utc),
+            datetime(2026, 3, 8, 7, 30, tzinfo=timezone.utc),
+        ]
+        for method, prefix in ((Recurrence.times, 'RDATE'), (Recurrence.exclude_times, 'EXDATE')):
+            with self.subTest(method=method.__name__):
+                self.assertEqual(method(values, timezone='America/New_York'),
+                                 prefix + ';TZID=America/New_York:20260308T013000,20260308T033000')
+
+    def test_times_convert_to_default_timezone(self):
+        when = datetime(2026, 7, 20, 15, tzinfo=timezone.utc)
+        with patch('gcsa.recurrence.get_localzone_name', return_value='Asia/Kolkata'):
+            for method, prefix in ((Recurrence.times, 'RDATE'), (Recurrence.exclude_times, 'EXDATE')):
+                with self.subTest(method=method.__name__):
+                    self.assertEqual(method(when), prefix + ';TZID=Asia/Kolkata:20260720T203000')
 
     def test__dates(self):
         def assert_dates_equal(ds, rdates):

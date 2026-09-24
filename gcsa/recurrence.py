@@ -1,5 +1,6 @@
 from datetime import datetime, date
 
+from dateutil.tz import gettz
 from tzlocal import get_localzone_name
 
 from .util.date_time_util import ensure_localisation
@@ -248,6 +249,9 @@ class Recurrence:
     def times(dts, timezone=None):
         """Converts datetime(s) set to RDATE format.
 
+        Datetimes with timezone information are converted to the selected timezone.
+        Naive datetimes and dates use that timezone directly.
+
         :param dts:
                 datetime object or list of datetime objects
         :param timezone:
@@ -292,6 +296,9 @@ class Recurrence:
     @staticmethod
     def exclude_times(dts, timezone=None):
         """Converts datetime(s) set to EXDATE format.
+
+        Datetimes with timezone information are converted to the selected timezone.
+        Naive datetimes and dates use that timezone directly.
 
         :param dts:
                 datetime object or list of datetime objects
@@ -345,7 +352,10 @@ class Recurrence:
             if not isinstance(dt, (date, datetime)):
                 msg = 'The dts object(s) must be date or datetime, not {!r}.'.format(dt.__class__.__name__)
                 raise TypeError(msg)
-            localized_datetimes.append(ensure_localisation(dt, timezone))
+            localized = ensure_localisation(dt, timezone)
+            if isinstance(localized, datetime):
+                localized = localized.astimezone(gettz(timezone))
+            localized_datetimes.append(localized)
 
         return 'TZID={}:{}'.format(timezone, ','.join(d.strftime('%Y%m%dT%H%M%S') for d in localized_datetimes))
 
