@@ -1,3 +1,5 @@
+import warnings
+from datetime import datetime, timezone
 from functools import partial
 from unittest import TestCase
 
@@ -126,6 +128,32 @@ class TestRecurrence(TestCase):
         self.assertEqual(Recurrence.exclude_times([(20 / Jul / 2020)[10:35],
                                                    (21 / Jul / 2020)[11:35]], timezone=TEST_TIMEZONE),
                          'EXDATE;TZID=Asia/Shanghai:20200720T103500,20200721T113500')
+
+    def test__times_with_timezone_aware_datetime(self):
+        aware = datetime(2026, 7, 20, 15, 0, tzinfo=timezone.utc)
+
+        with self.assertWarns(UserWarning):
+            rdate = Recurrence.times(aware, timezone=TEST_TIMEZONE)
+        self.assertEqual(rdate, 'RDATE;TZID=Asia/Shanghai:20260720T150000')
+
+        with self.assertWarns(UserWarning):
+            exdate = Recurrence.exclude_times(aware, timezone=TEST_TIMEZONE)
+        self.assertEqual(exdate, 'EXDATE;TZID=Asia/Shanghai:20260720T150000')
+
+    def test__times_naive_datetime_with_timezone_does_not_warn(self):
+        with warnings.catch_warnings():
+            warnings.simplefilter('error')
+            self.assertEqual(
+                Recurrence.times((20 / Jul / 2020)[10:30], timezone=TEST_TIMEZONE),
+                'RDATE;TZID=Asia/Shanghai:20200720T103000'
+            )
+
+    def test__times_aware_datetime_without_timezone_does_not_warn(self):
+        aware = datetime(2026, 7, 20, 15, 0, tzinfo=timezone.utc)
+
+        with warnings.catch_warnings():
+            warnings.simplefilter('error')
+            self.assertTrue(Recurrence.times(aware).endswith(':20260720T150000'))
 
     def test__times_errors(self):
         with self.assertRaises(TypeError):
