@@ -1,3 +1,4 @@
+import warnings
 from datetime import datetime, date
 
 from tzlocal import get_localzone_name
@@ -253,6 +254,8 @@ class Recurrence:
         :param timezone:
                 Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
                 the computers local timezone is used if it is configured. UTC is used otherwise.
+                Only applies to naive datetimes. Timezone-aware datetimes are used as-is, and a warning
+                is emitted if a timezone is passed together with them.
 
         :return:
                 RDATE string of datetimes with specified timezone.
@@ -298,6 +301,8 @@ class Recurrence:
         :param timezone:
                 Timezone formatted as an IANA Time Zone Database name, e.g. "Europe/Zurich". By default,
                 the computers local timezone is used if it is configured. UTC is used otherwise.
+                Only applies to naive datetimes. Timezone-aware datetimes are used as-is, and a warning
+                is emitted if a timezone is passed together with them.
 
         :return:
                 EXDATE string of datetimes with specified timezone.
@@ -335,10 +340,20 @@ class Recurrence:
         :return:
                 RDATE string of datetimes with specified timezone.
         """
-        timezone = timezone or get_localzone_name()
-
         if not isinstance(dts, list):
             dts = [dts]
+
+        if timezone is not None and any(
+                isinstance(dt, datetime) and dt.tzinfo is not None for dt in dts
+        ):
+            warnings.warn(
+                'The "timezone" argument is ignored for timezone-aware datetimes: they are formatted with '
+                'their own clock time and labeled with the given timezone. Convert them to that timezone '
+                'first, or pass naive datetimes.',
+                stacklevel=3
+            )
+
+        timezone = timezone or get_localzone_name()
 
         localized_datetimes = []
         for dt in dts:
